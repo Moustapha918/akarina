@@ -1,0 +1,99 @@
+<div class="min-h-screen bg-gray-50">
+  @if (loading()) {
+    <div class="max-w-4xl mx-auto px-4 py-8 animate-pulse space-y-4">
+      <div class="h-64 bg-gray-200 rounded-2xl"></div>
+      <div class="h-8 bg-gray-200 rounded w-1/2"></div>
+      <div class="h-4 bg-gray-200 rounded w-1/4"></div>
+    </div>
+  } @else if (project()) {
+    <!-- Hero image -->
+    <div class="w-full h-72 bg-gray-300 overflow-hidden">
+      @if (project()!.coverImageUrl) {
+        <img [src]="project()!.coverImageUrl" [alt]="project()!.title" class="w-full h-full object-cover" />
+      } @else {
+        <div class="w-full h-full flex items-center justify-center text-8xl">🏗️</div>
+      }
+    </div>
+
+    <div class="max-w-4xl mx-auto px-4 py-8">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        <!-- Main content -->
+        <div class="lg:col-span-2 space-y-6">
+          <div>
+            <span class="text-xs bg-primary-100 text-primary-700 font-semibold px-3 py-1 rounded-full">
+              {{ project()!.status }}
+            </span>
+            <h1 class="text-3xl font-bold text-gray-900 mt-3">{{ project()!.title }}</h1>
+            <p class="text-gray-500 mt-1">📍 {{ project()!.location }}</p>
+          </div>
+
+          <div class="prose max-w-none text-gray-700 leading-relaxed">
+            <p>{{ project()!.description }}</p>
+          </div>
+
+          @if (project()!.photoUrls.length > 0) {
+            <div>
+              <h3 class="font-bold text-gray-800 mb-3">Photos du projet</h3>
+              <div class="grid grid-cols-3 gap-2">
+                @for (url of project()!.photoUrls; track url) {
+                  <img [src]="url" class="rounded-lg h-24 w-full object-cover" />
+                }
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Investment card -->
+        <div class="lg:col-span-1">
+          <div class="bg-white rounded-2xl shadow-lg p-6 sticky top-20">
+            <!-- Funding progress -->
+            <div class="mb-5">
+              <div class="flex justify-between text-sm text-gray-600 mb-2">
+                <span>{{ project()!.fundingPercentage | number:'1.0-0' }}% financé</span>
+                <span>{{ project()!.investorCount }} investisseurs</span>
+              </div>
+              <div class="w-full bg-gray-100 rounded-full h-3">
+                <div class="bg-primary-600 h-3 rounded-full"
+                  [style.width.%]="project()!.fundingPercentage"></div>
+              </div>
+            </div>
+
+            <div class="space-y-3 mb-6">
+              <div class="flex justify-between">
+                <span class="text-sm text-gray-500">Objectif</span>
+                <span class="font-bold">{{ project()!.targetAmount | number:'1.0-0' }} MRU</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-sm text-gray-500">Collecté</span>
+                <span class="font-bold text-primary-700">{{ project()!.collectedAmount | number:'1.0-0' }} MRU</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-sm text-gray-500">Investissement min.</span>
+                <span class="font-bold">{{ project()!.minInvestmentAmount | number:'1.0-0' }} MRU</span>
+              </div>
+              <div class="flex justify-between border-t pt-3">
+                <span class="text-sm text-gray-500">ROI estimé</span>
+                <span class="font-bold text-green-600 text-lg">{{ project()!.roiEstimate }}% / an</span>
+              </div>
+            </div>
+
+            @if (project()!.status === 'OPEN') {
+              <button (click)="invest()"
+                class="w-full bg-primary-700 hover:bg-primary-800 text-white font-bold py-4 rounded-xl text-lg transition shadow-md hover:shadow-lg">
+                Investir maintenant
+              </button>
+              <p class="text-center text-xs text-gray-400 mt-3">
+                Contrat Mousharaka — Finance islamique
+              </p>
+            } @else {
+              <div class="text-center py-4 text-gray-400 text-sm border border-gray-200 rounded-xl">
+                Ce projet n'est plus ouvert aux investissements.
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

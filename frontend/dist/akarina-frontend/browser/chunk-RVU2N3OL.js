@@ -1,0 +1,1 @@
+import{b as t}from"./chunk-P74LXQHC.js";import"./chunk-OWGQ637I.js";import"./chunk-V5J4CWBH.js";import"./chunk-2NFLSA4Y.js";var a=[{path:"",loadComponent:()=>import("./chunk-U7EAR6GD.js").then(o=>o.InvestorDashboardComponent)},{path:"admin",loadComponent:()=>import("./chunk-JL7GRBNO.js").then(o=>o.AdminDashboardComponent),canActivate:[t]}];export{a as dashboardRoutes};

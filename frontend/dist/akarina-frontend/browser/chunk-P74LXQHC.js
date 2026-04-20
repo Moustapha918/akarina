@@ -1,0 +1,1 @@
+import{a as u}from"./chunk-OWGQ637I.js";import{l as r,xa as o}from"./chunk-V5J4CWBH.js";var c=()=>{let t=r(u),e=r(o);return t.isLoggedIn()?!0:e.createUrlTree(["/auth/login"])},s=()=>{let t=r(u),e=r(o);return t.isAdmin()?!0:e.createUrlTree(["/dashboard"])};export{c as a,s as b};

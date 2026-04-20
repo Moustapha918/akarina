@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: akarina_postgres
+    environment:
+      POSTGRES_DB: akarina_db
+      POSTGRES_USER: akarina
+      POSTGRES_PASSWORD: akarina_secret
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U akarina -d akarina_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: akarina_backend
+    environment:
+      DB_USERNAME: akarina
+      DB_PASSWORD: akarina_secret
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/akarina_db
+      JWT_SECRET: ThisIsAVeryLongSecretKeyForAkarinaProjectThatMustBeAtLeast512BitsLongForHS512Algorithm!!
+      KYC_UPLOAD_DIR: /var/akarina/kyc
+      CONTRACT_OUTPUT_DIR: /var/akarina/contracts
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - akarina_files:/var/akarina
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: akarina_frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+  akarina_files:

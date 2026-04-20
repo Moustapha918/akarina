@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ar-MR">
+<head>
+    <meta charset="UTF-8"/>
+    <style>
+        @page {
+            size: A4;
+            margin: 2.5cm 2cm;
+        }
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 12pt;
+            color: #1a1a1a;
+            line-height: 1.7;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #1a5f3c;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #1a5f3c;
+            font-size: 18pt;
+            margin: 0;
+            letter-spacing: 2px;
+        }
+        .header .subtitle {
+            color: #555;
+            font-size: 10pt;
+            margin-top: 5px;
+        }
+        .contract-ref {
+            text-align: right;
+            color: #888;
+            font-size: 9pt;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #1a5f3c;
+            font-size: 13pt;
+            border-bottom: 1px solid #cce0d5;
+            padding-bottom: 5px;
+            margin-top: 25px;
+        }
+        .parties-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .parties-table td {
+            padding: 8px 12px;
+            vertical-align: top;
+        }
+        .parties-table .label {
+            width: 35%;
+            font-weight: bold;
+            color: #333;
+            background-color: #f0f7f3;
+        }
+        .parties-table .value {
+            border-bottom: 1px dotted #ccc;
+        }
+        .amount-box {
+            background: #f0f7f3;
+            border-left: 4px solid #1a5f3c;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .amount-box .big-amount {
+            font-size: 20pt;
+            font-weight: bold;
+            color: #1a5f3c;
+        }
+        .article {
+            margin: 12px 0;
+            text-align: justify;
+        }
+        .article .art-num {
+            font-weight: bold;
+            color: #1a5f3c;
+        }
+        .signature-section {
+            margin-top: 60px;
+            display: flex;
+        }
+        .sig-box {
+            width: 45%;
+            text-align: center;
+            border-top: 1px solid #333;
+            padding-top: 10px;
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+            font-size: 8pt;
+            color: #999;
+            text-align: center;
+        }
+        .highlight {
+            background-color: #fff9e6;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>AKARINA — منصة التمويل العقاري التشاركي</h1>
+    <div class="subtitle">Plateforme de Financement Participatif Immobilier en Mauritanie</div>
+    <div style="margin-top:10px; font-size:14pt; font-weight:bold; color:#333;">
+        CONTRAT DE PARTENARIAT MOUSHARAKA
+    </div>
+    <div style="font-size:9pt; color:#777; margin-top:5px;">
+        Conforme aux principes de la finance islamique — Sharia-compliant
+    </div>
+</div>
+
+<div class="contract-ref">
+    Référence: <strong th:text="'AKARINA-CNTR-' + ${investmentId}">AKARINA-CNTR-0000</strong> &nbsp;|&nbsp;
+    Date: <strong th:text="${contractDate}">01 janvier 2025</strong> &nbsp;|&nbsp;
+    Réf. Paiement: <strong th:text="${bankilyRef}">BNK-XXXX</strong>
+</div>
+
+<!-- ── PARTIES ───────────────────────────────────────────────────── -->
+<h2>Article 1 — Identification des Parties</h2>
+
+<p class="article"><span class="art-num">1.1. La Société Gestionnaire (Rab Al-Mal) :</span></p>
+<table class="parties-table">
+    <tr>
+        <td class="label">Dénomination sociale</td>
+        <td class="value">AKARINA SARL</td>
+    </tr>
+    <tr>
+        <td class="label">Registre de Commerce</td>
+        <td class="value">RC-MR-XXXX-2024</td>
+    </tr>
+    <tr>
+        <td class="label">Adresse</td>
+        <td class="value">Tevragh Zeina, Nouakchott, Mauritanie</td>
+    </tr>
+</table>
+
+<p class="article"><span class="art-num">1.2. L'Investisseur (Sharik) :</span></p>
+<table class="parties-table">
+    <tr>
+        <td class="label">Nom complet</td>
+        <td class="value" th:text="${investorName}">Nom Prénom</td>
+    </tr>
+    <tr>
+        <td class="label">Email</td>
+        <td class="value" th:text="${investorEmail}">email@example.com</td>
+    </tr>
+    <tr>
+        <td class="label">Téléphone</td>
+        <td class="value" th:text="${investorPhone}">+222XXXXXXXX</td>
+    </tr>
+</table>
+
+<!-- ── OBJET ─────────────────────────────────────────────────────── -->
+<h2>Article 2 — Objet du Contrat et Projet Immobilier</h2>
+
+<table class="parties-table">
+    <tr>
+        <td class="label">Nom du projet</td>
+        <td class="value" th:text="${projectTitle}">Résidence Al-Amal</td>
+    </tr>
+    <tr>
+        <td class="label">Localisation</td>
+        <td class="value" th:text="${projectLocation}">Nouakchott</td>
+    </tr>
+    <tr>
+        <td class="label">ROI annuel estimé</td>
+        <td class="value"><span th:text="${roiEstimate}">12</span>%</td>
+    </tr>
+</table>
+
+<!-- ── MONTANT ───────────────────────────────────────────────────── -->
+<h2>Article 3 — Montant et Part de Propriété</h2>
+
+<div class="amount-box">
+    <div>Montant investi :</div>
+    <div class="big-amount">
+        <span th:text="${#numbers.formatDecimal(investmentAmount, 1, 'COMMA', 2, 'POINT')}">10,000.00</span>
+        <span style="font-size: 12pt;"> MRU</span>
+    </div>
+    <div style="margin-top:8px;">
+        Part de propriété : <span class="highlight" th:text="${ownershipShare} + '%'">0.50%</span>
+        du projet <span th:text="${projectTitle}">Résidence Al-Amal</span>
+    </div>
+</div>
+
+<!-- ── CONDITIONS ────────────────────────────────────────────────── -->
+<h2>Article 4 — Conditions de Partenariat</h2>
+
+<div class="article">
+    <span class="art-num">4.1. Nature du contrat :</span>
+    Le présent contrat est un contrat de <strong>Mousharaka Mutanakissa</strong> (partenariat décroissant) conforme aux
+    principes de la finance islamique. Il ne comporte aucun intérêt (Riba) et les profits/pertes sont
+    partagés proportionnellement aux apports de chaque partie.
+</div>
+<div class="article">
+    <span class="art-num">4.2. Distribution des bénéfices :</span>
+    Les bénéfices générés par le projet (loyers, plus-values) seront distribués aux investisseurs
+    proportionnellement à leur part de propriété, selon les modalités définies dans le prospectus du projet.
+</div>
+<div class="article">
+    <span class="art-num">4.3. Durée :</span>
+    Le partenariat prend effet à la date de signature du présent contrat et reste valable jusqu'à la
+    liquidation du projet ou le rachat de la part par AKARINA SARL selon les conditions convenues.
+</div>
+<div class="article">
+    <span class="art-num">4.4. Risques :</span>
+    L'investisseur reconnaît que l'investissement immobilier comporte des risques inhérents et que
+    le ROI annoncé est une estimation non garantie. En cas de perte, elle est supportée
+    proportionnellement par toutes les parties.
+</div>
+
+<!-- ── SIGNATURES ─────────────────────────────────────────────────── -->
+<h2>Article 5 — Signatures</h2>
+
+<p>En signant (électroniquement via la plateforme Akarina) le présent contrat, les deux parties déclarent
+avoir lu, compris et accepté l'intégralité des termes ci-dessus.</p>
+
+<table style="width:100%; margin-top:40px;">
+    <tr>
+        <td style="text-align:center; width:45%; border-top:1px solid #333; padding-top:10px;">
+            <div><strong>Pour AKARINA SARL</strong></div>
+            <div style="color:#888; font-size:9pt;">(Signature électronique)</div>
+            <div style="margin-top:10px;">Le Directeur Général</div>
+        </td>
+        <td style="width:10%;"></td>
+        <td style="text-align:center; width:45%; border-top:1px solid #333; padding-top:10px;">
+            <div><strong>L'Investisseur</strong></div>
+            <div style="color:#888; font-size:9pt;">(Acceptation numérique le <span th:text="${contractDate}">01/01/2025</span>)</div>
+            <div style="margin-top:10px;" th:text="${investorName}">Nom Prénom</div>
+        </td>
+    </tr>
+</table>
+
+<div class="footer">
+    Ce document est généré automatiquement par la plateforme Akarina et a valeur contractuelle.
+    Réf: <span th:text="'AKARINA-CNTR-' + ${investmentId}">AKARINA-CNTR-0000</span> |
+    Horodatage: <span th:text="${contractDate}">01 janvier 2025</span> |
+    Paiement Bankily: <span th:text="${bankilyRef}">BNK-XXXX</span>
+</div>
+
+</body>
+</html>

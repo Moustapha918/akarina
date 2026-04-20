@@ -1,0 +1,61 @@
+spring:
+  application:
+    name: akarina-backend
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/akarina_db
+    username: ${DB_USERNAME:akarina}
+    password: ${DB_PASSWORD:akarina_secret}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate          # Use Flyway/Liquibase in prod; use 'create-drop' for local dev
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 15MB
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+    cache: false
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+akarina:
+  jwt:
+    secret: ${JWT_SECRET:ThisIsAVeryLongSecretKeyForAkarinaProjectThatMustBeAtLeast512BitsLongForHS512Algorithm!!}
+    expiration-ms: 86400000       # 24 hours
+
+  kyc:
+    upload-dir: ${KYC_UPLOAD_DIR:/var/akarina/kyc}
+    allowed-types: image/jpeg,image/png,application/pdf
+    max-size-bytes: 5242880       # 5 MB
+
+  bankily:
+    base-url: ${BANKILY_BASE_URL:https://api.bankily.mr}
+    merchant-id: ${BANKILY_MERCHANT_ID:MOCK_MERCHANT}
+    api-key: ${BANKILY_API_KEY:MOCK_API_KEY}
+    webhook-secret: ${BANKILY_WEBHOOK_SECRET:MOCK_WEBHOOK_SECRET}
+    simulation-mode: true         # Set to false in production
+
+  contract:
+    output-dir: ${CONTRACT_OUTPUT_DIR:/var/akarina/contracts}
+
+logging:
+  level:
+    mr.akarina: DEBUG
+    org.springframework.security: INFO
