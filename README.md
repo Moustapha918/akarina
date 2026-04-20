@@ -189,3 +189,4 @@ Les valeurs par défaut permettent de démarrer sans configuration. En productio
 | `BANKILY_MERCHANT_ID` | Identifiant marchand Bankily | `MOCK_MERCHANT` |
 | `BANKILY_API_KEY` | Clé API Bankily | `MOCK_API_KEY` |
 | `BANKILY_WEBHOOK_SECRET` | Secret HMAC pour validation webhook | `MOCK_WEBHOOK_SECRET` |
+# Akarina Platform
