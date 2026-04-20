@@ -1,0 +1,28 @@
+# Node
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+
+# Gradle / Kotlin
+backend/build/
+backend/.gradle/
+*.class
+*.jar
+!gradle-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+*.env.local
+
+# Logs
+*.log
