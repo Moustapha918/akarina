@@ -1,5 +1,5 @@
-import { useRef, useState } from 'react';
-import { View, TextInput, StyleSheet, Pressable } from 'react-native';
+import { useRef } from 'react';
+import { View, Text, TextInput, StyleSheet, Pressable } from 'react-native';
 import { COLORS } from '../../constants';
 
 interface OtpInputProps {
@@ -15,6 +15,7 @@ export function OtpInput({ length = 6, value, onChange }: OtpInputProps) {
 
   return (
     <Pressable onPress={() => inputRef.current?.focus()} style={styles.container}>
+      {/* Cellules d'affichage — Text uniquement, pas de TextInput */}
       {digits.map((digit, index) => (
         <View
           key={index}
@@ -24,15 +25,11 @@ export function OtpInput({ length = 6, value, onChange }: OtpInputProps) {
             index === value.length && styles.cellActive,
           ]}
         >
-          <TextInput
-            style={styles.cellText}
-            value={digit}
-            editable={false}
-            caretHidden
-          />
+          <Text style={styles.cellText}>{digit}</Text>
         </View>
       ))}
-      {/* Input caché qui reçoit la saisie */}
+
+      {/* Input caché qui reçoit toute la saisie clavier */}
       <TextInput
         ref={inputRef}
         value={value}
@@ -44,6 +41,7 @@ export function OtpInput({ length = 6, value, onChange }: OtpInputProps) {
         maxLength={length}
         style={styles.hiddenInput}
         autoFocus
+        caretHidden
       />
     </Pressable>
   );
@@ -84,7 +82,9 @@ const styles = StyleSheet.create({
   hiddenInput: {
     position: 'absolute',
     opacity: 0,
-    width: 1,
-    height: 1,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
 });
