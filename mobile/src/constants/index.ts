@@ -46,5 +46,5 @@ export const BANKILY_SIMULATION_DELAY = 5_000;
  * Clé = numéro complet (+222...), valeur = OTP attendu.
  */
 export const DEV_TEST_PHONES: Record<string, string> = {
-  '+22200000001': '123456',
+  '+22220000001': '123456',
 };
