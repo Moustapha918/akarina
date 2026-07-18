@@ -60,8 +60,8 @@ export default function LoginScreen() {
     if (!validate()) return;
     setLoading(true);
     try {
-      await sendOtp(phone, recaptchaVerifier.current!);
-      router.push({ pathname: '/(auth)/verify', params: { phone } });
+      const isBypass = await sendOtp(phone, recaptchaVerifier.current);
+      router.push({ pathname: '/(auth)/verify', params: { phone, bypass: isBypass ? '1' : '0' } });
     } catch (e: any) {
       Alert.alert('Erreur', e.message ?? "Impossible d'envoyer le code. Réessayez.");
     } finally {

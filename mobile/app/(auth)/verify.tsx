@@ -9,7 +9,7 @@ import {
   Alert,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
-import { COLORS, PHONE_PREFIX } from '../../src/constants';
+import { COLORS, PHONE_PREFIX, DEV_TEST_PHONES } from '../../src/constants';
 import { Button } from '../../src/components/ui/Button';
 import { OtpInput } from '../../src/components/ui/OtpInput';
 import { verifyOtp } from '../../src/services/authService';
@@ -19,8 +19,11 @@ import { useAuthStore } from '../../src/hooks/useAuthStore';
 const RESEND_DELAY = 60;
 
 export default function VerifyScreen() {
-  const { phone } = useLocalSearchParams<{ phone: string }>();
+  const { phone, bypass } = useLocalSearchParams<{ phone: string; bypass: string }>();
   const { setUser } = useAuthStore();
+
+  const isDevBypass = __DEV__ && bypass === '1';
+  const devOtp = isDevBypass ? DEV_TEST_PHONES[`${PHONE_PREFIX}${phone}`] : undefined;
 
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
@@ -66,12 +69,28 @@ export default function VerifyScreen() {
           <Text style={styles.backText}>← Retour</Text>
         </TouchableOpacity>
 
+        {/* Bannière dev bypass */}
+        {isDevBypass && (
+          <TouchableOpacity
+            style={styles.devBanner}
+            onPress={() => setCode(devOtp ?? '')}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.devBannerText}>
+              🛠 Mode dev — OTP : <Text style={styles.devBannerCode}>{devOtp}</Text>
+            </Text>
+            <Text style={styles.devBannerHint}>Appuyer pour remplir automatiquement</Text>
+          </TouchableOpacity>
+        )}
+
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.title}>Vérification</Text>
           <Text style={styles.subtitle}>
-            Code envoyé au{'\n'}
-            <Text style={styles.phone}>{PHONE_PREFIX} {phone}</Text>
+            {isDevBypass
+              ? 'Mode simulateur — aucun SMS envoyé.'
+              : `Code envoyé au\n`}
+            {!isDevBypass && <Text style={styles.phone}>{PHONE_PREFIX} {phone}</Text>}
           </Text>
         </View>
 
@@ -157,5 +176,30 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     fontWeight: '600',
     textDecorationLine: 'underline',
+  },
+  // Dev bypass
+  devBanner: {
+    backgroundColor: '#FFF3CD',
+    borderWidth: 1,
+    borderColor: '#FFEAA7',
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 20,
+  },
+  devBannerText: {
+    fontSize: 13,
+    color: '#856404',
+    fontWeight: '600',
+  },
+  devBannerCode: {
+    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
+    fontSize: 15,
+    fontWeight: '700',
+  },
+  devBannerHint: {
+    fontSize: 11,
+    color: '#856404',
+    marginTop: 4,
+    opacity: 0.8,
   },
 });

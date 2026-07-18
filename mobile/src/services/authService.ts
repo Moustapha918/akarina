@@ -1,25 +1,46 @@
 import {
   signInWithPhoneNumber,
+  signInAnonymously,
   ConfirmationResult,
   signOut as firebaseSignOut,
   ApplicationVerifier,
 } from 'firebase/auth';
 import { auth } from './firebase';
-import { PHONE_PREFIX } from '../constants';
+import { PHONE_PREFIX, DEV_TEST_PHONES } from '../constants';
 
 let _confirmationResult: ConfirmationResult | null = null;
 
 /**
  * Envoie un OTP au numéro mauritanien.
+ * En mode DEV, les numéros de DEV_TEST_PHONES bypasse reCAPTCHA et l'envoi SMS.
  * @param localNumber - Les 8 chiffres du numéro (sans +222)
+ * @param appVerifier - Peut être null en mode dev bypass
  */
 export async function sendOtp(
   localNumber: string,
-  appVerifier: ApplicationVerifier
-): Promise<void> {
+  appVerifier: ApplicationVerifier | null
+): Promise<boolean> {
   const fullPhone = `${PHONE_PREFIX}${localNumber}`;
 
+  // ── Dev bypass : Simulator / Expo Go ────────────────────────────────────────
+  if (__DEV__ && DEV_TEST_PHONES[fullPhone] !== undefined) {
+    const expectedCode = DEV_TEST_PHONES[fullPhone];
+    _confirmationResult = {
+      verificationId: 'dev-bypass',
+      confirm: async (code: string) => {
+        if (code !== expectedCode) {
+          throw new Error(`Code invalide. Utilisez "${expectedCode}" en mode dev.`);
+        }
+        return await signInAnonymously(auth);
+      },
+    } as unknown as ConfirmationResult;
+    return true; // indique que le bypass a été utilisé
+  }
+
+  // ── Production : reCAPTCHA + SMS réel ───────────────────────────────────────
+  if (!appVerifier) throw new Error('Vérificateur reCAPTCHA non disponible.');
   _confirmationResult = await signInWithPhoneNumber(auth, fullPhone, appVerifier);
+  return false;
 }
 
 /**

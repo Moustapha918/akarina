@@ -38,3 +38,13 @@ export const COLORS = {
 // ─── Bankily ─────────────────────────────────────────────────────────────────
 /** Délai de timeout de la simulation Bankily (ms) */
 export const BANKILY_SIMULATION_DELAY = 5_000;
+
+// ─── Dev / Test ───────────────────────────────────────────────────────────────
+/**
+ * Numéros de test pour le mode développement.
+ * Bypasse reCAPTCHA et l'envoi SMS réel (Simulator / Expo Go).
+ * Clé = numéro complet (+222...), valeur = OTP attendu.
+ */
+export const DEV_TEST_PHONES: Record<string, string> = {
+  '+22200000001': '123456',
+};
