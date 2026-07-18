@@ -1,19 +1,18 @@
 # Agent Context: Akarina Crowdfund Platform
 
 ## 1. Vision & Business Logic
-* **Concept:** Plateforme de financement participatif immobilier en Mauritanie (modèle de Crowdequity).
+* **Concept:** Plateforme de financement participatif immobilier en Mauritanie.
 * **Structure Juridique:** Une seule SARL gère l'ensemble des projets pour réduire la lourdeur administrative.
-* **Modèle d'Investissement:** Contrat de **Mousharaka** (Partenariat Sharia-compliant) ou **Compte Courant d'Associé**.
+* **Modèle d'Investissement:** Contrat de **Mousharaka** (Partenariat Sharia-compliant).
 * **Cible:** Locaux et Diaspora mauritanienne.
 * **Contrainte:** Nombre d'investisseurs illimité par plateforme, mais projets segmentés par groupes (ex: 200 personnes max par projet pour la lisibilité).
 
 ## 2. Tech Stack
-* **Backend:** Kotlin / Spring Boot 4.x
-* **Security:** Spring Security + JWT (Stateless)
-* **Database:** PostgreSQL (Gestion stricte des transactions ACID)
-* **Frontend:** Angular 20+ / Tailwind CSS
+* **Backend:** typescript expo
+* **Database:** firebase
+* **Frontend:** react native
 * **Paiement:** Intégration API Bankily (BPM) - Flux B2B (Push/Pull/Webhook)
-* **Documents:** Génération de contrats PDF via OpenPDF/iText
+* **Documents:** Génération de contrats PDF
 
 ## 3. Data Model (Core Entities)
 * **User:** Id, Name, Email, Phone (format +222), Role (INVESTOR, ADMIN), KYC_Status.
@@ -24,6 +23,7 @@
 ## 4. Key Functional Requirements (MVP)
 
 ### A. Tunnel d'Investissement (Simplicité style)
+ un tunel d'investissement doit etre fait avec une expertise UX/UI pour maximiser la chance d'accrocher un nouveau client sur plusieurs etape: 
 1. Sélection du projet -> Choix du montant.
 2. Acceptation du contrat (Checkbox) -> Génération du contrat temporaire.
 3. Déclenchement paiement Bankily via API (Push OTP sur mobile).
@@ -41,10 +41,10 @@
 ## 5. Implementation Rules for AI Assistant
 * **Code Style:** Clean Code, SOLID principles, DTOs pour les échanges API.
 * **Security:** * Toutes les routes `/api/admin/**` doivent être protégées par le rôle ADMIN.
-    * Validation stricte des montants (BigDecimal en Kotlin).
+    * Validation stricte des montants.
     * Sanitisation des fichiers uploadés.
 * **Bankily Simulation:** Créer un `BankilyService` avec une méthode `initiatePayment` et un endpoint de `callback` (Webhook) simulant la réponse de la banque.
-* **Contract Service:** Créer un service utilisant un template HTML (Thymeleaf) pour générer le PDF du contrat de partenariat.
+* **Contract Service:** Créer un service utilisant un template HTML pour générer le PDF du contrat de partenariat.
 
 ## 6. Development Roadmap (3 Months)
 * **Month 1:** Base structure, Auth, Project Discovery API.

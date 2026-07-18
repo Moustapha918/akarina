@@ -1,1 +1,0 @@
-import"./chunk-2NFLSA4Y.js";var t=[{path:"",loadComponent:()=>import("./chunk-DO7XQGCM.js").then(o=>o.CatalogComponent)},{path:":id",loadComponent:()=>import("./chunk-CBKATD2T.js").then(o=>o.ProjectDetailComponent)}];export{t as catalogRoutes};

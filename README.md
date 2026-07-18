@@ -1,148 +1,6 @@
-# Akarina — منصة التمويل العقاري التشاركي
+# Akarina — Plateforme de Financement Participatif Immobilier
 
-Plateforme de financement participatif immobilier en Mauritanie, basée sur des contrats de partenariat **Mousharaka** (finance islamique, Sharia-compliant).
-
----
-
-## Concept
-
-Une SARL unique gère l'ensemble des projets immobiliers. Les investisseurs (locaux et diaspora mauritanienne) souscrivent à des **parts de projets spécifiques** via des contrats numériques générés automatiquement. Le paiement est effectué via **Bankily** (BPM Mauritanie).
-
----
-
-## Stack technique
-
-| Couche | Technologie |
-|---|---|
-| Backend | Kotlin · Spring Boot 3.4 · Spring Security (JWT) · Spring Data JPA |
-| Base de données | PostgreSQL 16 |
-| Frontend | Angular 20 · Tailwind CSS · TypeScript |
-| Paiement | API Bankily (mode simulation inclus) |
-| Génération PDF | OpenPDF 1.3 (contrats Mousharaka) |
-| Documentation API | Swagger UI (springdoc-openapi) |
-
----
-
-## Prérequis
-
-- **Java 21+** — `java -version`
-- **Node.js 20+** et **npm** — `node -v`
-- **Docker & Docker Compose** (optionnel, pour le lancement conteneurisé)
-- **PostgreSQL 16** (uniquement pour le lancement local sans Docker)
-
----
-
-## Lancement de l'application
-
-### Option A — Local (sans Docker)
-
-#### 1. Créer la base de données PostgreSQL
-
-```bash
-psql -U postgres -c "CREATE USER akarina WITH PASSWORD 'akarina_secret';"
-psql -U postgres -c "CREATE DATABASE akarina_db OWNER akarina;"
-```
-
-#### 2. Lancer le backend
-
-```bash
-cd backend
-./gradlew bootRun --args='--spring.profiles.active=local'
-```
-
-Le profil `local` active :
-- `ddl-auto: create-drop` (le schéma est recréé automatiquement)
-- Les logs SQL Hibernate
-- Le stockage des fichiers dans `~/akarina-local/`
-
-L'API est disponible sur : **http://localhost:8080/api**
-
-#### 3. Lancer le frontend
-
-```bash
-cd frontend
-npm install
-ng serve
-```
-
-L'interface est disponible sur : **http://localhost:4200**
-
----
-
-### Option B — Docker Compose (recommandé)
-
-Lance PostgreSQL, le backend et le frontend en une seule commande.
-
-```bash
-docker compose up --build
-```
-
-| Service | URL |
-|---|---|
-| Frontend | http://localhost:4200 |
-| Backend API | http://localhost:8080/api |
-| Swagger UI | http://localhost:8080/api/swagger-ui.html |
-| PostgreSQL | localhost:5432 |
-
-Pour arrêter :
-
-```bash
-docker compose down
-```
-
-Pour repartir de zéro (supprime les volumes) :
-
-```bash
-docker compose down -v
-```
-
----
-
-## Documentation de l'API
-
-Swagger UI est disponible après démarrage du backend :
-
-```
-http://localhost:8080/api/swagger-ui.html
-```
-
-Tous les endpoints protégés nécessitent un header `Authorization: Bearer <token>` obtenu via `/api/auth/login`.
-
-### Endpoints principaux
-
-| Méthode | Route | Accès | Description |
-|---|---|---|---|
-| `POST` | `/auth/register` | Public | Inscription investisseur |
-| `POST` | `/auth/login` | Public | Connexion, retourne le JWT |
-| `GET` | `/projects` | Public | Liste paginée des projets |
-| `GET` | `/projects/{id}` | Public | Détail d'un projet |
-| `POST` | `/investments` | Authentifié | Initier un investissement |
-| `GET` | `/investments/portfolio` | Authentifié | Portefeuille de l'investisseur |
-| `POST` | `/kyc/upload` | Authentifié | Upload de pièce d'identité |
-| `GET` | `/dashboard/investor` | Authentifié | Vue investisseur |
-| `GET` | `/dashboard/admin/stats` | Admin | Statistiques globales |
-| `POST` | `/projects` | Admin | Créer un projet |
-| `GET` | `/kyc/pending` | Admin | Documents KYC en attente |
-| `POST` | `/bankily/simulate` | Public (dev) | Simuler un webhook de paiement |
-
----
-
-## Tunnel d'investissement
-
-```
-1. Sélection du projet  →  GET /projects/{id}
-2. Saisie du montant    →  validation côté front (min, max, statut OPEN)
-3. Acceptation contrat  →  checkbox Mousharaka obligatoire
-4. Initiation paiement  →  POST /investments  →  Bankily Push OTP
-5. Confirmation webhook →  POST /bankily/webhook  →  génération PDF contrat
-6. Contrat disponible   →  GET /investments/portfolio
-```
-
-En mode simulation, l'étape 5 peut être déclenchée manuellement :
-
-```bash
-curl -X POST "http://localhost:8080/api/bankily/simulate?bankilyRef=BNK_XXX&status=SUCCESS&amount=50000"
-```
+Plateforme de crowdfunding islamique (contrat Mousharaka) pour des projets immobiliers en Mauritanie.
 
 ---
 
@@ -150,43 +8,175 @@ curl -X POST "http://localhost:8080/api/bankily/simulate?bankilyRef=BNK_XXX&stat
 
 ```
 akarina/
-├── backend/                        # Spring Boot / Kotlin
-│   └── src/main/kotlin/mr/akarina/
-│       ├── config/                 # Security, OpenAPI, JPA, ExceptionHandler
-│       ├── controller/             # AuthController, ProjectController, ...
-│       ├── domain/entity/          # User, Project, Investment, Document
-│       ├── dto/                    # Request / Response DTOs
-│       ├── repository/             # Spring Data JPA repositories
-│       ├── security/               # JWT provider + filtre
-│       └── service/                # AuthService, InvestmentService, PdfContractService, ...
-│
-├── frontend/                       # Angular 20 / Tailwind CSS
-│   └── src/app/
-│       ├── core/                   # Models, Services, Guards, Interceptors
-│       └── features/
-│           ├── auth/               # Login / Register
-│           ├── catalog/            # Liste projets + Détail
-│           ├── invest/             # Tunnel d'investissement (4 étapes)
-│           ├── dashboard/          # Vue investisseur + Back-office admin
-│           └── kyc/                # Upload document d'identité
-│
-└── docker-compose.yml
+├── mobile/     # Application React Native (Expo) — investisseurs
+└── web/        # Interface admin (à venir)
 ```
 
 ---
 
-## Variables d'environnement
+## Prérequis
 
-Les valeurs par défaut permettent de démarrer sans configuration. En production, surcharger via des variables d'environnement :
+- [Node.js](https://nodejs.org/) v18 ou supérieur
+- [npm](https://www.npmjs.com/) v9 ou supérieur
+- [Expo CLI](https://docs.expo.dev/get-started/installation/) : `npm install -g expo-cli`
+- [Expo Go](https://expo.dev/go) installé sur ton téléphone (iOS ou Android)
+- Un compte [Firebase](https://firebase.google.com/)
 
-| Variable | Description | Défaut |
-|---|---|---|
-| `DB_USERNAME` | Utilisateur PostgreSQL | `akarina` |
-| `DB_PASSWORD` | Mot de passe PostgreSQL | `akarina_secret` |
-| `JWT_SECRET` | Clé de signature JWT (min. 64 chars) | *(valeur de dev incluse)* |
-| `KYC_UPLOAD_DIR` | Répertoire de stockage des documents | `/var/akarina/kyc` |
-| `CONTRACT_OUTPUT_DIR` | Répertoire des contrats PDF générés | `/var/akarina/contracts` |
-| `BANKILY_MERCHANT_ID` | Identifiant marchand Bankily | `MOCK_MERCHANT` |
-| `BANKILY_API_KEY` | Clé API Bankily | `MOCK_API_KEY` |
-| `BANKILY_WEBHOOK_SECRET` | Secret HMAC pour validation webhook | `MOCK_WEBHOOK_SECRET` |
-# Akarina Platform
+---
+
+## 1. Créer et configurer le projet Firebase
+
+### 1.1 Créer le projet
+
+1. Aller sur [console.firebase.google.com](https://console.firebase.google.com)
+2. Cliquer **Ajouter un projet**
+3. Nom : `akarina` → Continuer
+4. Désactiver Google Analytics si non nécessaire → Créer le projet
+
+### 1.2 Activer Authentication (Phone OTP)
+
+1. Dans le menu gauche : **Build → Authentication**
+2. Cliquer **Commencer**
+3. Onglet **Sign-in method** → activer **Téléphone**
+4. Sauvegarder
+
+### 1.3 Créer la base Firestore
+
+1. **Build → Firestore Database**
+2. Cliquer **Créer une base de données**
+3. Choisir **Mode test** (pour le développement — à sécuriser avant prod)
+4. Sélectionner la région : `eur3 (europe-west)` ou la plus proche
+5. Terminer
+
+### 1.4 Activer Storage
+
+1. **Build → Storage**
+2. Cliquer **Commencer**
+3. Mode test → Suivant → Terminer
+
+### 1.5 Enregistrer l'application mobile
+
+1. Dans **Paramètres du projet** (icône engrenage) → **Vos applications**
+2. Cliquer l'icône **</>** (Web app) — Firebase JS SDK fonctionne avec Expo
+3. Nom : `akarina-mobile` → Enregistrer
+4. Copier les valeurs du bloc `firebaseConfig` affiché :
+
+```js
+const firebaseConfig = {
+  apiKey: "...",
+  authDomain: "...",
+  projectId: "...",
+  storageBucket: "...",
+  messagingSenderId: "...",
+  appId: "..."
+};
+```
+
+---
+
+## 2. Configurer les variables d'environnement
+
+```bash
+cd mobile
+cp .env.example .env
+```
+
+Ouvrir `.env` et remplir avec les valeurs copiées à l'étape 1.5 :
+
+```env
+EXPO_PUBLIC_FIREBASE_API_KEY=AIza...
+EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=akarina-xxxxx.firebaseapp.com
+EXPO_PUBLIC_FIREBASE_PROJECT_ID=akarina-xxxxx
+EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=akarina-xxxxx.appspot.com
+EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789
+EXPO_PUBLIC_FIREBASE_APP_ID=1:123456789:web:abc123
+```
+
+> Les variables préfixées `EXPO_PUBLIC_` sont automatiquement exposées au code client par Expo.
+
+---
+
+## 3. Lancer l'application en local
+
+```bash
+cd mobile
+npm install
+npm start
+```
+
+Un QR code s'affiche dans le terminal.
+
+- **iOS** : Scanner avec l'app Appareil Photo
+- **Android** : Scanner depuis l'app Expo Go
+
+L'application se charge directement sur ton téléphone via le réseau local.
+
+### Autres commandes utiles
+
+```bash
+npm run android   # Lancer sur émulateur Android
+npm run ios       # Lancer sur simulateur iOS (macOS requis)
+npm run web       # Lancer dans le navigateur
+```
+
+---
+
+## 4. Créer un compte Admin manuellement
+
+Les comptes admin ne sont pas créables depuis l'app. Après une première connexion d'un utilisateur :
+
+1. Aller dans **Firestore → Collection `users`**
+2. Trouver le document de l'utilisateur (ID = UID Firebase Auth)
+3. Modifier le champ `role` : `"INVESTOR"` → `"ADMIN"`
+
+---
+
+## 5. Règles Firestore (développement)
+
+En mode test, toutes les lectures/écritures sont autorisées pendant 30 jours. Pour prolonger ou sécuriser :
+
+1. **Firestore → Règles**
+2. Remplacer par :
+
+```js
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Utilisateurs : lecture/écriture sur son propre document
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    // Projets : lecture publique, écriture admin uniquement
+    match /projects/{projectId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'ADMIN';
+    }
+    // Investissements : lecture/écriture sur les siens
+    match /investments/{investmentId} {
+      allow read, write: if request.auth != null
+        && request.auth.uid == resource.data.userId;
+    }
+    // Documents KYC : lecture/écriture sur les siens
+    match /documents/{documentId} {
+      allow read, write: if request.auth != null
+        && request.auth.uid == resource.data.userId;
+    }
+  }
+}
+```
+
+---
+
+## Stack technique
+
+| Couche | Technologie |
+|--------|-------------|
+| Mobile | React Native + Expo SDK 57 |
+| Navigation | Expo Router (file-based) |
+| Base de données | Firebase Firestore |
+| Authentification | Firebase Auth (Phone OTP) |
+| Fichiers | Firebase Storage |
+| Paiement | Bankily API (simulé en MVP) |
+| Contrats | PDF généré depuis template HTML |
+| Langue | TypeScript |

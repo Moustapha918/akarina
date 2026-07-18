@@ -1,0 +1,45 @@
+{
+  "expo": {
+    "name": "Akarina",
+    "slug": "akarina",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "scheme": "akarina",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "mr.akarina.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#1B4F72",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "mr.akarina.app"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-status-bar",
+      "expo-secure-store",
+      "expo-sharing",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Akarina a besoin d'accéder à vos photos pour le KYC.",
+          "cameraPermission": "Akarina a besoin d'accéder à la caméra pour photographier votre pièce d'identité."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
