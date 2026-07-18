@@ -51,7 +51,10 @@ export default function VerifyScreen() {
         router.push({ pathname: '/(auth)/register', params: { phone: `${PHONE_PREFIX}${phone}` } });
       }
     } catch (e: any) {
-      Alert.alert('Code incorrect', 'Le code saisi est invalide ou expiré. Réessayez.');
+      const message = __DEV__
+        ? (e?.message ?? String(e))
+        : 'Le code saisi est invalide ou expiré. Réessayez.';
+      Alert.alert('Erreur', message);
       setCode('');
     } finally {
       setLoading(false);
