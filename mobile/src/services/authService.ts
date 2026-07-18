@@ -19,14 +19,7 @@ export async function sendOtp(
 ): Promise<void> {
   const fullPhone = `${PHONE_PREFIX}${localNumber}`;
 
-  const timeout = new Promise<never>((_, reject) =>
-    setTimeout(() => reject(new Error('Délai dépassé. Vérifiez votre connexion et réessayez.')), 20_000)
-  );
-
-  _confirmationResult = await Promise.race([
-    signInWithPhoneNumber(auth, fullPhone, appVerifier),
-    timeout,
-  ]);
+  _confirmationResult = await signInWithPhoneNumber(auth, fullPhone, appVerifier);
 }
 
 /**

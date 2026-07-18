@@ -77,9 +77,7 @@ export default function LoginScreen() {
       <FirebaseRecaptchaVerifierModal
         ref={recaptchaVerifier}
         firebaseConfig={app.options}
-        attemptInvisibleVerification={false}
-        title="Vérification de sécurité"
-        cancelLabel="Annuler"
+        attemptInvisibleVerification={true}
       />
 
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
