@@ -30,7 +30,12 @@ yarn-error.*
 .DS_Store
 *.pem
 
-# local env files
+# Env files (contiennent des secrets Firebase)
+# Crée les tiens depuis .env.example
+.env
+.env.dev
+.env.staging
+.env.prod
 .env*.local
 
 # typescript

@@ -30,8 +30,18 @@
   },
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+
+    "dev": "node scripts/set-env.js dev && APP_ENV=dev expo start",
+    "dev:ios": "node scripts/set-env.js dev && APP_ENV=dev expo start --ios",
+    "dev:android": "node scripts/set-env.js dev && APP_ENV=dev expo start --android",
+
+    "staging": "node scripts/set-env.js staging && APP_ENV=staging expo start",
+    "staging:ios": "node scripts/set-env.js staging && APP_ENV=staging expo start --ios",
+    "staging:android": "node scripts/set-env.js staging && APP_ENV=staging expo start --android",
+
+    "prod": "node scripts/set-env.js prod && APP_ENV=prod expo start",
+    "prod:ios": "node scripts/set-env.js prod && APP_ENV=prod expo start --ios",
+
     "web": "expo start --web"
   },
   "private": true
