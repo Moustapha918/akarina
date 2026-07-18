@@ -25,7 +25,10 @@ service cloud.firestore {
       allow read: if request.auth != null &&
         (resource.data.userId == request.auth.uid || request.auth.token.role == 'ADMIN');
       allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
-      allow update: if request.auth != null && request.auth.token.role == 'ADMIN';
+      // L'utilisateur peut mettre à jour son propre investissement (simulation Bankily).
+      // En production, la mise à jour viendrait d'un webhook via Cloud Function (admin SDK).
+      allow update: if request.auth != null &&
+        (resource.data.userId == request.auth.uid || request.auth.token.role == 'ADMIN');
     }
 
     // Documents KYC : lecture par le propriétaire ou admin
