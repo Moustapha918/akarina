@@ -19,13 +19,16 @@ export default function RootLayout() {
     initI18n().then(() => setI18nReady(true));
   }, []);
 
-  if (!i18nReady) return null;
-
+  // I18nextProvider must be mounted before i18n.init() resolves so that
+  // initReactI18next can update its context without triggering the
+  // "state update on an unmounted component" warning.
+  // The Stack (app content) is withheld until i18n is ready to avoid any
+  // flash of untranslated strings.
   return (
     <I18nextProvider i18n={i18n}>
       <SafeAreaProvider>
         <StatusBar style="light" />
-        <Stack screenOptions={{ headerShown: false }} />
+        {i18nReady && <Stack screenOptions={{ headerShown: false }} />}
       </SafeAreaProvider>
     </I18nextProvider>
   );
