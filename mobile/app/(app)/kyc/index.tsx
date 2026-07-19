@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import { GuestGuard } from '../../../src/components/ui/GuestGuard';
 import { Button } from '../../../src/components/ui/Button';
 import { useAuthStore } from '../../../src/hooks/useAuthStore';
@@ -18,12 +19,10 @@ import { submitKycDocuments } from '../../../src/services/kycService';
 import { COLORS } from '../../../src/constants';
 import { KycStatus } from '../../../src/types';
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-
-async function pickImage(): Promise<string | null> {
+async function pickImage(t: (key: string) => string): Promise<string | null> {
   const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
   if (status !== 'granted') {
-    Alert.alert('Permission refusée', 'Akarina a besoin d\'accéder à vos photos.');
+    Alert.alert(t('common.permissionDenied'), t('kyc.galleryPermission'));
     return null;
   }
   const result = await ImagePicker.launchImageLibraryAsync({
@@ -36,10 +35,10 @@ async function pickImage(): Promise<string | null> {
   return result.assets[0].uri;
 }
 
-async function takePhoto(): Promise<string | null> {
+async function takePhoto(t: (key: string) => string): Promise<string | null> {
   const { status } = await ImagePicker.requestCameraPermissionsAsync();
   if (status !== 'granted') {
-    Alert.alert('Permission refusée', 'Akarina a besoin d\'accéder à la caméra.');
+    Alert.alert(t('common.permissionDenied'), t('kyc.cameraPermission'));
     return null;
   }
   const result = await ImagePicker.launchCameraAsync({
@@ -50,8 +49,6 @@ async function takePhoto(): Promise<string | null> {
   if (result.canceled) return null;
   return result.assets[0].uri;
 }
-
-// ─── Image Picker Card ────────────────────────────────────────────────────────
 
 function ImagePickerCard({
   label,
@@ -64,23 +61,25 @@ function ImagePickerCard({
   uri: string | null;
   onPick: (uri: string) => void;
 }) {
+  const { t } = useTranslation();
+
   function handlePress() {
-    Alert.alert('Ajouter une photo', '', [
+    Alert.alert(t('kyc.addPhoto'), '', [
       {
-        text: 'Prendre une photo',
+        text: t('kyc.takePhoto'),
         onPress: async () => {
-          const u = await takePhoto();
+          const u = await takePhoto(t);
           if (u) onPick(u);
         },
       },
       {
-        text: 'Choisir dans la galerie',
+        text: t('kyc.pickGallery'),
         onPress: async () => {
-          const u = await pickImage();
+          const u = await pickImage(t);
           if (u) onPick(u);
         },
       },
-      { text: 'Annuler', style: 'cancel' },
+      { text: t('common.cancel'), style: 'cancel' },
     ]);
   }
 
@@ -90,7 +89,7 @@ function ImagePickerCard({
         <>
           <Image source={{ uri }} style={styles.previewImage} resizeMode="cover" />
           <View style={styles.imageEditBadge}>
-            <Text style={styles.imageEditText}>✏ Modifier</Text>
+            <Text style={styles.imageEditText}>{t('kyc.modify')}</Text>
           </View>
         </>
       ) : (
@@ -104,31 +103,23 @@ function ImagePickerCard({
   );
 }
 
-// ─── Status Views ─────────────────────────────────────────────────────────────
-
 function PendingView() {
+  const { t } = useTranslation();
   return (
     <View style={styles.statusContainer}>
       <View style={[styles.statusIconBg, { backgroundColor: '#FFF3CD' }]}>
         <Text style={styles.statusIcon}>⏳</Text>
       </View>
-      <Text style={styles.statusTitle}>Documents soumis</Text>
-      <Text style={styles.statusText}>
-        Votre pièce d'identité est en cours de vérification par notre équipe.
-        Ce processus prend généralement 24 à 48 heures ouvrées.
-      </Text>
+      <Text style={styles.statusTitle}>{t('kyc.pending.title')}</Text>
+      <Text style={styles.statusText}>{t('kyc.pending.text')}</Text>
       <View style={styles.infoBox}>
-        <Text style={styles.infoTitle}>Que se passe-t-il maintenant ?</Text>
-        {[
-          'Notre équipe examine vos documents',
-          'Vous recevrez une notification du résultat',
-          "En cas de rejet, vous pourrez soumettre à nouveau",
-        ].map((step, i) => (
+        <Text style={styles.infoTitle}>{t('kyc.pending.whatNext')}</Text>
+        {(['kyc.pending.step1', 'kyc.pending.step2', 'kyc.pending.step3'] as const).map((key, i) => (
           <View key={i} style={styles.infoRow}>
             <View style={styles.infoStep}>
               <Text style={styles.infoStepText}>{i + 1}</Text>
             </View>
-            <Text style={styles.infoText}>{step}</Text>
+            <Text style={styles.infoText}>{t(key)}</Text>
           </View>
         ))}
       </View>
@@ -137,59 +128,46 @@ function PendingView() {
 }
 
 function VerifiedView() {
+  const { t } = useTranslation();
   return (
     <View style={styles.statusContainer}>
       <View style={[styles.statusIconBg, { backgroundColor: '#D5F5E3' }]}>
         <Text style={styles.statusIcon}>✅</Text>
       </View>
-      <Text style={styles.statusTitle}>Identité vérifiée</Text>
-      <Text style={styles.statusText}>
-        Votre identité a été confirmée. Vous pouvez investir sans limite de montant.
-      </Text>
+      <Text style={styles.statusTitle}>{t('kyc.verified.title')}</Text>
+      <Text style={styles.statusText}>{t('kyc.verified.text')}</Text>
       <View style={[styles.infoBox, { borderColor: COLORS.success + '40', backgroundColor: '#F0FFF4' }]}>
-        <Text style={[styles.infoTitle, { color: COLORS.success }]}>Avantages débloqués</Text>
-        <Text style={styles.infoText}>• Investissement illimité (sans plafond KYC)</Text>
-        <Text style={styles.infoText}>• Contrats Mousharaka complets</Text>
-        <Text style={styles.infoText}>• Accès aux projets exclusifs</Text>
+        <Text style={[styles.infoTitle, { color: COLORS.success }]}>{t('kyc.verified.benefitsTitle')}</Text>
+        <Text style={styles.infoText}>{t('kyc.verified.benefit1')}</Text>
+        <Text style={styles.infoText}>{t('kyc.verified.benefit2')}</Text>
+        <Text style={styles.infoText}>{t('kyc.verified.benefit3')}</Text>
       </View>
     </View>
   );
 }
 
-function RejectedView({
-  reason,
-  onResubmit,
-}: {
-  reason?: string;
-  onResubmit: () => void;
-}) {
+function RejectedView({ reason, onResubmit }: { reason?: string; onResubmit: () => void }) {
+  const { t } = useTranslation();
   return (
     <View style={styles.statusContainer}>
       <View style={[styles.statusIconBg, { backgroundColor: '#FADBD8' }]}>
         <Text style={styles.statusIcon}>❌</Text>
       </View>
-      <Text style={styles.statusTitle}>Documents rejetés</Text>
+      <Text style={styles.statusTitle}>{t('kyc.rejected.title')}</Text>
       {reason ? (
         <View style={[styles.infoBox, { borderColor: COLORS.danger + '40', backgroundColor: '#FDF2F2' }]}>
-          <Text style={[styles.infoTitle, { color: COLORS.danger }]}>Motif du rejet</Text>
+          <Text style={[styles.infoTitle, { color: COLORS.danger }]}>{t('kyc.rejected.reasonTitle')}</Text>
           <Text style={styles.infoText}>{reason}</Text>
         </View>
       ) : null}
-      <Text style={styles.statusText}>
-        Veuillez soumettre à nouveau vos documents en vous assurant qu'ils sont lisibles et valides.
-      </Text>
-      <Button
-        label="Soumettre à nouveau"
-        onPress={onResubmit}
-        style={{ marginTop: 8 }}
-      />
+      <Text style={styles.statusText}>{t('kyc.rejected.text')}</Text>
+      <Button label={t('kyc.rejected.resubmit')} onPress={onResubmit} style={{ marginTop: 8 }} />
     </View>
   );
 }
 
-// ─── Upload Form ──────────────────────────────────────────────────────────────
-
 function UploadForm({ userId, onSuccess }: { userId: string; onSuccess: () => void }) {
+  const { t } = useTranslation();
   const [frontUri, setFrontUri] = useState<string | null>(null);
   const [backUri, setBackUri] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -201,7 +179,7 @@ function UploadForm({ userId, onSuccess }: { userId: string; onSuccess: () => vo
       await submitKycDocuments(userId, 'ID_CARD', frontUri, backUri);
       onSuccess();
     } catch (e: any) {
-      Alert.alert('Erreur', e?.message ?? 'Impossible de soumettre les documents. Réessayez.');
+      Alert.alert(t('common.error'), e?.message ?? t('kyc.submitError'));
     } finally {
       setLoading(false);
     }
@@ -210,24 +188,24 @@ function UploadForm({ userId, onSuccess }: { userId: string; onSuccess: () => vo
   return (
     <View>
       <View style={styles.infoBox}>
-        <Text style={styles.infoTitle}>Documents acceptés</Text>
-        <Text style={styles.infoText}>• Carte nationale d'identité mauritanienne</Text>
-        <Text style={styles.infoText}>• Passeport en cours de validité</Text>
-        <Text style={styles.infoText}>• Photos nettes, lisibles, sans reflets</Text>
+        <Text style={styles.infoTitle}>{t('kyc.acceptedDocsTitle')}</Text>
+        <Text style={styles.infoText}>{t('kyc.acceptedDoc1')}</Text>
+        <Text style={styles.infoText}>{t('kyc.acceptedDoc2')}</Text>
+        <Text style={styles.infoText}>{t('kyc.acceptedDoc3')}</Text>
       </View>
 
-      <Text style={styles.uploadSectionLabel}>Recto (face avant)</Text>
+      <Text style={styles.uploadSectionLabel}>{t('kyc.frontLabel')}</Text>
       <ImagePickerCard
-        label="Face avant"
-        hint="Visage, nom, prénom, date de naissance"
+        label={t('kyc.frontCard')}
+        hint={t('kyc.frontHint')}
         uri={frontUri}
         onPick={setFrontUri}
       />
 
-      <Text style={styles.uploadSectionLabel}>Verso (face arrière)</Text>
+      <Text style={styles.uploadSectionLabel}>{t('kyc.backLabel')}</Text>
       <ImagePickerCard
-        label="Face arrière"
-        hint="Numéro de document, date d'expiration"
+        label={t('kyc.backCard')}
+        hint={t('kyc.backHint')}
         uri={backUri}
         onPick={setBackUri}
       />
@@ -235,38 +213,35 @@ function UploadForm({ userId, onSuccess }: { userId: string; onSuccess: () => vo
       {loading && (
         <View style={styles.uploadProgress}>
           <ActivityIndicator color={COLORS.primary} />
-          <Text style={styles.uploadProgressText}>Envoi des documents en cours…</Text>
+          <Text style={styles.uploadProgressText}>{t('kyc.uploading')}</Text>
         </View>
       )}
 
       <Button
-        label="Soumettre pour vérification"
+        label={t('kyc.submitBtn')}
         onPress={handleSubmit}
         loading={loading}
         disabled={!frontUri || !backUri}
         style={{ marginTop: 8 }}
       />
 
-      <Text style={styles.legalNote}>
-        Vos documents sont chiffrés et traités conformément à notre politique de confidentialité.
-        Ils ne seront utilisés qu'aux fins de vérification d'identité.
-      </Text>
+      <Text style={styles.legalNote}>{t('kyc.legal')}</Text>
     </View>
   );
 }
 
-// ─── Screen ───────────────────────────────────────────────────────────────────
-
 function KycContent() {
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
   const { user, setUser } = useAuthStore();
   const [forceUpload, setForceUpload] = useState(false);
 
   const kycStatus: KycStatus = user?.kycStatus ?? 'NONE';
   const showUploadForm = kycStatus === 'NONE' || (kycStatus === 'REJECTED' && forceUpload);
 
+  const STEPS = [t('kyc.stepSubmit'), t('kyc.stepReview'), t('kyc.stepDecision')] as const;
+
   function handleSuccess() {
-    // Met à jour localement le store sans attendre Firestore
     if (user) setUser({ ...user, kycStatus: 'PENDING' });
     setForceUpload(false);
   }
@@ -282,24 +257,22 @@ function KycContent() {
         />
       );
     }
-    return (
-      <UploadForm userId={user!.id} onSuccess={handleSuccess} />
-    );
+    return <UploadForm userId={user!.id} onSuccess={handleSuccess} />;
   }
 
   return (
     <ScrollView style={styles.flex} contentContainerStyle={styles.container}>
       {/* Header */}
       <View style={[styles.pageHeader, { paddingTop: insets.top + 16 }]}>
-        <Text style={styles.pageTitle}>Vérification d'identité</Text>
+        <Text style={styles.pageTitle}>{t('kyc.title')}</Text>
         <Text style={styles.pageSubtitle}>
-          La vérification KYC est requise pour investir au-delà de{' '}
-          <Text style={styles.highlight}>5 000 MRU</Text>.
+          {t('kyc.subtitle')}{' '}
+          <Text style={styles.highlight}>{t('kyc.threshold')}</Text>.
         </Text>
 
         {/* Stepper */}
         <View style={styles.stepper}>
-          {(['Soumission', 'Examen', 'Décision'] as const).map((label, i) => {
+          {STEPS.map((label, i) => {
             const stepDone =
               (i === 0 && kycStatus !== 'NONE') ||
               (i === 1 && (kycStatus === 'VERIFIED' || kycStatus === 'REJECTED')) ||
@@ -337,24 +310,22 @@ function KycContent() {
 }
 
 export default function KycScreen() {
+  const { t } = useTranslation();
   return (
     <GuestGuard
       icon="🪪"
-      title="Vérification d'identité"
-      description="Connectez-vous pour soumettre votre pièce d'identité et débloquer l'investissement complet."
+      title={t('kyc.guestTitle')}
+      description={t('kyc.guestDescription')}
     >
       <KycContent />
     </GuestGuard>
   );
 }
 
-// ─── Styles ───────────────────────────────────────────────────────────────────
-
 const styles = StyleSheet.create({
   flex: { flex: 1, backgroundColor: COLORS.background },
   container: { paddingBottom: 40 },
 
-  // Header
   pageHeader: {
     backgroundColor: COLORS.primary,
     paddingHorizontal: 20,
@@ -378,7 +349,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 
-  // Stepper
   stepper: {
     flexDirection: 'row',
     alignItems: 'flex-start',
@@ -433,7 +403,6 @@ const styles = StyleSheet.create({
 
   body: { padding: 20 },
 
-  // Info box
   infoBox: {
     backgroundColor: '#EBF5FB',
     borderRadius: 12,
@@ -472,7 +441,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  // Upload section
   uploadSectionLabel: {
     fontSize: 14,
     fontWeight: '600',
@@ -519,7 +487,6 @@ const styles = StyleSheet.create({
   },
   imageEditText: { color: '#fff', fontSize: 12, fontWeight: '600' },
 
-  // Upload progress
   uploadProgress: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -532,7 +499,6 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
   },
 
-  // Legal
   legalNote: {
     fontSize: 11,
     color: COLORS.textSecondary,
@@ -541,7 +507,6 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
 
-  // Status views
   statusContainer: { alignItems: 'center', paddingVertical: 12, width: '100%' },
   statusIconBg: {
     width: 80,

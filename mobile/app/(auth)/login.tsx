@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import { COLORS, COUNTRIES, Country } from '../../src/constants';
 import { Button } from '../../src/components/ui/Button';
@@ -28,6 +29,7 @@ const firebaseConfig = {
 
 export default function LoginScreen() {
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
   const recaptchaVerifier = useRef<FirebaseRecaptchaVerifierModal>(null);
   const [country, setCountry] = useState<Country>(COUNTRIES[0]);
   const [phone, setPhone] = useState('');
@@ -36,14 +38,14 @@ export default function LoginScreen() {
 
   function handleCountryPick() {
     Alert.alert(
-      'Sélectionner le pays',
+      t('auth.login.selectCountry'),
       undefined,
       [
         ...COUNTRIES.map((c) => ({
           text: `${c.flag}  ${c.name}  (${c.prefix})`,
           onPress: () => { setCountry(c); setPhone(''); setError(''); },
         })),
-        { text: 'Annuler', style: 'cancel' as const },
+        { text: t('common.cancel'), style: 'cancel' as const },
       ]
     );
   }
@@ -51,7 +53,7 @@ export default function LoginScreen() {
   function validate(): boolean {
     const full = `${country.prefix}${phone}`;
     if (!country.regex.test(full)) {
-      setError(`Numéro invalide. Ex: ${country.placeholder}`);
+      setError(t('auth.login.invalidNumber', { placeholder: country.placeholder }));
       return false;
     }
     setError('');
@@ -65,13 +67,12 @@ export default function LoginScreen() {
       const isBypass = await sendOtp(phone, recaptchaVerifier.current, country.prefix);
       router.push({ pathname: '/(auth)/verify', params: { phone, bypass: isBypass ? '1' : '0', prefix: country.prefix } });
     } catch (e: any) {
-      Alert.alert('Erreur', e.message ?? "Impossible d'envoyer le code. Réessayez.");
+      Alert.alert(t('common.error'), e.message ?? t('auth.login.sendError'));
     } finally {
       setLoading(false);
     }
   }
 
-  // Sur web : afficher un message d'indisponibilité
   if (Platform.OS === 'web') {
     return (
       <View style={styles.webContainer}>
@@ -79,11 +80,8 @@ export default function LoginScreen() {
         <Text style={styles.logoLatin}>Akarina</Text>
         <View style={styles.webCard}>
           <Text style={styles.webEmoji}>📱</Text>
-          <Text style={styles.webTitle}>Application mobile</Text>
-          <Text style={styles.webMessage}>
-            La connexion par SMS est disponible uniquement sur l'application mobile.{'\n\n'}
-            Téléchargez Akarina sur iOS ou Android pour investir.
-          </Text>
+          <Text style={styles.webTitle}>{t('auth.login.webTitle')}</Text>
+          <Text style={styles.webMessage}>{t('auth.login.webMessage')}</Text>
         </View>
       </View>
     );
@@ -104,18 +102,16 @@ export default function LoginScreen() {
         <View style={styles.header}>
           <Text style={styles.logo}>أكارينا</Text>
           <Text style={styles.logoLatin}>Akarina</Text>
-          <Text style={styles.tagline}>Investissez dans l'immobilier mauritanien</Text>
+          <Text style={styles.tagline}>{t('auth.login.tagline')}</Text>
         </View>
 
         {/* Card */}
         <View style={styles.card}>
-          <Text style={styles.title}>Connexion</Text>
-          <Text style={styles.subtitle}>
-            Entrez votre numéro de téléphone mauritanien pour recevoir un code de vérification.
-          </Text>
+          <Text style={styles.title}>{t('auth.login.title')}</Text>
+          <Text style={styles.subtitle}>{t('auth.login.subtitle')}</Text>
 
           <Input
-            label="Numéro de téléphone"
+            label={t('auth.login.phoneLabel')}
             prefixElement={
               <TouchableOpacity style={styles.countryPicker} onPress={handleCountryPick}>
                 <Text style={styles.countryFlag}>{country.flag}</Text>
@@ -125,9 +121,9 @@ export default function LoginScreen() {
             }
             placeholder={country.placeholder}
             value={phone}
-            onChangeText={(t) => {
+            onChangeText={(text) => {
               setError('');
-              setPhone(t.replace(/\D/g, '').slice(0, country.digitCount));
+              setPhone(text.replace(/\D/g, '').slice(0, country.digitCount));
             }}
             keyboardType="phone-pad"
             error={error}
@@ -136,7 +132,7 @@ export default function LoginScreen() {
           />
 
           <Button
-            label="Recevoir le code"
+            label={t('auth.login.sendCode')}
             onPress={handleSendOtp}
             loading={loading}
             disabled={phone.length < country.digitCount}
@@ -145,9 +141,10 @@ export default function LoginScreen() {
         </View>
 
         <Text style={styles.legal}>
-          En continuant, vous acceptez nos{' '}
-          <Text style={styles.link}>Conditions d'utilisation</Text> et notre{' '}
-          <Text style={styles.link}>Politique de confidentialité</Text>.
+          {t('auth.login.legal')}{' '}
+          <Text style={styles.link}>{t('auth.login.terms')}</Text>{' '}
+          {t('auth.login.and')}{' '}
+          <Text style={styles.link}>{t('auth.login.privacy')}</Text>.
         </Text>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -234,7 +231,6 @@ const styles = StyleSheet.create({
     color: COLORS.secondary,
     textDecorationLine: 'underline',
   },
-  // Web uniquement
   webContainer: {
     flex: 1,
     backgroundColor: COLORS.primary,

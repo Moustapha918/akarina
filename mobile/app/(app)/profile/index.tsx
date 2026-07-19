@@ -8,24 +8,12 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import { GuestGuard } from '../../../src/components/ui/GuestGuard';
 import { useAuthStore } from '../../../src/hooks/useAuthStore';
 import { signOut } from '../../../src/services/authService';
 import { COLORS } from '../../../src/constants';
 import { KycStatus } from '../../../src/types';
-
-const KYC_LABEL: Record<KycStatus, string> = {
-  NONE: 'Non soumis',
-  PENDING: 'En attente',
-  VERIFIED: 'Vérifié',
-  REJECTED: 'Rejeté',
-};
-const KYC_COLOR: Record<KycStatus, string> = {
-  NONE: COLORS.textSecondary,
-  PENDING: COLORS.warning,
-  VERIFIED: COLORS.success,
-  REJECTED: COLORS.danger,
-};
 
 function Row({ icon, label, value, onPress, danger }: {
   icon: string;
@@ -53,16 +41,39 @@ function Row({ icon, label, value, onPress, danger }: {
 
 function ProfileContent() {
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
   const { user, signOut: clearStore } = useAuthStore();
+
+  const kycStatus: KycStatus = user?.kycStatus ?? 'NONE';
+
+  const KYC_LABEL: Record<KycStatus, string> = {
+    NONE: t('profile.kycLabel.none'),
+    PENDING: t('profile.kycLabel.pending'),
+    VERIFIED: t('profile.kycLabel.verified'),
+    REJECTED: t('profile.kycLabel.rejected'),
+  };
+  const KYC_COLOR: Record<KycStatus, string> = {
+    NONE: COLORS.textSecondary,
+    PENDING: COLORS.warning,
+    VERIFIED: COLORS.success,
+    REJECTED: COLORS.danger,
+  };
+
+  const kycBadgeText: Record<KycStatus, string> = {
+    VERIFIED: t('profile.kycBadge.verified'),
+    PENDING: t('profile.kycBadge.pending'),
+    REJECTED: t('profile.kycBadge.rejected'),
+    NONE: t('profile.kycBadge.none'),
+  };
 
   async function handleSignOut() {
     Alert.alert(
-      'Déconnexion',
-      'Voulez-vous vraiment vous déconnecter ?',
+      t('profile.signOutTitle'),
+      t('profile.signOutMsg'),
       [
-        { text: 'Annuler', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         {
-          text: 'Déconnexion',
+          text: t('profile.signOut'),
           style: 'destructive',
           onPress: async () => {
             await signOut();
@@ -73,8 +84,6 @@ function ProfileContent() {
       ]
     );
   }
-
-  const kycStatus = user?.kycStatus ?? 'NONE';
 
   return (
     <ScrollView style={styles.flex} contentContainerStyle={styles.container}>
@@ -91,64 +100,59 @@ function ProfileContent() {
 
       {/* Infos */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Informations</Text>
+        <Text style={styles.sectionTitle}>{t('profile.infoSection')}</Text>
         <View style={styles.card}>
-          <Row icon="👤" label="Nom complet" value={user?.name} />
+          <Row icon="👤" label={t('profile.fullName')} value={user?.name} />
           <View style={styles.separator} />
-          <Row icon="📧" label="Email" value={user?.email || '—'} />
+          <Row icon="📧" label={t('profile.email')} value={user?.email || '—'} />
           <View style={styles.separator} />
-          <Row icon="📱" label="Téléphone" value={user?.phone} />
+          <Row icon="📱" label={t('profile.phone')} value={user?.phone} />
         </View>
       </View>
 
       {/* KYC */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Vérification</Text>
+        <Text style={styles.sectionTitle}>{t('profile.verificationSection')}</Text>
         <View style={styles.card}>
           <Row
             icon="🪪"
-            label="Statut KYC"
+            label={t('profile.kycStatus')}
             value={KYC_LABEL[kycStatus]}
             onPress={() => router.push('/(app)/kyc')}
           />
         </View>
         <View style={[styles.kycBadge, { borderColor: KYC_COLOR[kycStatus] + '40', backgroundColor: KYC_COLOR[kycStatus] + '10' }]}>
           <Text style={[styles.kycBadgeText, { color: KYC_COLOR[kycStatus] }]}>
-            {kycStatus === 'VERIFIED'
-              ? '✓ Investissement illimité débloqué'
-              : kycStatus === 'PENDING'
-              ? '⏳ En cours de vérification par notre équipe'
-              : kycStatus === 'REJECTED'
-              ? '✗ Documents rejetés — soumettez à nouveau'
-              : '○ Requis pour investir au-delà de 5 000 MRU'}
+            {kycBadgeText[kycStatus]}
           </Text>
         </View>
       </View>
 
       {/* Compte */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Compte</Text>
+        <Text style={styles.sectionTitle}>{t('profile.accountSection')}</Text>
         <View style={styles.card}>
           <Row
             icon="🚪"
-            label="Déconnexion"
+            label={t('profile.signOut')}
             onPress={handleSignOut}
             danger
           />
         </View>
       </View>
 
-      <Text style={styles.version}>Akarina v1.0.0</Text>
+      <Text style={styles.version}>{t('profile.version')}</Text>
     </ScrollView>
   );
 }
 
 export default function ProfileScreen() {
+  const { t } = useTranslation();
   return (
     <GuestGuard
       icon="👤"
-      title="Votre profil"
-      description="Connectez-vous pour accéder à votre profil et gérer vos informations."
+      title={t('profile.guestTitle')}
+      description={t('profile.guestDescription')}
     >
       <ProfileContent />
     </GuestGuard>

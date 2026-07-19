@@ -1,10 +1,12 @@
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import { COLORS } from '../../src/constants';
 
 export default function AppLayout() {
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
 
   return (
     <Tabs
@@ -27,7 +29,7 @@ export default function AppLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Projets',
+          title: t('tabs.projects'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="business-outline" size={size} color={color} />
           ),
@@ -36,7 +38,7 @@ export default function AppLayout() {
       <Tabs.Screen
         name="dashboard/index"
         options={{
-          title: 'Portfolio',
+          title: t('tabs.portfolio'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="pie-chart-outline" size={size} color={color} />
           ),
@@ -45,7 +47,7 @@ export default function AppLayout() {
       <Tabs.Screen
         name="kyc/index"
         options={{
-          title: 'KYC',
+          title: t('tabs.kyc'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="shield-checkmark-outline" size={size} color={color} />
           ),
@@ -54,7 +56,7 @@ export default function AppLayout() {
       <Tabs.Screen
         name="profile/index"
         options={{
-          title: 'Profil',
+          title: t('tabs.profile'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person-outline" size={size} color={color} />
           ),

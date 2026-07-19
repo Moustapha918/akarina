@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import { auth } from '../../src/services/firebase';
 import { COLORS } from '../../src/constants';
 import { Button } from '../../src/components/ui/Button';
@@ -19,6 +20,7 @@ import { useAuthStore } from '../../src/hooks/useAuthStore';
 
 export default function RegisterScreen() {
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
   const { phone } = useLocalSearchParams<{ phone: string }>();
   const { setUser } = useAuthStore();
 
@@ -29,8 +31,8 @@ export default function RegisterScreen() {
 
   function validate(): boolean {
     const newErrors: { name?: string; email?: string } = {};
-    if (name.trim().length < 3) newErrors.name = 'Nom trop court (min. 3 caractères)';
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) newErrors.email = 'Email invalide';
+    if (name.trim().length < 3) newErrors.name = t('auth.register.nameTooShort');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) newErrors.email = t('auth.register.invalidEmail');
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }
@@ -39,7 +41,7 @@ export default function RegisterScreen() {
     if (!validate()) return;
     const uid = auth.currentUser?.uid;
     if (!uid) {
-      Alert.alert('Session expirée', 'Veuillez recommencer la connexion.');
+      Alert.alert(t('auth.register.sessionExpired'), t('auth.register.sessionExpiredMsg'));
       router.replace('/(auth)/login');
       return;
     }
@@ -50,7 +52,7 @@ export default function RegisterScreen() {
       setUser(user);
       router.replace('/(app)');
     } catch (e: any) {
-      Alert.alert('Erreur', e.message ?? 'Impossible de créer le profil.');
+      Alert.alert(t('common.error'), e.message ?? t('auth.register.createError'));
     } finally {
       setLoading(false);
     }
@@ -65,33 +67,31 @@ export default function RegisterScreen() {
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.emoji}>👋</Text>
-          <Text style={styles.title}>Créez votre compte</Text>
-          <Text style={styles.subtitle}>
-            Quelques informations pour finaliser votre inscription.
-          </Text>
+          <Text style={styles.title}>{t('auth.register.title')}</Text>
+          <Text style={styles.subtitle}>{t('auth.register.subtitle')}</Text>
         </View>
 
         {/* Phone (readonly) */}
         <View style={styles.phoneCard}>
-          <Text style={styles.phoneLabel}>Numéro vérifié</Text>
+          <Text style={styles.phoneLabel}>{t('auth.register.verifiedNumber')}</Text>
           <Text style={styles.phoneValue}>{phone}</Text>
         </View>
 
         {/* Form */}
         <View style={styles.form}>
           <Input
-            label="Nom complet"
+            label={t('auth.register.fullName')}
             placeholder="Mohamed Ahmed"
             value={name}
-            onChangeText={(t) => { setErrors((e) => ({ ...e, name: undefined })); setName(t); }}
+            onChangeText={(text) => { setErrors((e) => ({ ...e, name: undefined })); setName(text); }}
             error={errors.name}
             autoCapitalize="words"
           />
           <Input
-            label="Adresse email"
+            label={t('auth.register.email')}
             placeholder="exemple@email.com"
             value={email}
-            onChangeText={(t) => { setErrors((e) => ({ ...e, email: undefined })); setEmail(t); }}
+            onChangeText={(text) => { setErrors((e) => ({ ...e, email: undefined })); setEmail(text); }}
             error={errors.email}
             keyboardType="email-address"
             autoCapitalize="none"
@@ -100,16 +100,14 @@ export default function RegisterScreen() {
         </View>
 
         <Button
-          label="Créer mon compte"
+          label={t('auth.register.createAccount')}
           onPress={handleRegister}
           loading={loading}
           disabled={!name || !email}
           style={styles.button}
         />
 
-        <Text style={styles.notice}>
-          Vos données sont sécurisées et ne seront jamais partagées avec des tiers.
-        </Text>
+        <Text style={styles.notice}>{t('auth.register.notice')}</Text>
       </ScrollView>
     </KeyboardAvoidingView>
   );

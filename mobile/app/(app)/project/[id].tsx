@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import { COLORS } from '../../../src/constants';
 import { Project, ProjectUpdate } from '../../../src/types';
 import { getProject, getProjectUpdates } from '../../../src/services/projectService';
@@ -24,8 +25,6 @@ import {
   projectStatusColor,
   projectTypeLabel,
   projectTypeIcon,
-  exitStrategyLabel,
-  estimatedMonthlyRent,
 } from '../../../src/utils/format';
 
 const { width } = Dimensions.get('window');
@@ -34,6 +33,7 @@ export default function ProjectDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const insets = useSafeAreaInsets();
   const { user } = useAuthStore();
+  const { t } = useTranslation();
 
   const [project, setProject] = useState<Project | null>(null);
   const [updates, setUpdates] = useState<ProjectUpdate[]>([]);
@@ -69,9 +69,9 @@ export default function ProjectDetailScreen() {
     return (
       <View style={styles.center}>
         <Text style={styles.errorEmoji}>⚠️</Text>
-        <Text style={styles.errorText}>Projet introuvable.</Text>
+        <Text style={styles.errorText}>{t('project.notFound')}</Text>
         <TouchableOpacity onPress={() => router.back()}>
-          <Text style={styles.backLink}>← Retour</Text>
+          <Text style={styles.backLink}>{t('project.back')}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -82,6 +82,12 @@ export default function ProjectDetailScreen() {
   const isOpen = project.status === 'OPEN';
   const isRental = project.projectType === 'CONSTRUCTION' && project.exitStrategy === 'RENTAL';
   const isLandFlip = project.projectType === 'LAND_FLIP';
+
+  const mousharakaText = isRental
+    ? t('project.mousharakaRental')
+    : isLandFlip
+    ? t('project.mousharakaLandFlip')
+    : t('project.mousharakaConstruction');
 
   return (
     <View style={styles.container}>
@@ -125,7 +131,7 @@ export default function ProjectDetailScreen() {
             {project.exitStrategy && (
               <View style={[styles.typeBadge, styles.typeBadgeAlt]}>
                 <Text style={styles.typeBadgeText}>
-                  {project.exitStrategy === 'RENTAL' ? '🏠 Location' : '💼 Vente'}
+                  {project.exitStrategy === 'RENTAL' ? t('project.exitRental') : t('project.exitSale')}
                 </Text>
               </View>
             )}
@@ -138,30 +144,30 @@ export default function ProjectDetailScreen() {
                 {formatMRU(project.collectedAmount, true)}
               </Text>
               <Text style={styles.progressTarget}>
-                sur {formatMRU(project.targetAmount, true)}
+                {t('project.on')} {formatMRU(project.targetAmount, true)}
               </Text>
             </View>
             <View style={styles.progressBar}>
               <View style={[styles.progressFill, { width: `${progress}%` }]} />
             </View>
-            <Text style={styles.progressPercent}>{progress}% financé</Text>
+            <Text style={styles.progressPercent}>{progress}{t('project.fundedPercent')}</Text>
           </View>
 
           {/* Stats clés */}
           <View style={styles.statsGrid}>
             {isRental && project.monthlyRent ? (
               <StatCard
-                label="Loyer mensuel total"
+                label={t('project.monthlyRent')}
                 value={formatMRU(project.monthlyRent, true)}
                 icon="🏠"
               />
             ) : (
-              <StatCard label="ROI estimé" value={`${project.roiEstimate}%`} icon="📈" />
+              <StatCard label={t('project.roiEstimate')} value={`${project.roiEstimate}%`} icon="📈" />
             )}
-            <StatCard label="Durée" value={`${project.roiDurationMonths} mois`} icon="📅" />
-            <StatCard label="Min. investissement" value={formatMRU(project.minInvestment, true)} icon="💰" />
+            <StatCard label={t('project.durationLabel')} value={`${project.roiDurationMonths} ${t('project.duration')}`} icon="📅" />
+            <StatCard label={t('project.minInvestment')} value={formatMRU(project.minInvestment, true)} icon="💰" />
             <StatCard
-              label="Investisseurs"
+              label={t('project.investors')}
               value={`${project.currentInvestors}/${project.maxInvestors}`}
               icon="👥"
             />
@@ -169,29 +175,23 @@ export default function ProjectDetailScreen() {
 
           {/* Description */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>À propos du projet</Text>
+            <Text style={styles.sectionTitle}>{t('project.about')}</Text>
             <Text style={styles.description}>{project.description}</Text>
           </View>
 
           {/* Contrat Mousharaka */}
           <View style={styles.mousharakaBox}>
-            <Text style={styles.mousharakaTitle}>🤝 Contrat Mousharaka</Text>
-            <Text style={styles.mousharakaText}>
-              {isRental
-                ? 'Vous devenez co-propriétaire du bien. En phase de location, vous percevez chaque mois votre quote-part du loyer, proportionnellement à votre mise de fonds.'
-                : isLandFlip
-                ? 'Vous co-financez l\'acquisition de ce terrain. À sa revente, vous percevez votre part de la plus-value nette réalisée, proportionnellement à votre apport.'
-                : 'Votre investissement est structuré selon un contrat Mousharaka. Vous devenez co-propriétaire proportionnellement à votre mise et partagez les bénéfices à l\'issue du projet.'}
-            </Text>
+            <Text style={styles.mousharakaTitle}>{t('project.mousharakaTitle')}</Text>
+            <Text style={styles.mousharakaText}>{mousharakaText}</Text>
             <View style={styles.mousharakaBadge}>
-              <Text style={styles.mousharakaBadgeText}>✓ Conforme Sharia</Text>
+              <Text style={styles.mousharakaBadgeText}>{t('project.shariaCompliant')}</Text>
             </View>
           </View>
 
           {/* Actualités chantier */}
           {updates.length > 0 && (
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Actualités du chantier</Text>
+              <Text style={styles.sectionTitle}>{t('project.updates')}</Text>
               {updates.map((update) => (
                 <UpdateCard key={update.id} update={update} />
               ))}
@@ -207,15 +207,13 @@ export default function ProjectDetailScreen() {
       <View style={[styles.stickyFooter, { paddingBottom: insets.bottom + 16 }]}>
         {isOpen ? (
           <Button
-            label={user ? 'Investir dans ce projet' : 'Se connecter pour investir'}
+            label={user ? t('project.investBtn') : t('project.investSignIn')}
             onPress={handleInvest}
             style={styles.investButton}
           />
         ) : (
           <View style={styles.closedBanner}>
-            <Text style={styles.closedBannerText}>
-              Ce projet n'accepte plus de nouveaux investissements
-            </Text>
+            <Text style={styles.closedBannerText}>{t('project.closedBanner')}</Text>
           </View>
         )}
       </View>
@@ -223,7 +221,7 @@ export default function ProjectDetailScreen() {
       <AuthPromptModal
         visible={showAuthModal}
         onClose={() => setShowAuthModal(false)}
-        message={`Créez un compte pour investir dans "${project.title}".`}
+        message={t('project.authPrompt', { title: project.title })}
       />
     </View>
   );

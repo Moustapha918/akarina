@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import { sharePDF, buildPDFFilename } from '../../../../src/utils/pdfShare';
 import { COLORS } from '../../../../src/constants';
 import { Button } from '../../../../src/components/ui/Button';
@@ -21,11 +22,10 @@ import { Investment, Project } from '../../../../src/types';
 
 export default function InvestConfirmationScreen() {
   const { id, investmentId, amount: amountParam } = useLocalSearchParams<{
-    id: string;
-    investmentId: string;
-    amount: string;
+    id: string; investmentId: string; amount: string;
   }>();
   const router = useRouter();
+  const { t } = useTranslation();
   const { user } = useAuthStore();
 
   const amount = parseInt(amountParam, 10);
@@ -56,14 +56,6 @@ export default function InvestConfirmationScreen() {
     }
   }
 
-  function handleBackHome() {
-    router.replace('/');
-  }
-
-  function handleViewDashboard() {
-    router.replace('/dashboard');
-  }
-
   if (loading) {
     return (
       <View style={styles.center}>
@@ -75,8 +67,8 @@ export default function InvestConfirmationScreen() {
   if (!project || !investment) {
     return (
       <View style={styles.center}>
-        <Text style={styles.errorText}>Investissement introuvable.</Text>
-        <Button label="Retour à l'accueil" onPress={handleBackHome} style={{ marginTop: 16 }} />
+        <Text style={styles.errorText}>{t('invest.confirmation.notFound')}</Text>
+        <Button label={t('invest.confirmation.backHome')} onPress={() => router.replace('/')} style={{ marginTop: 16 }} />
       </View>
     );
   }
@@ -86,70 +78,57 @@ export default function InvestConfirmationScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
-      <ScrollView
-        contentContainerStyle={styles.scroll}
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         {/* Success header */}
         <View style={styles.successHeader}>
           <View style={styles.successCircle}>
             <Text style={styles.successIcon}>✓</Text>
           </View>
-          <Text style={styles.successTitle}>Investissement confirmé !</Text>
+          <Text style={styles.successTitle}>{t('invest.confirmation.title')}</Text>
           <Text style={styles.successSubtitle}>
-            Bienvenue dans le projet <Text style={styles.bold}>{project.title}</Text>.
-            Votre participation a bien été enregistrée.
+            {t('invest.confirmation.subtitle', { title: project.title })}
           </Text>
         </View>
 
         {/* Investment summary */}
         <View style={styles.summaryCard}>
-          <Text style={styles.cardTitle}>Récapitulatif de votre investissement</Text>
-
-          <Row label="Projet" value={project.title} />
-          <Row label="Localisation" value={project.location} />
+          <Text style={styles.cardTitle}>{t('invest.confirmation.summaryTitle')}</Text>
+          <Row label={t('invest.confirmation.rowProject')} value={project.title} />
+          <Row label={t('invest.confirmation.rowLocation')} value={project.location} />
           <Divider />
-          <Row label="Montant investi" value={formatMRU(amount)} highlight />
-          <Row label="Part du projet" value={`${sharePercent}%`} />
-          <Row label="Retour estimé" value={`+${formatMRU(estimatedReturn)}`} valueColor={COLORS.success} />
-          <Row label="Total estimé" value={formatMRU(amount + estimatedReturn)} />
+          <Row label={t('invest.confirmation.rowInvested')} value={formatMRU(amount)} highlight />
+          <Row label={t('invest.confirmation.rowShare')} value={`${sharePercent}%`} />
+          <Row label={t('invest.confirmation.rowReturn')} value={`+${formatMRU(estimatedReturn)}`} valueColor={COLORS.success} />
+          <Row label={t('invest.confirmation.rowTotal')} value={formatMRU(amount + estimatedReturn)} />
           <Divider />
-          <Row label="ROI" value={`${project.roiEstimate}%`} />
-          <Row label="Durée" value={`${project.roiDurationMonths} mois`} />
-          <Row
-            label="Référence Bankily"
-            value={investment.bankilyRef ?? '—'}
-            mono
-          />
+          <Row label={t('invest.confirmation.rowRoi')} value={`${project.roiEstimate}%`} />
+          <Row label={t('invest.confirmation.rowDuration')} value={t('invest.confirmation.rowDurationValue', { count: project.roiDurationMonths })} />
+          <Row label={t('invest.confirmation.rowBankilyRef')} value={investment.bankilyRef ?? '—'} mono />
         </View>
 
         {/* Mousharaka info */}
         <View style={styles.infoCard}>
-          <Text style={styles.infoTitle}>🤝 Votre partenariat Mousharaka</Text>
-          <Text style={styles.infoText}>
-            En tant qu'associé, vous pouvez suivre l'avancement du chantier en temps réel depuis
-            l'onglet <Text style={styles.bold}>Projets</Text>. Des photos et vidéos sont publiées
-            régulièrement par l'équipe de construction.
-          </Text>
+          <Text style={styles.infoTitle}>{t('invest.confirmation.mousharakaTitle')}</Text>
+          <Text style={styles.infoText}>{t('invest.confirmation.mousharakaText')}</Text>
         </View>
 
         {/* Actions */}
         <View style={styles.actions}>
           <Button
-            label="Télécharger le contrat PDF"
+            label={t('invest.confirmation.downloadPdf')}
             onPress={handleDownloadContract}
             loading={sharingPDF}
             variant="outline"
             style={{ marginBottom: 12 }}
           />
           <Button
-            label="Voir mon portfolio"
-            onPress={handleViewDashboard}
+            label={t('invest.confirmation.viewPortfolio')}
+            onPress={() => router.replace('/dashboard')}
             style={{ marginBottom: 12 }}
           />
           <Button
-            label="Retour à l'accueil"
-            onPress={handleBackHome}
+            label={t('invest.confirmation.backHome')}
+            onPress={() => router.replace('/')}
             variant="ghost"
           />
         </View>
@@ -159,17 +138,9 @@ export default function InvestConfirmationScreen() {
 }
 
 function Row({
-  label,
-  value,
-  highlight = false,
-  mono = false,
-  valueColor,
+  label, value, highlight = false, mono = false, valueColor,
 }: {
-  label: string;
-  value: string;
-  highlight?: boolean;
-  mono?: boolean;
-  valueColor?: string;
+  label: string; value: string; highlight?: boolean; mono?: boolean; valueColor?: string;
 }) {
   return (
     <View style={rowStyles.row}>
@@ -194,12 +165,7 @@ function Divider() {
 }
 
 const rowStyles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 10,
-  },
+  row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 },
   label: { fontSize: 13, color: COLORS.textSecondary, flex: 1 },
   value: { fontSize: 13, fontWeight: '600', color: COLORS.textPrimary, flex: 1, textAlign: 'right' },
   valueHighlight: { fontSize: 16, fontWeight: '800', color: COLORS.primary },
@@ -210,82 +176,30 @@ const rowStyles = StyleSheet.create({
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
   center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: COLORS.background,
-    padding: 24,
+    flex: 1, justifyContent: 'center', alignItems: 'center',
+    backgroundColor: COLORS.background, padding: 24,
   },
   scroll: { padding: 24, paddingBottom: 40 },
-
-  // Success header
-  successHeader: {
-    alignItems: 'center',
-    marginBottom: 28,
-  },
+  successHeader: { alignItems: 'center', marginBottom: 28 },
   successCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: COLORS.success,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 16,
-    shadowColor: COLORS.success,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
-    elevation: 6,
+    width: 80, height: 80, borderRadius: 40, backgroundColor: COLORS.success,
+    justifyContent: 'center', alignItems: 'center', marginBottom: 16,
+    shadowColor: COLORS.success, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 12, elevation: 6,
   },
   successIcon: { fontSize: 36, color: '#fff', fontWeight: '700' },
-  successTitle: {
-    fontSize: 24,
-    fontWeight: '800',
-    color: COLORS.textPrimary,
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  successSubtitle: {
-    fontSize: 14,
-    color: COLORS.textSecondary,
-    textAlign: 'center',
-    lineHeight: 20,
-  },
-  bold: { fontWeight: '700', color: COLORS.textPrimary },
-
-  // Summary card
+  successTitle: { fontSize: 24, fontWeight: '800', color: COLORS.textPrimary, marginBottom: 8, textAlign: 'center' },
+  successSubtitle: { fontSize: 14, color: COLORS.textSecondary, textAlign: 'center', lineHeight: 20 },
   summaryCard: {
-    backgroundColor: COLORS.surface,
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 2,
+    backgroundColor: COLORS.surface, borderRadius: 16, padding: 20, marginBottom: 16,
+    shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2,
   },
-  cardTitle: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: COLORS.textPrimary,
-    marginBottom: 16,
-  },
-
-  // Info card
+  cardTitle: { fontSize: 14, fontWeight: '700', color: COLORS.textPrimary, marginBottom: 16 },
   infoCard: {
-    backgroundColor: '#EBF5FB',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 24,
-    borderWidth: 1,
-    borderColor: '#AED6F1',
+    backgroundColor: '#EBF5FB', borderRadius: 16, padding: 16, marginBottom: 24,
+    borderWidth: 1, borderColor: '#AED6F1',
   },
   infoTitle: { fontSize: 14, fontWeight: '700', color: COLORS.primary, marginBottom: 8 },
   infoText: { fontSize: 13, color: COLORS.textSecondary, lineHeight: 20 },
-
-  // Actions
   actions: { marginTop: 4 },
-
   errorText: { fontSize: 15, color: COLORS.textSecondary },
 });

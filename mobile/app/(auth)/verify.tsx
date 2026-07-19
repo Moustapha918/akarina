@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import { COLORS, PHONE_PREFIX, DEV_TEST_PHONES } from '../../src/constants';
 import { Button } from '../../src/components/ui/Button';
 import { OtpInput } from '../../src/components/ui/OtpInput';
@@ -21,6 +22,7 @@ const RESEND_DELAY = 60;
 
 export default function VerifyScreen() {
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
   const { phone, bypass, prefix: prefixParam } = useLocalSearchParams<{ phone: string; bypass: string; prefix: string }>();
   const prefix = prefixParam ?? PHONE_PREFIX;
   const { setUser } = useAuthStore();
@@ -46,18 +48,16 @@ export default function VerifyScreen() {
       const user = await getUser(uid);
 
       if (user) {
-        // Utilisateur existant → accueil
         setUser(user);
         router.replace('/(app)');
       } else {
-        // Nouvel utilisateur → compléter le profil
         router.push({ pathname: '/(auth)/register', params: { phone: `${prefix}${phone}` } });
       }
     } catch (e: any) {
       const message = __DEV__
         ? (e?.message ?? String(e))
-        : 'Le code saisi est invalide ou expiré. Réessayez.';
-      Alert.alert('Erreur', message);
+        : t('auth.verify.invalidCode');
+      Alert.alert(t('common.error'), message);
       setCode('');
     } finally {
       setLoading(false);
@@ -72,10 +72,10 @@ export default function VerifyScreen() {
       <View style={[styles.container, { paddingTop: insets.top + 16 }]}>
         {/* Back */}
         <TouchableOpacity onPress={() => router.back()} style={styles.back}>
-          <Text style={styles.backText}>← Retour</Text>
+          <Text style={styles.backText}>{t('common.back')}</Text>
         </TouchableOpacity>
 
-        {/* Bannière dev bypass */}
+        {/* Dev bypass banner */}
         {isDevBypass && (
           <TouchableOpacity
             style={styles.devBanner}
@@ -83,19 +83,19 @@ export default function VerifyScreen() {
             activeOpacity={0.8}
           >
             <Text style={styles.devBannerText}>
-              🛠 Mode dev — OTP : <Text style={styles.devBannerCode}>{devOtp}</Text>
+              {t('auth.verify.devOtpLabel')}<Text style={styles.devBannerCode}>{devOtp}</Text>
             </Text>
-            <Text style={styles.devBannerHint}>Appuyer pour remplir automatiquement</Text>
+            <Text style={styles.devBannerHint}>{t('auth.verify.devFill')}</Text>
           </TouchableOpacity>
         )}
 
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>Vérification</Text>
+          <Text style={styles.title}>{t('auth.verify.title')}</Text>
           <Text style={styles.subtitle}>
             {isDevBypass
-              ? 'Mode simulateur — aucun SMS envoyé.'
-              : `Code envoyé au\n`}
+              ? t('auth.verify.devMode')
+              : t('auth.verify.codeSentTo')}
             {!isDevBypass && <Text style={styles.phone}>{prefix} {phone}</Text>}
           </Text>
         </View>
@@ -105,7 +105,7 @@ export default function VerifyScreen() {
 
         {/* Confirm */}
         <Button
-          label="Confirmer"
+          label={t('auth.verify.confirm')}
           onPress={handleVerify}
           loading={loading}
           disabled={code.length !== 6}
@@ -116,11 +116,11 @@ export default function VerifyScreen() {
         <View style={styles.resendRow}>
           {countdown > 0 ? (
             <Text style={styles.countdown}>
-              Renvoyer dans <Text style={styles.countdownBold}>{countdown}s</Text>
+              {t('auth.verify.resendIn', { count: countdown })}
             </Text>
           ) : (
             <TouchableOpacity onPress={() => { router.back(); }}>
-              <Text style={styles.resend}>Renvoyer le code</Text>
+              <Text style={styles.resend}>{t('auth.verify.resend')}</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -172,17 +172,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLORS.textSecondary,
   },
-  countdownBold: {
-    fontWeight: '700',
-    color: COLORS.primary,
-  },
   resend: {
     fontSize: 14,
     color: COLORS.primary,
     fontWeight: '600',
     textDecorationLine: 'underline',
   },
-  // Dev bypass
   devBanner: {
     backgroundColor: '#FFF3CD',
     borderWidth: 1,

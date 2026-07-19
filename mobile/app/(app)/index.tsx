@@ -10,22 +10,24 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { COLORS } from '../../src/constants';
 import { ProjectType } from '../../src/types';
 import { useProjects } from '../../src/hooks/useProjects';
 import { ProjectCard } from '../../src/components/project/ProjectCard';
 import { useAuthStore } from '../../src/hooks/useAuthStore';
 
-const FILTERS: { label: string; value: ProjectType }[] = [
-  { label: '🏕️ Land Flip', value: 'LAND_FLIP' },
-  { label: '🏗️ Construction', value: 'CONSTRUCTION' },
-];
-
 export default function ProjectsScreen() {
   const insets = useSafeAreaInsets();
   const { user } = useAuthStore();
+  const { t } = useTranslation();
   const [activeFilter, setActiveFilter] = useState<ProjectType>('LAND_FLIP');
   const { projects, isLoading, error, refetch } = useProjects(activeFilter);
+
+  const FILTERS: { label: string; value: ProjectType }[] = [
+    { label: t('projects.filterLandFlip'), value: 'LAND_FLIP' },
+    { label: t('projects.filterConstruction'), value: 'CONSTRUCTION' },
+  ];
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -33,7 +35,7 @@ export default function ProjectsScreen() {
       <View style={styles.header}>
         <View>
           <Text style={styles.headerTitle}>أكارينا — Akarina</Text>
-          <Text style={styles.headerSub}>Projets immobiliers</Text>
+          <Text style={styles.headerSub}>{t('projects.header')}</Text>
         </View>
         {user ? (
           <TouchableOpacity
@@ -49,7 +51,7 @@ export default function ProjectsScreen() {
             style={styles.loginButton}
             onPress={() => router.push('/(auth)/login')}
           >
-            <Text style={styles.loginButtonText}>Se connecter</Text>
+            <Text style={styles.loginButtonText}>{t('projects.signIn')}</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -59,7 +61,7 @@ export default function ProjectsScreen() {
         <FlatList
           horizontal
           data={FILTERS}
-          keyExtractor={(f) => f.label}
+          keyExtractor={(f) => f.value}
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.filters}
           renderItem={({ item }) => (
@@ -94,7 +96,7 @@ export default function ProjectsScreen() {
           <Text style={styles.errorEmoji}>⚠️</Text>
           <Text style={styles.errorText}>{error}</Text>
           <TouchableOpacity onPress={refetch} style={styles.retryButton}>
-            <Text style={styles.retryText}>Réessayer</Text>
+            <Text style={styles.retryText}>{t('common.retry')}</Text>
           </TouchableOpacity>
         </View>
       ) : (
@@ -116,10 +118,8 @@ export default function ProjectsScreen() {
           ListEmptyComponent={
             <View style={styles.emptyContainer}>
               <Text style={styles.emptyEmoji}>🏗️</Text>
-              <Text style={styles.emptyTitle}>Aucun projet disponible</Text>
-              <Text style={styles.emptyText}>
-                De nouveaux projets seront bientôt disponibles. Revenez prochainement.
-              </Text>
+              <Text style={styles.emptyTitle}>{t('projects.emptyTitle')}</Text>
+              <Text style={styles.emptyText}>{t('projects.emptyText')}</Text>
             </View>
           }
         />
