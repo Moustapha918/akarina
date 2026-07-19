@@ -46,7 +46,7 @@ export default function InvestConfirmationScreen() {
     if (!user || !project) return;
     setSharingPDF(true);
     try {
-      const html = generateContractHTML(user, project, amount);
+      const html = generateContractHTML(user, project, amount, investmentId);
       await sharePDF(html, buildPDFFilename(project.title, user.name));
       await updateInvestmentStatus(investmentId, 'SUCCESS', { contractUrl: 'generated' });
     } catch {

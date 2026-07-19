@@ -2,19 +2,34 @@ import { User, Project } from '../types';
 import { formatMRU } from './format';
 
 /**
+ * Génère un numéro de contrat lisible à partir de l'ID d'investissement.
+ * Format : AKR-YYYYMMDD-XXXXXX (6 premiers chars de l'ID en majuscules)
+ */
+function buildContractNumber(investmentId: string): string {
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
+  const suffix = investmentId.slice(0, 6).toUpperCase();
+  return `AKR-${yyyy}${mm}${dd}-${suffix}`;
+}
+
+/**
  * Génère le HTML du contrat de partenariat Mousharaka.
  * Utilisé avec expo-print pour produire un PDF signable.
  */
 export function generateContractHTML(
   user: User,
   project: Project,
-  amount: number
+  amount: number,
+  investmentId: string
 ): string {
   const today = new Date().toLocaleDateString('fr-FR', {
     day: '2-digit',
     month: 'long',
     year: 'numeric',
   });
+  const contractNumber = buildContractNumber(investmentId);
   const sharePercent = ((amount / project.targetAmount) * 100).toFixed(2);
   const estimatedReturn = Math.round(amount * (project.roiEstimate / 100));
 
@@ -108,6 +123,19 @@ export function generateContractHTML(
       color: #1B4F72;
       margin-top: 8px;
     }
+    .contract-number {
+      display: inline-block;
+      margin-top: 10px;
+      background: #EBF5FB;
+      border: 1px solid #AED6F1;
+      border-radius: 6px;
+      padding: 5px 14px;
+      font-family: monospace;
+      font-size: 13px;
+      font-weight: bold;
+      color: #1B4F72;
+      letter-spacing: 1px;
+    }
   </style>
 </head>
 <body>
@@ -116,6 +144,7 @@ export function generateContractHTML(
     <div class="logo">AKARINA</div>
     <div class="doc-title">Contrat de Partenariat Mousharaka</div>
     <div class="doc-subtitle">Conforme aux principes de la Finance Islamique (Sharia) · Droit mauritanien</div>
+    <div class="contract-number">N° ${contractNumber}</div>
   </div>
 
   <h2>Parties Contractantes</h2>
@@ -230,7 +259,7 @@ export function generateContractHTML(
   </div>
 
   <div class="footer">
-    <p>Document généré le ${today} via l'application Akarina.</p>
+    <p>Contrat N° <strong>${contractNumber}</strong> · Généré le ${today} via l'application Akarina.</p>
     <p>Ce contrat est juridiquement contraignant selon la législation mauritanienne.</p>
   </div>
 

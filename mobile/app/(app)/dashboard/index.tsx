@@ -64,7 +64,7 @@ function InvestmentCard({ item, user }: { item: InvestmentWithProject; user: Use
     if (!project) return;
     setDownloadingPdf(true);
     try {
-      const html = generateContractHTML(user, project, investment.amount);
+      const html = generateContractHTML(user, project, investment.amount, investment.id);
       await sharePDF(html, buildPDFFilename(project.title, user.name));
     } catch {
       // annulation silencieuse
