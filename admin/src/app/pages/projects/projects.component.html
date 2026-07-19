@@ -27,6 +27,7 @@
         <thead>
           <tr>
             <th>Projet</th>
+            <th>Type</th>
             <th>Localisation</th>
             <th>Statut</th>
             <th>Progression</th>
@@ -57,6 +58,9 @@
                   </div>
                 </div>
               </td>
+              <td>
+                <span class="badge badge-info">{{ projectTypeLabel(p.projectType) }}</span>
+              </td>
               <td>{{ p.location }}</td>
               <td>
                 <span class="badge" [class]="statusBadgeClass(p.status)">
@@ -74,7 +78,7 @@
               <td>{{ p.currentInvestors }} / {{ p.maxInvestors }}</td>
               <td>{{ p.roiEstimate }}% / {{ p.roiDurationMonths }}m</td>
               <td>
-                @if (nextStatus(p.status)) {
+                @if (nextStatus(p)) {
                   <button
                     class="btn btn-outline btn-sm"
                     [disabled]="processing() === p.id"
@@ -83,7 +87,7 @@
                     @if (processing() === p.id) {
                       <span class="spinner-sm"></span>
                     }
-                    → {{ statusLabel(nextStatus(p.status)!) }}
+                    → {{ statusLabel(nextStatus(p)!) }}
                   </button>
                 } @else {
                   <span class="text-secondary" style="font-size:12px">Terminé</span>
@@ -142,6 +146,49 @@
         />
       </div>
 
+      <!-- Type de projet -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Type de projet</label>
+          <select
+            [ngModel]="formData().projectType"
+            (ngModelChange)="updateForm('projectType', $event)"
+            name="projectType"
+          >
+            <option value="CONSTRUCTION">🏗️ Construction</option>
+            <option value="LAND_FLIP">🏕️ Achat-Revente Terrain</option>
+          </select>
+        </div>
+
+        @if (isConstruction(formData())) {
+          <div class="form-group">
+            <label>Stratégie de sortie</label>
+            <select
+              [ngModel]="formData().exitStrategy"
+              (ngModelChange)="updateForm('exitStrategy', $event)"
+              name="exitStrategy"
+            >
+              <option value="SALE">💼 Vente</option>
+              <option value="RENTAL">🏠 Location</option>
+            </select>
+          </div>
+        }
+      </div>
+
+      @if (isRental(formData())) {
+        <div class="form-group">
+          <label>Loyer mensuel total (MRU) *</label>
+          <input
+            type="number"
+            [ngModel]="formData().monthlyRent"
+            (ngModelChange)="updateForm('monthlyRent', $event)"
+            name="monthlyRent"
+            min="0"
+            placeholder="Ex: 150000"
+          />
+        </div>
+      }
+
       <div class="form-row">
         <div class="form-group">
           <label>Montant cible (MRU) *</label>
@@ -169,7 +216,7 @@
 
       <div class="form-row">
         <div class="form-group">
-          <label>ROI estimé (%)</label>
+          <label>ROI estimé (% annuel)</label>
           <input
             type="number"
             [ngModel]="formData().roiEstimate"
@@ -181,7 +228,7 @@
           />
         </div>
         <div class="form-group">
-          <label>Durée ROI (mois)</label>
+          <label>Durée (mois)</label>
           <input
             type="number"
             [ngModel]="formData().roiDurationMonths"
@@ -206,17 +253,15 @@
           />
         </div>
         <div class="form-group">
-          <label>Statut initial</label>
-          <select
-            [ngModel]="formData().status"
-            (ngModelChange)="updateForm('status', $event)"
-            name="status"
-          >
-            <option value="OPEN">Ouvert</option>
-            <option value="FUNDED">Financé</option>
-            <option value="CONSTRUCTION">Construction</option>
-            <option value="COMPLETED">Terminé</option>
-          </select>
+          <label>Prix de revente estimé (MRU)</label>
+          <input
+            type="number"
+            [ngModel]="formData().expectedSalePrice"
+            (ngModelChange)="updateForm('expectedSalePrice', $event)"
+            name="expectedSalePrice"
+            min="0"
+            placeholder="Optionnel"
+          />
         </div>
       </div>
 

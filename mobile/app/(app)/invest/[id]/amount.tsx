@@ -20,7 +20,7 @@ import {
   KYC_FREE_THRESHOLD,
 } from '../../../../src/constants';
 import { Button } from '../../../../src/components/ui/Button';
-import { formatMRU } from '../../../../src/utils/format';
+import { formatMRU, estimatedMonthlyRent, estimatedMonthlyFromROI } from '../../../../src/utils/format';
 import { getProject } from '../../../../src/services/projectService';
 import { useAuthStore } from '../../../../src/hooks/useAuthStore';
 import { Project } from '../../../../src/types';
@@ -106,7 +106,12 @@ export default function InvestAmountScreen() {
   }
 
   const num = parseInt(amount, 10) || 0;
+  const isRental = project.projectType === 'CONSTRUCTION' && project.exitStrategy === 'RENTAL';
+  const isLandFlip = project.projectType === 'LAND_FLIP';
   const estimatedROI = num > 0 ? Math.round(num * (project.roiEstimate / 100)) : 0;
+  const monthlyRent = (isRental && project.monthlyRent && num > 0)
+    ? estimatedMonthlyRent(num, project.targetAmount, project.monthlyRent)
+    : 0;
   const availablePresets = INVESTMENT_PRESETS.filter((p) => p >= project.minInvestment);
 
   return (
@@ -205,14 +210,31 @@ export default function InvestAmountScreen() {
                 <Text style={styles.roiLabel}>Votre participation</Text>
                 <Text style={styles.roiValue}>{formatMRU(num)}</Text>
               </View>
-              <View style={[styles.roiRow, { marginTop: 8 }]}>
-                <Text style={styles.roiLabel}>Retour estimé ({project.roiEstimate}%)</Text>
-                <Text style={[styles.roiValue, { color: COLORS.success }]}>+{formatMRU(estimatedROI)}</Text>
-              </View>
-              <View style={[styles.roiRow, { marginTop: 8 }]}>
-                <Text style={styles.roiLabel}>Total estimé</Text>
-                <Text style={[styles.roiValue, { fontWeight: '700' }]}>{formatMRU(num + estimatedROI)}</Text>
-              </View>
+              {isRental && monthlyRent > 0 ? (
+                <>
+                  <View style={[styles.roiRow, { marginTop: 8 }]}>
+                    <Text style={styles.roiLabel}>Loyer mensuel estimé</Text>
+                    <Text style={[styles.roiValue, { color: COLORS.success }]}>{formatMRU(monthlyRent)}/mois</Text>
+                  </View>
+                  <View style={[styles.roiRow, { marginTop: 8 }]}>
+                    <Text style={styles.roiLabel}>Revenu annuel estimé</Text>
+                    <Text style={[styles.roiValue, { color: COLORS.success }]}>+{formatMRU(monthlyRent * 12)}</Text>
+                  </View>
+                </>
+              ) : (
+                <>
+                  <View style={[styles.roiRow, { marginTop: 8 }]}>
+                    <Text style={styles.roiLabel}>
+                      {isLandFlip ? 'Plus-value estimée' : `Retour estimé (${project.roiEstimate}%)`}
+                    </Text>
+                    <Text style={[styles.roiValue, { color: COLORS.success }]}>+{formatMRU(estimatedROI)}</Text>
+                  </View>
+                  <View style={[styles.roiRow, { marginTop: 8 }]}>
+                    <Text style={styles.roiLabel}>Total estimé</Text>
+                    <Text style={[styles.roiValue, { fontWeight: '700' }]}>{formatMRU(num + estimatedROI)}</Text>
+                  </View>
+                </>
+              )}
               <Text style={styles.roiDisclaimer}>
                 *Estimation non garantie. Basée sur les projections du marché immobilier mauritanien.
               </Text>

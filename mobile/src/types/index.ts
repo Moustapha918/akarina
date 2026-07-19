@@ -6,9 +6,15 @@ export type UserRole = 'INVESTOR' | 'ADMIN';
 
 export type KycStatus = 'NONE' | 'PENDING' | 'VERIFIED' | 'REJECTED';
 
-export type ProjectStatus = 'OPEN' | 'FUNDED' | 'CONSTRUCTION' | 'COMPLETED';
+export type ProjectType = 'CONSTRUCTION' | 'LAND_FLIP';
+
+export type ExitStrategy = 'SALE' | 'RENTAL';
+
+export type ProjectStatus = 'OPEN' | 'FUNDED' | 'CONSTRUCTION' | 'RENTING' | 'COMPLETED';
 
 export type InvestmentStatus = 'PENDING' | 'SUCCESS' | 'FAILED';
+
+export type PayoutType = 'RENTAL' | 'PROFIT';
 
 export type DocType = 'ID_CARD' | 'PASSPORT' | 'CONTRACT';
 
@@ -34,16 +40,33 @@ export interface Project {
   location: string;
   targetAmount: number; // MRU
   collectedAmount: number; // MRU
-  roiEstimate: number; // pourcentage, ex: 15.5
+  roiEstimate: number; // pourcentage annuel, ex: 15.5
   roiDurationMonths: number; // durée estimée du projet en mois
   status: ProjectStatus;
+  projectType: ProjectType; // 'CONSTRUCTION' | 'LAND_FLIP'
+  exitStrategy?: ExitStrategy; // 'SALE' | 'RENTAL' — CONSTRUCTION seulement
+  monthlyRent?: number; // loyer mensuel total du bien (MRU) — si RENTAL
+  expectedSalePrice?: number; // prix de revente estimé (MRU)
   coverImageUrl: string;
   imageUrls: string[];
-  maxInvestors: number; // ex: 200
+  maxInvestors: number;
   currentInvestors: number;
   minInvestment: number; // MRU
   createdAt: Timestamp;
   updatedAt: Timestamp;
+}
+
+/** Collection: payouts/{payoutId} */
+export interface Payout {
+  id: string;
+  projectId: string;
+  userId: string;
+  investmentId: string;
+  amount: number; // MRU versé à cet investisseur
+  type: PayoutType;
+  month: string; // 'YYYY-MM' pour RENTAL
+  paidAt: Timestamp;
+  createdAt: Timestamp;
 }
 
 /** Collection: investments/{investmentId} */

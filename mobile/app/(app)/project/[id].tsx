@@ -22,6 +22,10 @@ import {
   collectProgress,
   projectStatusLabel,
   projectStatusColor,
+  projectTypeLabel,
+  projectTypeIcon,
+  exitStrategyLabel,
+  estimatedMonthlyRent,
 } from '../../../src/utils/format';
 
 const { width } = Dimensions.get('window');
@@ -76,6 +80,8 @@ export default function ProjectDetailScreen() {
   const progress = collectProgress(project.collectedAmount, project.targetAmount);
   const statusColor = projectStatusColor(project.status);
   const isOpen = project.status === 'OPEN';
+  const isRental = project.projectType === 'CONSTRUCTION' && project.exitStrategy === 'RENTAL';
+  const isLandFlip = project.projectType === 'LAND_FLIP';
 
   return (
     <View style={styles.container}>
@@ -109,6 +115,22 @@ export default function ProjectDetailScreen() {
           <Text style={styles.title}>{project.title}</Text>
           <Text style={styles.location}>📍 {project.location}</Text>
 
+          {/* Badges type & stratégie */}
+          <View style={styles.typeBadgeRow}>
+            <View style={styles.typeBadge}>
+              <Text style={styles.typeBadgeText}>
+                {projectTypeIcon(project.projectType ?? 'CONSTRUCTION')} {projectTypeLabel(project.projectType ?? 'CONSTRUCTION')}
+              </Text>
+            </View>
+            {project.exitStrategy && (
+              <View style={[styles.typeBadge, styles.typeBadgeAlt]}>
+                <Text style={styles.typeBadgeText}>
+                  {project.exitStrategy === 'RENTAL' ? '🏠 Location' : '💼 Vente'}
+                </Text>
+              </View>
+            )}
+          </View>
+
           {/* Progression */}
           <View style={styles.progressSection}>
             <View style={styles.progressHeader}>
@@ -127,7 +149,15 @@ export default function ProjectDetailScreen() {
 
           {/* Stats clés */}
           <View style={styles.statsGrid}>
-            <StatCard label="ROI estimé" value={`${project.roiEstimate}%`} icon="📈" />
+            {isRental && project.monthlyRent ? (
+              <StatCard
+                label="Loyer mensuel total"
+                value={formatMRU(project.monthlyRent, true)}
+                icon="🏠"
+              />
+            ) : (
+              <StatCard label="ROI estimé" value={`${project.roiEstimate}%`} icon="📈" />
+            )}
             <StatCard label="Durée" value={`${project.roiDurationMonths} mois`} icon="📅" />
             <StatCard label="Min. investissement" value={formatMRU(project.minInvestment, true)} icon="💰" />
             <StatCard
@@ -147,9 +177,11 @@ export default function ProjectDetailScreen() {
           <View style={styles.mousharakaBox}>
             <Text style={styles.mousharakaTitle}>🤝 Contrat Mousharaka</Text>
             <Text style={styles.mousharakaText}>
-              Votre investissement est structuré selon un contrat de partenariat islamique (Mousharaka).
-              Vous devenez co-propriétaire du projet proportionnellement à votre mise, et partagez
-              les bénéfices à l'issue du projet.
+              {isRental
+                ? 'Vous devenez co-propriétaire du bien. En phase de location, vous percevez chaque mois votre quote-part du loyer, proportionnellement à votre mise de fonds.'
+                : isLandFlip
+                ? 'Vous co-financez l\'acquisition de ce terrain. À sa revente, vous percevez votre part de la plus-value nette réalisée, proportionnellement à votre apport.'
+                : 'Votre investissement est structuré selon un contrat Mousharaka. Vous devenez co-propriétaire proportionnellement à votre mise et partagez les bénéfices à l\'issue du projet.'}
             </Text>
             <View style={styles.mousharakaBadge}>
               <Text style={styles.mousharakaBadgeText}>✓ Conforme Sharia</Text>
@@ -274,6 +306,17 @@ const styles = StyleSheet.create({
     lineHeight: 30,
   },
   location: { fontSize: 14, color: COLORS.textSecondary, marginTop: -12 },
+  typeBadgeRow: { flexDirection: 'row', gap: 8, marginTop: -8 },
+  typeBadge: {
+    backgroundColor: '#EBF5FB',
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderWidth: 1,
+    borderColor: '#AED6F1',
+  },
+  typeBadgeAlt: { backgroundColor: '#FEF9E7', borderColor: '#F9E79F' },
+  typeBadgeText: { fontSize: 12, fontWeight: '600', color: COLORS.primary },
   progressSection: { gap: 6 },
   progressHeader: { flexDirection: 'row', alignItems: 'baseline', gap: 6 },
   progressAmount: { fontSize: 22, fontWeight: '800', color: COLORS.primary },
