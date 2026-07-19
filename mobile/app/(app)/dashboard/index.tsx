@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   View,
   Text,
@@ -10,12 +11,15 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import * as Print from 'expo-print';
+import * as Sharing from 'expo-sharing';
 import { COLORS } from '../../../src/constants';
 import { GuestGuard } from '../../../src/components/ui/GuestGuard';
 import { useAuthStore } from '../../../src/hooks/useAuthStore';
 import { useMyInvestments, InvestmentWithProject } from '../../../src/hooks/useMyInvestments';
 import { formatMRU, collectProgress, projectStatusLabel, projectStatusColor } from '../../../src/utils/format';
-import { Investment, KycStatus } from '../../../src/types';
+import { generateContractHTML } from '../../../src/utils/contractTemplate';
+import { Investment, KycStatus, User } from '../../../src/types';
 
 // ─── KYC Badge ───────────────────────────────────────────────────────────────
 
@@ -53,8 +57,30 @@ const STATUS_COLOR: Record<Investment['status'], string> = {
 
 // ─── Investment Card ──────────────────────────────────────────────────────────
 
-function InvestmentCard({ item }: { item: InvestmentWithProject }) {
+function InvestmentCard({ item, user }: { item: InvestmentWithProject; user: User }) {
   const { investment, project } = item;
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
+
+  async function handleDownloadContract() {
+    if (!project) return;
+    setDownloadingPdf(true);
+    try {
+      const html = generateContractHTML(user, project, investment.amount);
+      const { uri } = await Print.printToFileAsync({ html, base64: false });
+      const canShare = await Sharing.isAvailableAsync();
+      if (canShare) {
+        await Sharing.shareAsync(uri, {
+          mimeType: 'application/pdf',
+          dialogTitle: 'Contrat Mousharaka — Akarina',
+          UTI: 'com.adobe.pdf',
+        });
+      }
+    } catch {
+      // annulation silencieuse
+    } finally {
+      setDownloadingPdf(false);
+    }
+  }
 
   const estimatedGain = project
     ? Math.round(investment.amount * (project.roiEstimate / 100))
@@ -135,6 +161,21 @@ function InvestmentCard({ item }: { item: InvestmentWithProject }) {
             {progress}% collecté · {formatMRU(project.collectedAmount, true)} / {formatMRU(project.targetAmount, true)}
           </Text>
         </View>
+      )}
+
+      {/* Bouton contrat PDF */}
+      {investment.status === 'SUCCESS' && project && (
+        <TouchableOpacity
+          style={[styles.pdfBtn, downloadingPdf && { opacity: 0.6 }]}
+          onPress={handleDownloadContract}
+          disabled={downloadingPdf}
+          activeOpacity={0.75}
+        >
+          {downloadingPdf
+            ? <ActivityIndicator size="small" color={COLORS.primary} />
+            : <Text style={styles.pdfBtnText}>📄 Télécharger le contrat PDF</Text>
+          }
+        </TouchableOpacity>
       )}
     </TouchableOpacity>
   );
@@ -236,7 +277,7 @@ function DashboardContent() {
           </View>
         ) : (
           items.map((item) => (
-            <InvestmentCard key={item.investment.id} item={item} />
+            <InvestmentCard key={item.investment.id} item={item} user={user!} />
           ))
         )}
       </View>
@@ -417,6 +458,21 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
     color: COLORS.secondary,
+  },
+
+  // PDF button
+  pdfBtn: {
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+    borderRadius: 8,
+    paddingVertical: 8,
+    alignItems: 'center',
+  },
+  pdfBtnText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: COLORS.primary,
   },
 
   // Progress
