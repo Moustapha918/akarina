@@ -50,7 +50,7 @@ function ProjectCard() {
           </Text>
           <Text style={cardStyles.stat}>
             <Text style={cardStyles.statValue}>{PROJECT_CARD.roi}% </Text>
-            <Text style={cardStyles.statLabel}>/ {PROJECT_CARD.duration} mois*</Text>
+            <Text style={cardStyles.statLabel}>/ {PROJECT_CARD.duration} {t('onboarding.projectCard.months')}</Text>
           </Text>
         </View>
         <Text style={cardStyles.disclaimer}>{t('onboarding.projectCard.disclaimer')}</Text>

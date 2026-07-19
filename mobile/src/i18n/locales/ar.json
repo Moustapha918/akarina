@@ -20,7 +20,12 @@
     "error": "خطأ",
     "loading": "جاري التحميل...",
     "retry": "إعادة المحاولة",
-    "permissionDenied": "تم رفض الإذن"
+    "permissionDenied": "تم رفض الإذن",
+    "signIn": "تسجيل الدخول",
+    "createAccount": "إنشاء حساب",
+    "loginRequired": "تسجيل الدخول مطلوب",
+    "loginPrompt": "سجّل الدخول للوصول إلى هذا القسم.",
+    "unknownProject": "مشروع غير معروف"
   },
   "tabs": {
     "projects": "المشاريع",
@@ -60,6 +65,7 @@
     "projectCard": {
       "photo": "📸 صورة المشروع",
       "collected": "أوقية محصّلة",
+      "months": "شهرًا*",
       "disclaimer": "* على سبيل المثال"
     }
   },
@@ -103,7 +109,18 @@
       "invalidEmail": "بريد إلكتروني غير صالح",
       "sessionExpired": "انتهت الجلسة",
       "sessionExpiredMsg": "يرجى إعادة تسجيل الدخول.",
-      "createError": "تعذر إنشاء الملف الشخصي."
+      "createError": "تعذر إنشاء الملف الشخصي.",
+      "namePlaceholder": "محمد أحمد",
+      "emailPlaceholder": "مثال@email.com"
+    },
+    "prompt": {
+      "title": "انضم إلى أكارينا",
+      "defaultMessage": "أنشئ حساباً مجانياً للاستثمار في هذا المشروع.",
+      "benefit1": "✓  عقد مشاركة آمن",
+      "benefit2": "✓  دفع سريع عبر Bankily",
+      "benefit3": "✓  متابعة الورشة في الوقت الفعلي",
+      "createAccount": "إنشاء حساب",
+      "haveAccount": "لدي حساب بالفعل"
     }
   },
   "projects": {

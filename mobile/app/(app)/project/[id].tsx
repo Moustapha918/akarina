@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Dimensions,
+  I18nManager,
 } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -107,7 +108,7 @@ export default function ProjectDetailScreen() {
             style={[styles.backButton, { top: insets.top + 12 }]}
             onPress={() => router.back()}
           >
-            <Text style={styles.backButtonText}>←</Text>
+            <Text style={styles.backButtonText}>{I18nManager.isRTL ? '→' : '←'}</Text>
           </TouchableOpacity>
 
           {/* Badge statut */}

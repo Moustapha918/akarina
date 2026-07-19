@@ -81,7 +81,7 @@ export default function RegisterScreen() {
         <View style={styles.form}>
           <Input
             label={t('auth.register.fullName')}
-            placeholder="Mohamed Ahmed"
+            placeholder={t('auth.register.namePlaceholder')}
             value={name}
             onChangeText={(text) => { setErrors((e) => ({ ...e, name: undefined })); setName(text); }}
             error={errors.name}
@@ -89,7 +89,7 @@ export default function RegisterScreen() {
           />
           <Input
             label={t('auth.register.email')}
-            placeholder="exemple@email.com"
+            placeholder={t('auth.register.emailPlaceholder')}
             value={email}
             onChangeText={(text) => { setErrors((e) => ({ ...e, email: undefined })); setEmail(text); }}
             error={errors.email}

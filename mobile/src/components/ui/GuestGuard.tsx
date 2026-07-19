@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import { COLORS } from '../../constants';
 import { Button } from './Button';
 import { useAuthStore } from '../../hooks/useAuthStore';
@@ -15,26 +16,27 @@ interface GuestGuardProps {
 export function GuestGuard({
   children,
   icon = '🔒',
-  title = 'Connexion requise',
-  description = 'Connectez-vous pour accéder à cette section.',
+  title,
+  description,
 }: GuestGuardProps) {
   const { user } = useAuthStore();
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
 
   if (user) return <>{children}</>;
 
   return (
     <View style={[styles.container, { paddingBottom: insets.bottom + 24 }]}>
       <Text style={styles.icon}>{icon}</Text>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.description}>{description}</Text>
+      <Text style={styles.title}>{title ?? t('common.loginRequired')}</Text>
+      <Text style={styles.description}>{description ?? t('common.loginPrompt')}</Text>
       <Button
-        label="Se connecter"
+        label={t('common.signIn')}
         onPress={() => router.push('/(auth)/login')}
         style={styles.button}
       />
       <Button
-        label="Créer un compte"
+        label={t('common.createAccount')}
         onPress={() => router.push('/(auth)/login')}
         variant="outline"
         style={styles.buttonOutline}

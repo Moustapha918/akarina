@@ -74,7 +74,7 @@ function InvestmentCard({ item, user }: { item: InvestmentWithProject; user: Use
         )}
         <View style={styles.cardInfo}>
           <Text style={styles.cardTitle} numberOfLines={2}>
-            {project?.title ?? 'Projet inconnu'}
+            {project?.title ?? t('common.unknownProject')}
           </Text>
           {project?.location ? (
             <Text style={styles.cardLocation}>📍 {project.location}</Text>
@@ -86,7 +86,7 @@ function InvestmentCard({ item, user }: { item: InvestmentWithProject; user: Use
               </Text>
             </View>
             {project && (
-              <View style={[styles.badge, { backgroundColor: projectStatusColor(project.status) + '20', marginLeft: 6 }]}>
+              <View style={[styles.badge, { backgroundColor: projectStatusColor(project.status) + '20', marginStart: 6 }]}>
                 <Text style={[styles.badgeText, { color: projectStatusColor(project.status) }]}>
                   {projectStatusLabel(project.status)}
                 </Text>

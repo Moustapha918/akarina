@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: COLORS.textPrimary,
     fontWeight: '500',
-    marginRight: 8,
+    marginEnd: 8,
   },
   input: {
     flex: 1,

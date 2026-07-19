@@ -20,7 +20,12 @@
     "error": "Erreur",
     "loading": "Chargement...",
     "retry": "Réessayer",
-    "permissionDenied": "Permission refusée"
+    "permissionDenied": "Permission refusée",
+    "signIn": "Se connecter",
+    "createAccount": "Créer un compte",
+    "loginRequired": "Connexion requise",
+    "loginPrompt": "Connectez-vous pour accéder à cette section.",
+    "unknownProject": "Projet inconnu"
   },
   "tabs": {
     "projects": "Projets",
@@ -60,6 +65,7 @@
     "projectCard": {
       "photo": "📸 Photo du projet",
       "collected": "MRU collectés",
+      "months": "mois*",
       "disclaimer": "* À titre d'exemple"
     }
   },
@@ -103,7 +109,18 @@
       "invalidEmail": "Email invalide",
       "sessionExpired": "Session expirée",
       "sessionExpiredMsg": "Veuillez recommencer la connexion.",
-      "createError": "Impossible de créer le profil."
+      "createError": "Impossible de créer le profil.",
+      "namePlaceholder": "Mohamed Ahmed",
+      "emailPlaceholder": "exemple@email.com"
+    },
+    "prompt": {
+      "title": "Rejoignez Akarina",
+      "defaultMessage": "Créez un compte gratuitement pour investir dans ce projet.",
+      "benefit1": "✓  Contrat Mousharaka sécurisé",
+      "benefit2": "✓  Paiement rapide via Bankily",
+      "benefit3": "✓  Suivi du chantier en temps réel",
+      "createAccount": "Créer un compte",
+      "haveAccount": "J'ai déjà un compte"
     }
   },
   "projects": {
