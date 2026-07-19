@@ -1,0 +1,146 @@
+<div class="page-header">
+  <h1>Vérification KYC</h1>
+  <span class="badge badge-warning">{{ users().length }} en attente</span>
+</div>
+
+@if (loading()) {
+  <div class="loading-state">
+    <div class="spinner-lg"></div>
+    <p>Chargement...</p>
+  </div>
+} @else if (users().length === 0) {
+  <div class="empty-state">
+    <div class="empty-icon">✓</div>
+    <h3>Tout est à jour</h3>
+    <p>Aucun utilisateur en attente de vérification KYC.</p>
+  </div>
+} @else {
+  <div class="card table-card">
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Utilisateur</th>
+            <th>Téléphone</th>
+            <th>Email</th>
+            <th>Documents</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of users(); track user.uid) {
+            <tr>
+              <td>
+                <div class="user-cell">
+                  <div class="user-avatar-sm">{{ user.name[0]?.toUpperCase() || '?' }}</div>
+                  <span class="user-name">{{ user.name }}</span>
+                </div>
+              </td>
+              <td><span class="phone">{{ user.phone || '—' }}</span></td>
+              <td>{{ user.email }}</td>
+              <td>
+                @if (user.documents.length > 0) {
+                  <button class="doc-btn" (click)="openDocModal(user)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M15 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7z"/>
+                      <polyline points="14 2 14 8 20 8"/>
+                    </svg>
+                    {{ user.documents.length }} fichier(s)
+                  </button>
+                } @else {
+                  <span class="text-secondary">Aucun</span>
+                }
+              </td>
+              <td>
+                <div class="action-btns">
+                  <button
+                    class="btn btn-success btn-sm"
+                    [disabled]="processing() === user.uid"
+                    (click)="approveUser(user.uid)"
+                  >
+                    @if (processing() === user.uid) {
+                      <span class="spinner-sm"></span>
+                    }
+                    Approuver
+                  </button>
+                  <button
+                    class="btn btn-danger btn-sm"
+                    [disabled]="processing() === user.uid"
+                    (click)="openRejectModal(user.uid)"
+                  >
+                    Rejeter
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+}
+
+<!-- Reject Modal -->
+@if (showRejectModal()) {
+  <div class="modal-overlay" (click)="closeRejectModal()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Motif de refus</h2>
+        <button class="close-btn" (click)="closeRejectModal()">×</button>
+      </div>
+      <div class="form-group">
+        <label>Raison du rejet</label>
+        <textarea
+          [ngModel]="rejectReason()"
+          (ngModelChange)="rejectReason.set($event)"
+          name="rejectReason"
+          placeholder="Expliquez pourquoi ce KYC est rejeté..."
+          rows="4"
+        ></textarea>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-outline" (click)="closeRejectModal()">Annuler</button>
+        <button
+          class="btn btn-danger"
+          [disabled]="!rejectReason().trim() || processing() !== null"
+          (click)="confirmReject()"
+        >
+          Confirmer le rejet
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Documents Modal -->
+@if (showDocModal() && docModalUser()) {
+  <div class="modal-overlay" (click)="closeDocModal()">
+    <div class="modal-box doc-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Documents — {{ docModalUser()!.name }}</h2>
+        <button class="close-btn" (click)="closeDocModal()">×</button>
+      </div>
+
+      @if (docModalUser()!.documents.length === 0) {
+        <p class="text-secondary">Aucun document soumis.</p>
+      } @else {
+        <div class="doc-tabs">
+          @for (d of docModalUser()!.documents; track d.id) {
+            <button
+              class="doc-tab"
+              [class.active]="selectedDocUrl() === d.downloadUrl"
+              (click)="selectDoc(d.downloadUrl)"
+            >
+              {{ docTypeLabel(d.docType) }}
+            </button>
+          }
+        </div>
+        @if (selectedDocUrl()) {
+          <div class="doc-preview">
+            <img [src]="selectedDocUrl()!" alt="Document" />
+          </div>
+        }
+      }
+    </div>
+  </div>
+}

@@ -1,0 +1,92 @@
+<div class="page-header">
+  <h1>Investissements</h1>
+</div>
+
+@if (loading()) {
+  <div class="loading-state">
+    <div class="spinner-lg"></div>
+    <p>Chargement des investissements...</p>
+  </div>
+} @else {
+  <!-- Summary cards -->
+  <div class="summary-row">
+    <div class="summary-card">
+      <div class="summary-label">Total</div>
+      <div class="summary-value">{{ investments().length }}</div>
+    </div>
+    <div class="summary-card summary-success">
+      <div class="summary-label">Réussis</div>
+      <div class="summary-value">{{ successCount() }}</div>
+    </div>
+    <div class="summary-card summary-amount">
+      <div class="summary-label">Total collecté</div>
+      <div class="summary-value amount">{{ formatAmount(totalCollected()) }}</div>
+    </div>
+  </div>
+
+  @if (investments().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">💳</div>
+      <h3>Aucun investissement</h3>
+      <p>Les investissements apparaîtront ici une fois créés dans l'application mobile.</p>
+    </div>
+  } @else {
+    <div class="card table-card">
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Investisseur</th>
+              <th>Projet</th>
+              <th>Montant</th>
+              <th>Statut</th>
+              <th>Réf. Bankily</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (inv of investments(); track inv.id) {
+              <tr>
+                <td>
+                  <div class="user-cell">
+                    <div class="user-avatar-sm">{{ (inv.userName ?? '?')[0].toUpperCase() }}</div>
+                    <span>{{ inv.userName }}</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="project-name">{{ inv.projectTitle }}</span>
+                </td>
+                <td>
+                  <span class="amount-cell">{{ formatAmount(inv.amount) }}</span>
+                </td>
+                <td>
+                  <span class="badge" [class]="statusBadgeClass(inv.status)">
+                    {{ statusLabel(inv.status) }}
+                  </span>
+                </td>
+                <td>
+                  @if (inv.bankilyRef) {
+                    <code class="ref-code">{{ inv.bankilyRef }}</code>
+                  } @else {
+                    <span class="text-secondary">—</span>
+                  }
+                </td>
+                <td class="date-cell">{{ formatDate(inv.createdAt) }}</td>
+              </tr>
+            }
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="2"><strong>Total ({{ investments().length }} investissements)</strong></td>
+              <td colspan="4">
+                <span class="badge badge-success">
+                  {{ successCount() }} succès · {{ formatAmount(totalCollected()) }} collectés
+                </span>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  }
+}

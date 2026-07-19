@@ -1,0 +1,112 @@
+<div class="page-header">
+  <h1>Tableau de bord</h1>
+</div>
+
+@if (loading()) {
+  <div class="loading-state">
+    <div class="spinner-lg"></div>
+    <p>Chargement des statistiques...</p>
+  </div>
+} @else {
+  <div class="stats-grid">
+    <!-- KYC en attente -->
+    <div class="stat-card stat-warning">
+      <div class="stat-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      <div class="stat-body">
+        <div class="stat-value">{{ stats().kycPending }}</div>
+        <div class="stat-label">KYC en attente</div>
+      </div>
+      <a routerLink="/kyc" class="stat-link">Traiter →</a>
+    </div>
+
+    <!-- Total investissements -->
+    <div class="stat-card stat-primary">
+      <div class="stat-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+          <path d="M16 3.13a4 4 0 010 7.75"/>
+        </svg>
+      </div>
+      <div class="stat-body">
+        <div class="stat-value">{{ stats().totalInvestments }}</div>
+        <div class="stat-label">Total investissements</div>
+      </div>
+      <a routerLink="/investments" class="stat-link">Voir →</a>
+    </div>
+
+    <!-- Total collecté -->
+    <div class="stat-card stat-success">
+      <div class="stat-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="1" x2="12" y2="23"/>
+          <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+        </svg>
+      </div>
+      <div class="stat-body">
+        <div class="stat-value amount">{{ formatAmount(stats().totalCollected) }}</div>
+        <div class="stat-label">Total collecté (succès)</div>
+      </div>
+      <a routerLink="/investments" class="stat-link">Voir →</a>
+    </div>
+
+    <!-- Projets ouverts -->
+    <div class="stat-card stat-info">
+      <div class="stat-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0H5m14 0h2m-2 0H3"/>
+        </svg>
+      </div>
+      <div class="stat-body">
+        <div class="stat-value">{{ stats().openProjects }}</div>
+        <div class="stat-label">Projets ouverts</div>
+      </div>
+      <a routerLink="/projects" class="stat-link">Gérer →</a>
+    </div>
+  </div>
+
+  <!-- Quick links -->
+  <div class="quick-links">
+    <h2>Accès rapide</h2>
+    <div class="links-grid">
+      <a routerLink="/kyc" class="quick-link-card">
+        <div class="ql-icon ql-warning">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="ql-title">Vérification KYC</div>
+          <div class="ql-desc">{{ stats().kycPending }} utilisateur(s) en attente</div>
+        </div>
+      </a>
+      <a routerLink="/projects" class="quick-link-card">
+        <div class="ql-icon ql-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 4v16m8-8H4"/>
+          </svg>
+        </div>
+        <div>
+          <div class="ql-title">Nouveau projet</div>
+          <div class="ql-desc">Créer un projet immobilier</div>
+        </div>
+      </a>
+      <a routerLink="/investments" class="quick-link-card">
+        <div class="ql-icon ql-success">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+        </div>
+        <div>
+          <div class="ql-title">Suivi financier</div>
+          <div class="ql-desc">{{ stats().totalInvestments }} investissement(s) au total</div>
+        </div>
+      </a>
+    </div>
+  </div>
+}

@@ -1,0 +1,243 @@
+<div class="page-header">
+  <h1>Projets immobiliers</h1>
+  <button class="btn btn-primary" (click)="openModal()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <line x1="12" y1="5" x2="12" y2="19"/>
+      <line x1="5" y1="12" x2="19" y2="12"/>
+    </svg>
+    Nouveau projet
+  </button>
+</div>
+
+@if (loading()) {
+  <div class="loading-state">
+    <div class="spinner-lg"></div>
+    <p>Chargement des projets...</p>
+  </div>
+} @else if (projects().length === 0) {
+  <div class="empty-state">
+    <div class="empty-icon">🏗️</div>
+    <h3>Aucun projet</h3>
+    <p>Cliquez sur "Nouveau projet" pour commencer.</p>
+  </div>
+} @else {
+  <div class="card table-card">
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Projet</th>
+            <th>Localisation</th>
+            <th>Statut</th>
+            <th>Progression</th>
+            <th>Investisseurs</th>
+            <th>ROI</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of projects(); track p.id) {
+            <tr>
+              <td>
+                <div class="project-cell">
+                  @if (p.coverImageUrl) {
+                    <img class="project-thumb" [src]="p.coverImageUrl" [alt]="p.title" />
+                  } @else {
+                    <div class="project-thumb-placeholder">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0H5m14 0h2m-2 0H3"/>
+                      </svg>
+                    </div>
+                  }
+                  <div>
+                    <div class="project-title">{{ p.title }}</div>
+                    <div class="project-amounts">
+                      {{ formatAmount(p.collectedAmount) }} / {{ formatAmount(p.targetAmount) }} MRU
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>{{ p.location }}</td>
+              <td>
+                <span class="badge" [class]="statusBadgeClass(p.status)">
+                  {{ statusLabel(p.status) }}
+                </span>
+              </td>
+              <td>
+                <div class="progress-cell">
+                  <div class="progress-bar">
+                    <div class="progress-fill" [style.width.%]="progress(p)"></div>
+                  </div>
+                  <span class="progress-pct">{{ progress(p) }}%</span>
+                </div>
+              </td>
+              <td>{{ p.currentInvestors }} / {{ p.maxInvestors }}</td>
+              <td>{{ p.roiEstimate }}% / {{ p.roiDurationMonths }}m</td>
+              <td>
+                @if (nextStatus(p.status)) {
+                  <button
+                    class="btn btn-outline btn-sm"
+                    [disabled]="processing() === p.id"
+                    (click)="advanceStatus(p)"
+                  >
+                    @if (processing() === p.id) {
+                      <span class="spinner-sm"></span>
+                    }
+                    → {{ statusLabel(nextStatus(p.status)!) }}
+                  </button>
+                } @else {
+                  <span class="text-secondary" style="font-size:12px">Terminé</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+}
+
+<!-- New Project Modal -->
+@if (showModal()) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-box project-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Nouveau projet</h2>
+        <button class="close-btn" (click)="closeModal()">×</button>
+      </div>
+
+      @if (formError()) {
+        <div class="error-banner" style="margin-bottom:16px">{{ formError() }}</div>
+      }
+
+      <div class="form-group">
+        <label>Titre du projet *</label>
+        <input
+          type="text"
+          [ngModel]="formData().title"
+          (ngModelChange)="updateForm('title', $event)"
+          name="title"
+          placeholder="Ex: Résidence Al-Amal"
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea
+          [ngModel]="formData().description"
+          (ngModelChange)="updateForm('description', $event)"
+          name="description"
+          placeholder="Décrivez le projet..."
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Localisation *</label>
+        <input
+          type="text"
+          [ngModel]="formData().location"
+          (ngModelChange)="updateForm('location', $event)"
+          name="location"
+          placeholder="Ex: Tevragh Zeina, Nouakchott"
+        />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Montant cible (MRU) *</label>
+          <input
+            type="number"
+            [ngModel]="formData().targetAmount"
+            (ngModelChange)="updateForm('targetAmount', $event)"
+            name="targetAmount"
+            min="0"
+            placeholder="5000000"
+          />
+        </div>
+        <div class="form-group">
+          <label>Investissement min. (MRU)</label>
+          <input
+            type="number"
+            [ngModel]="formData().minInvestment"
+            (ngModelChange)="updateForm('minInvestment', $event)"
+            name="minInvestment"
+            min="0"
+            placeholder="5000"
+          />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>ROI estimé (%)</label>
+          <input
+            type="number"
+            [ngModel]="formData().roiEstimate"
+            (ngModelChange)="updateForm('roiEstimate', $event)"
+            name="roiEstimate"
+            min="0"
+            step="0.1"
+            placeholder="12"
+          />
+        </div>
+        <div class="form-group">
+          <label>Durée ROI (mois)</label>
+          <input
+            type="number"
+            [ngModel]="formData().roiDurationMonths"
+            (ngModelChange)="updateForm('roiDurationMonths', $event)"
+            name="roiDurationMonths"
+            min="1"
+            placeholder="24"
+          />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Max investisseurs</label>
+          <input
+            type="number"
+            [ngModel]="formData().maxInvestors"
+            (ngModelChange)="updateForm('maxInvestors', $event)"
+            name="maxInvestors"
+            min="1"
+            placeholder="200"
+          />
+        </div>
+        <div class="form-group">
+          <label>Statut initial</label>
+          <select
+            [ngModel]="formData().status"
+            (ngModelChange)="updateForm('status', $event)"
+            name="status"
+          >
+            <option value="OPEN">Ouvert</option>
+            <option value="FUNDED">Financé</option>
+            <option value="CONSTRUCTION">Construction</option>
+            <option value="COMPLETED">Terminé</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>URL image de couverture</label>
+        <input
+          type="url"
+          [ngModel]="formData().coverImageUrl"
+          (ngModelChange)="updateForm('coverImageUrl', $event)"
+          name="coverImageUrl"
+          placeholder="https://..."
+        />
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-outline" (click)="closeModal()">Annuler</button>
+        <button class="btn btn-primary" [disabled]="saving()" (click)="saveProject()">
+          @if (saving()) { <span class="spinner-sm"></span> }
+          Créer le projet
+        </button>
+      </div>
+    </div>
+  </div>
+}
