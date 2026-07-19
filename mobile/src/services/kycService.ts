@@ -8,7 +8,8 @@ import {
   serverTimestamp,
   DocumentData,
 } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref, uploadString, getDownloadURL } from 'firebase/storage';
+import * as FileSystem from 'expo-file-system';
 import { db, storage } from './firebase';
 import { updateUserKycStatus } from './userService';
 import { Document, DocType } from '../types';
@@ -29,9 +30,12 @@ async function uploadImage(
   const filePath = `kyc/${userId}/${side}_${Date.now()}.jpg`;
   const storageRef = ref(storage, filePath);
 
-  const response = await fetch(localUri);
-  const blob = await response.blob();
-  await uploadBytes(storageRef, blob, { contentType: 'image/jpeg' });
+  // fetch().blob() ne fonctionne pas sur les URI locaux React Native —
+  // on lit le fichier en base64 via expo-file-system puis on utilise uploadString.
+  const base64 = await FileSystem.readAsStringAsync(localUri, {
+    encoding: FileSystem.EncodingType.Base64,
+  });
+  await uploadString(storageRef, base64, 'base64', { contentType: 'image/jpeg' });
 
   const downloadUrl = await getDownloadURL(storageRef);
   return { filePath, downloadUrl };
