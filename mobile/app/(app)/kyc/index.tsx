@@ -539,7 +539,7 @@ const styles = StyleSheet.create({
   },
 
   // Status views
-  statusContainer: { alignItems: 'center', paddingVertical: 12 },
+  statusContainer: { alignItems: 'center', paddingVertical: 12, width: '100%' },
   statusIconBg: {
     width: 80,
     height: 80,
