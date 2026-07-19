@@ -33,9 +33,11 @@
   "devDependencies": {
     "@types/react": "~19.2.2",
     "babel-preset-expo": "^57.0.3",
+    "patch-package": "^8.0.1",
     "typescript": "~6.0.3"
   },
   "scripts": {
+    "postinstall": "patch-package",
     "start": "expo start",
     "dev": "node scripts/set-env.js dev && APP_ENV=dev expo start",
     "dev:ios": "node scripts/set-env.js dev && APP_ENV=dev expo start --ios",
