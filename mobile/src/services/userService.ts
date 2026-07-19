@@ -1,6 +1,6 @@
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from './firebase';
-import { User, RegisterDTO } from '../types';
+import { User, RegisterDTO, KycStatus } from '../types';
 
 /**
  * Récupère le profil utilisateur depuis Firestore.
@@ -27,4 +27,18 @@ export async function createUserProfile(uid: string, dto: RegisterDTO): Promise<
 
   await setDoc(doc(db, 'users', uid), newUser);
   return { id: uid, ...newUser };
+}
+
+/**
+ * Met à jour le statut KYC d'un utilisateur.
+ */
+export async function updateUserKycStatus(
+  uid: string,
+  status: KycStatus,
+  rejectionReason?: string
+): Promise<void> {
+  await updateDoc(doc(db, 'users', uid), {
+    kycStatus: status,
+    ...(rejectionReason ? { kycRejectionReason: rejectionReason } : {}),
+  });
 }
