@@ -28,7 +28,7 @@ export function useProjects(projectType?: ProjectType) {
     try {
       const all = await getProjects();
       const filtered = projectType
-        ? all.filter((p) => p.projectType === projectType)
+        ? all.filter((p) => (p.projectType ?? 'CONSTRUCTION') === projectType)
         : all;
       const sorted = [...filtered].sort(
         (a, b) => (STATUS_ORDER[a.status] ?? 99) - (STATUS_ORDER[b.status] ?? 99)
