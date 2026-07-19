@@ -13,11 +13,14 @@ service firebase.storage {
         request.resource.contentType.matches('image/.*');
     }
 
-    // Contrats PDF — lecture seule par le propriétaire ou un admin
+    // Contrats PDF — lecture par le propriétaire ou un admin, écriture par le propriétaire
     match /contracts/{userId}/{fileName} {
       allow read: if request.auth != null &&
         (request.auth.uid == userId || request.auth.token.role == 'ADMIN');
-      allow write: if false; // écriture via backend uniquement
+      allow write: if request.auth != null &&
+        request.auth.uid == userId &&
+        request.resource.size < 5 * 1024 * 1024 &&
+        request.resource.contentType == 'application/pdf';
     }
 
     // Tout le reste est interdit

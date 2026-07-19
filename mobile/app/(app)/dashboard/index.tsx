@@ -48,9 +48,9 @@ function InvestmentCard({ item, user }: { item: InvestmentWithProject; user: Use
       await sharePDF(html, buildPDFFilename(project.title, user.name));
       // Si le contrat n'est pas encore persisté en Storage, l'uploader maintenant
       if (!investment.contractUrl) {
-        uploadContractPDF(html, investment.id)
+        uploadContractPDF(html, investment.id, user.id)
           .then((url) => updateInvestmentStatus(investment.id, 'SUCCESS', { contractUrl: url }))
-          .catch(() => {});
+          .catch((err) => console.error('[Contract] Upload Storage échoué:', err));
       }
     } catch {
       // annulation silencieuse

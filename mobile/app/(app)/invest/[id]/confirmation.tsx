@@ -44,9 +44,9 @@ export default function InvestConfirmationScreen() {
       // Auto-upload du contrat en arrière-plan si pas encore persisté
       if (p && inv && user && !inv.contractUrl) {
         const html = generateContractHTML(user, p, parseInt(amountParam, 10), investmentId);
-        uploadContractPDF(html, investmentId)
+        uploadContractPDF(html, investmentId, user.id)
           .then((url) => updateInvestmentStatus(investmentId, 'SUCCESS', { contractUrl: url }))
-          .catch(() => {}); // échec silencieux — l'utilisateur peut télécharger manuellement
+          .catch((err) => console.error('[Contract] Auto-upload Storage échoué:', err));
       }
     });
   }, [id, investmentId]);
@@ -57,8 +57,14 @@ export default function InvestConfirmationScreen() {
     try {
       const html = generateContractHTML(user, project, amount, investmentId);
       await sharePDF(html, buildPDFFilename(project.title, user.name));
-    } catch {
-      // annulation silencieuse
+      // Upload vers Firebase Storage si pas encore persisté
+      if (investment && !investment.contractUrl) {
+        uploadContractPDF(html, investmentId, user.id)
+          .then((url) => updateInvestmentStatus(investmentId, 'SUCCESS', { contractUrl: url }))
+          .catch((err) => console.error('[Contract] Upload Storage échoué:', err));
+      }
+    } catch (err) {
+      console.error('[Contract] Partage PDF échoué:', err);
     } finally {
       setSharingPDF(false);
     }
