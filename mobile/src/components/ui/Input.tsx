@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TextInputProps,
   ViewStyle,
+  ReactNode,
 } from 'react-native';
 import { COLORS } from '../../constants';
 
@@ -12,15 +13,16 @@ interface InputProps extends TextInputProps {
   label?: string;
   error?: string;
   prefix?: string;
+  prefixElement?: ReactNode;
   containerStyle?: ViewStyle;
 }
 
-export function Input({ label, error, prefix, containerStyle, style, ...props }: InputProps) {
+export function Input({ label, error, prefix, prefixElement, containerStyle, style, ...props }: InputProps) {
   return (
     <View style={[styles.container, containerStyle]}>
       {label ? <Text style={styles.label}>{label}</Text> : null}
       <View style={[styles.inputRow, error ? styles.inputError : styles.inputNormal]}>
-        {prefix ? <Text style={styles.prefix}>{prefix}</Text> : null}
+        {prefixElement ?? (prefix ? <Text style={styles.prefix}>{prefix}</Text> : null)}
         <TextInput
           style={[styles.input, style]}
           placeholderTextColor={COLORS.disabled}

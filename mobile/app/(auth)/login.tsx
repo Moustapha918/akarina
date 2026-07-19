@@ -7,11 +7,12 @@ import {
   Platform,
   ScrollView,
   Alert,
+  TouchableOpacity,
 } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
-import { COLORS, MAURITANIAN_PHONE_REGEX, PHONE_PREFIX } from '../../src/constants';
+import { COLORS, COUNTRIES, Country } from '../../src/constants';
 import { Button } from '../../src/components/ui/Button';
 import { Input } from '../../src/components/ui/Input';
 import { sendOtp } from '../../src/services/authService';
@@ -28,9 +29,47 @@ const firebaseConfig = {
 export default function LoginScreen() {
   const insets = useSafeAreaInsets();
   const recaptchaVerifier = useRef<FirebaseRecaptchaVerifierModal>(null);
+  const [country, setCountry] = useState<Country>(COUNTRIES[0]);
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  function handleCountryPick() {
+    Alert.alert(
+      'Sélectionner le pays',
+      undefined,
+      [
+        ...COUNTRIES.map((c) => ({
+          text: `${c.flag}  ${c.name}  (${c.prefix})`,
+          onPress: () => { setCountry(c); setPhone(''); setError(''); },
+        })),
+        { text: 'Annuler', style: 'cancel' as const },
+      ]
+    );
+  }
+
+  function validate(): boolean {
+    const full = `${country.prefix}${phone}`;
+    if (!country.regex.test(full)) {
+      setError(`Numéro invalide. Ex: ${country.placeholder}`);
+      return false;
+    }
+    setError('');
+    return true;
+  }
+
+  async function handleSendOtp() {
+    if (!validate()) return;
+    setLoading(true);
+    try {
+      const isBypass = await sendOtp(phone, recaptchaVerifier.current, country.prefix);
+      router.push({ pathname: '/(auth)/verify', params: { phone, bypass: isBypass ? '1' : '0' } });
+    } catch (e: any) {
+      Alert.alert('Erreur', e.message ?? "Impossible d'envoyer le code. Réessayez.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   // Sur web : afficher un message d'indisponibilité
   if (Platform.OS === 'web') {
@@ -48,29 +87,6 @@ export default function LoginScreen() {
         </View>
       </View>
     );
-  }
-
-  function validate(): boolean {
-    const full = `${PHONE_PREFIX}${phone}`;
-    if (!MAURITANIAN_PHONE_REGEX.test(full)) {
-      setError('Numéro invalide. Ex: 22 00 00 00');
-      return false;
-    }
-    setError('');
-    return true;
-  }
-
-  async function handleSendOtp() {
-    if (!validate()) return;
-    setLoading(true);
-    try {
-      const isBypass = await sendOtp(phone, recaptchaVerifier.current);
-      router.push({ pathname: '/(auth)/verify', params: { phone, bypass: isBypass ? '1' : '0' } });
-    } catch (e: any) {
-      Alert.alert('Erreur', e.message ?? "Impossible d'envoyer le code. Réessayez.");
-    } finally {
-      setLoading(false);
-    }
   }
 
   return (
@@ -100,12 +116,18 @@ export default function LoginScreen() {
 
           <Input
             label="Numéro de téléphone"
-            prefix="+222"
-            placeholder="XX XX XX XX"
+            prefixElement={
+              <TouchableOpacity style={styles.countryPicker} onPress={handleCountryPick}>
+                <Text style={styles.countryFlag}>{country.flag}</Text>
+                <Text style={styles.countryPrefix}>{country.prefix}</Text>
+                <Text style={styles.countryChevron}>▾</Text>
+              </TouchableOpacity>
+            }
+            placeholder={country.placeholder}
             value={phone}
             onChangeText={(t) => {
               setError('');
-              setPhone(t.replace(/\D/g, '').slice(0, 8));
+              setPhone(t.replace(/\D/g, '').slice(0, country.digitCount));
             }}
             keyboardType="phone-pad"
             error={error}
@@ -117,7 +139,7 @@ export default function LoginScreen() {
             label="Recevoir le code"
             onPress={handleSendOtp}
             loading={loading}
-            disabled={phone.length < 8}
+            disabled={phone.length < country.digitCount}
             style={styles.button}
           />
         </View>
@@ -189,6 +211,18 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 4,
   },
+  countryPicker: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingRight: 10,
+    borderRightWidth: 1.5,
+    borderRightColor: COLORS.border,
+    marginRight: 8,
+  },
+  countryFlag: { fontSize: 18 },
+  countryPrefix: { fontSize: 15, fontWeight: '600', color: COLORS.textPrimary },
+  countryChevron: { fontSize: 10, color: COLORS.textSecondary },
   legal: {
     marginTop: 24,
     fontSize: 12,

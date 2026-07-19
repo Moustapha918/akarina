@@ -11,16 +11,18 @@ import { PHONE_PREFIX, DEV_TEST_PHONES } from '../constants';
 let _confirmationResult: ConfirmationResult | null = null;
 
 /**
- * Envoie un OTP au numéro mauritanien.
- * En mode DEV, les numéros de DEV_TEST_PHONES bypasse reCAPTCHA et l'envoi SMS.
- * @param localNumber - Les 8 chiffres du numéro (sans +222)
+ * Envoie un OTP au numéro de téléphone.
+ * En mode DEV, les numéros de DEV_TEST_PHONES bypassent reCAPTCHA et l'envoi SMS.
+ * @param localNumber - Chiffres du numéro sans le préfixe pays
  * @param appVerifier - Peut être null en mode dev bypass
+ * @param prefix - Indicatif pays (défaut +222)
  */
 export async function sendOtp(
   localNumber: string,
-  appVerifier: ApplicationVerifier | null
+  appVerifier: ApplicationVerifier | null,
+  prefix: string = PHONE_PREFIX
 ): Promise<boolean> {
-  const fullPhone = `${PHONE_PREFIX}${localNumber}`;
+  const fullPhone = `${prefix}${localNumber}`;
 
   // ── Dev bypass : Simulator / Expo Go ────────────────────────────────────────
   if (__DEV__ && DEV_TEST_PHONES[fullPhone] !== undefined) {

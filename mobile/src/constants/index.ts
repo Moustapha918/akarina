@@ -13,11 +13,43 @@ export const MAX_INVESTMENT_AMOUNT = 500_000;
 export const INVESTMENT_PRESETS = [5_000, 10_000, 25_000, 50_000, 100_000];
 
 // ─── Format ──────────────────────────────────────────────────────────────────
-/** Préfixe téléphone mauritanien */
+/** Préfixe téléphone mauritanien (rétrocompat) */
 export const PHONE_PREFIX = '+222';
 
 /** Regex numéro mauritanien (8 chiffres après +222) */
 export const MAURITANIAN_PHONE_REGEX = /^\+222[2-4][0-9]{7}$/;
+
+/** Pays supportés pour l'authentification téléphone */
+export interface Country {
+  code: string;
+  flag: string;
+  name: string;
+  prefix: string;
+  digitCount: number;
+  placeholder: string;
+  regex: RegExp;
+}
+
+export const COUNTRIES: Country[] = [
+  {
+    code: 'MR',
+    flag: '🇲🇷',
+    name: 'Mauritanie',
+    prefix: '+222',
+    digitCount: 8,
+    placeholder: 'XX XX XX XX',
+    regex: /^\+222[2-4][0-9]{7}$/,
+  },
+  {
+    code: 'FR',
+    flag: '🇫🇷',
+    name: 'France',
+    prefix: '+33',
+    digitCount: 9,
+    placeholder: 'X XX XX XX XX',
+    regex: /^\+33[67][0-9]{8}$/,
+  },
+];
 
 // ─── Couleurs ────────────────────────────────────────────────────────────────
 export const COLORS = {
