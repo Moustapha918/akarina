@@ -1,6 +1,7 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { I18nManager } from 'react-native';
 import fr from './locales/fr.json';
 import ar from './locales/ar.json';
 
@@ -10,6 +11,21 @@ export const SUPPORTED_LANGUAGES = [
   { code: 'ar', label: 'Arabe', nativeLabel: 'العربية' },
 ] as const;
 export type LanguageCode = 'fr' | 'ar';
+
+/**
+ * Apply RTL layout direction for the given language.
+ * Returns true if the RTL state changed — the caller should prompt a restart
+ * so that React Native fully re-initialises the layout engine.
+ */
+export function applyRTL(lang: LanguageCode): boolean {
+  const shouldBeRTL = lang === 'ar';
+  if (I18nManager.isRTL !== shouldBeRTL) {
+    I18nManager.allowRTL(shouldBeRTL);
+    I18nManager.forceRTL(shouldBeRTL);
+    return true; // restart needed for full effect
+  }
+  return false;
+}
 
 export async function getSavedLanguage(): Promise<LanguageCode> {
   try {
@@ -25,6 +41,9 @@ export async function saveLanguage(lang: LanguageCode): Promise<void> {
 
 export async function initI18n(): Promise<void> {
   const lang = await getSavedLanguage();
+
+  // Apply RTL before the first render so the layout engine is configured correctly.
+  applyRTL(lang);
 
   await i18n
     .use(initReactI18next)

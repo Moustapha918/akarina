@@ -123,7 +123,10 @@
     "authPrompt": "أنشئ حساباً للاستثمار في \"{{title}}\".",
     "durationLabel": "المدة",
     "exitRental": "🏠 إيجار",
-    "exitSale": "💼 بيع"
+    "exitSale": "💼 بيع",
+    "collected": "تم جمعه",
+    "durationShort": "المدة",
+    "fromAmount": "ابتداءً من"
   },
   "invest": {
     "steps": {

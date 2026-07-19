@@ -167,7 +167,7 @@ function Divider() {
 const rowStyles = StyleSheet.create({
   row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 },
   label: { fontSize: 13, color: COLORS.textSecondary, flex: 1 },
-  value: { fontSize: 13, fontWeight: '600', color: COLORS.textPrimary, flex: 1, textAlign: 'right' },
+  value: { fontSize: 13, fontWeight: '600', color: COLORS.textPrimary, flex: 1, textAlign: 'auto' },
   valueHighlight: { fontSize: 16, fontWeight: '800', color: COLORS.primary },
   valueMono: { fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace', fontSize: 11 },
   divider: { height: 1, backgroundColor: COLORS.border, marginVertical: 4 },

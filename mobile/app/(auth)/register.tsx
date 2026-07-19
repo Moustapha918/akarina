@@ -143,8 +143,8 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     marginBottom: 28,
-    borderLeftWidth: 4,
-    borderLeftColor: COLORS.primary,
+    borderStartWidth: 4,
+    borderStartColor: COLORS.primary,
   },
   phoneLabel: {
     fontSize: 11,

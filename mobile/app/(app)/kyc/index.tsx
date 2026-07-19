@@ -393,8 +393,8 @@ const styles = StyleSheet.create({
   stepLine: {
     position: 'absolute',
     top: 14,
-    left: '60%',
-    right: '-60%',
+    start: '60%',
+    end: '-60%',
     height: 2,
     backgroundColor: 'rgba(255,255,255,0.2)',
     zIndex: -1,
@@ -479,7 +479,7 @@ const styles = StyleSheet.create({
   imageEditBadge: {
     position: 'absolute',
     bottom: 8,
-    right: 8,
+    end: 8,
     backgroundColor: 'rgba(0,0,0,0.55)',
     borderRadius: 8,
     paddingHorizontal: 10,

@@ -123,7 +123,10 @@
     "authPrompt": "Créez un compte pour investir dans \"{{title}}\".",
     "durationLabel": "Durée",
     "exitRental": "🏠 Location",
-    "exitSale": "💼 Vente"
+    "exitSale": "💼 Vente",
+    "collected": "collectés",
+    "durationShort": "durée",
+    "fromAmount": "À partir de"
   },
   "invest": {
     "steps": {

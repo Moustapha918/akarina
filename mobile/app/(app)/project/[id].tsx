@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
   heroEmoji: { fontSize: 64 },
   backButton: {
     position: 'absolute',
-    left: 16,
+    start: 16,
     width: 40,
     height: 40,
     borderRadius: 20,
@@ -290,7 +290,7 @@ const styles = StyleSheet.create({
   heroBadge: {
     position: 'absolute',
     bottom: 16,
-    left: 16,
+    start: 16,
     paddingHorizontal: 12,
     paddingVertical: 5,
     borderRadius: 20,
@@ -352,8 +352,8 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     padding: 18,
     gap: 10,
-    borderLeftWidth: 4,
-    borderLeftColor: COLORS.primary,
+    borderStartWidth: 4,
+    borderStartColor: COLORS.primary,
   },
   mousharakaTitle: {
     fontSize: 16,
@@ -380,8 +380,8 @@ const styles = StyleSheet.create({
   stickyFooter: {
     position: 'absolute',
     bottom: 0,
-    left: 0,
-    right: 0,
+    start: 0,
+    end: 0,
     backgroundColor: COLORS.surface,
     paddingHorizontal: 20,
     paddingTop: 12,

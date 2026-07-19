@@ -242,7 +242,7 @@ const slideStyles = StyleSheet.create({
   description: { fontSize: 15, color: COLORS.textSecondary, lineHeight: 24 },
   highlightBox: {
     marginTop: 24, backgroundColor: '#EBF5FB', borderRadius: 14, padding: 16,
-    borderLeftWidth: 4, borderLeftColor: COLORS.primary,
+    borderStartWidth: 4, borderStartColor: COLORS.primary,
   },
   highlightLabel: {
     fontSize: 11, fontWeight: '600', color: COLORS.textSecondary,

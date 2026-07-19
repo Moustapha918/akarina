@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { router } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { Project } from '../../types';
 import { COLORS } from '../../constants';
 import {
@@ -14,6 +15,7 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
+  const { t } = useTranslation();
   const progress = collectProgress(project.collectedAmount, project.targetAmount);
   const statusColor = projectStatusColor(project.status);
 
@@ -55,24 +57,24 @@ export function ProjectCard({ project }: ProjectCardProps) {
         <View style={styles.stats}>
           <View style={styles.stat}>
             <Text style={styles.statValue}>{formatMRU(project.collectedAmount, true)}</Text>
-            <Text style={styles.statLabel}>collectés</Text>
+            <Text style={styles.statLabel}>{t('project.collected')}</Text>
           </View>
           <View style={styles.statDivider} />
           <View style={styles.stat}>
             <Text style={styles.statValue}>{project.roiEstimate}%</Text>
-            <Text style={styles.statLabel}>ROI estimé</Text>
+            <Text style={styles.statLabel}>{t('project.roiEstimate')}</Text>
           </View>
           <View style={styles.statDivider} />
           <View style={styles.stat}>
-            <Text style={styles.statValue}>{project.roiDurationMonths} mois</Text>
-            <Text style={styles.statLabel}>durée</Text>
+            <Text style={styles.statValue}>{project.roiDurationMonths} {t('project.duration')}</Text>
+            <Text style={styles.statLabel}>{t('project.durationShort')}</Text>
           </View>
         </View>
 
         {/* Montant minimum */}
         <View style={styles.footer}>
           <Text style={styles.minInvest}>
-            À partir de{' '}
+            {t('project.fromAmount')}{' '}
             <Text style={styles.minInvestAmount}>{formatMRU(project.minInvestment)}</Text>
           </Text>
           <Text style={styles.investors}>
@@ -118,7 +120,7 @@ const styles = StyleSheet.create({
   statusBadge: {
     position: 'absolute',
     top: 12,
-    left: 12,
+    start: 12,
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 20,

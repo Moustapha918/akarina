@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
   stepLabel: { fontSize: 10, color: COLORS.textSecondary, textAlign: 'center' },
   stepLabelActive: { color: COLORS.primary, fontWeight: '600' },
   stepLine: {
-    position: 'absolute', right: -8, top: 14,
+    position: 'absolute', end: -8, top: 14,
     width: 16, height: 1, backgroundColor: COLORS.border,
   },
   stepLineActive: { backgroundColor: COLORS.primary },
@@ -317,7 +317,7 @@ const styles = StyleSheet.create({
   },
   currencyBadge: {
     backgroundColor: COLORS.background, paddingHorizontal: 16, paddingVertical: 14,
-    borderLeftWidth: 1, borderLeftColor: COLORS.border,
+    borderStartWidth: 1, borderStartColor: COLORS.border,
   },
   currencyText: { fontSize: 14, fontWeight: '600', color: COLORS.textSecondary },
   errorBox: { backgroundColor: '#FDEDEC', borderRadius: 10, padding: 12, marginBottom: 16 },
