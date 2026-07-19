@@ -346,6 +346,10 @@
       "none": "○ مطلوب للاستثمار فوق 5 000 أوقية"
     },
     "guestTitle": "ملفك الشخصي",
-    "guestDescription": "سجّل الدخول للوصول إلى ملفك الشخصي وإدارة معلوماتك."
+    "guestDescription": "سجّل الدخول للوصول إلى ملفك الشخصي وإدارة معلوماتك.",
+    "languageSection": "اللغة",
+    "languageFr": "Français",
+    "languageAr": "العربية",
+    "languageActive": "نشط"
   }
 }

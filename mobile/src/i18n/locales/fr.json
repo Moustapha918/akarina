@@ -346,6 +346,10 @@
       "none": "○ Requis pour investir au-delà de 5 000 MRU"
     },
     "guestTitle": "Votre profil",
-    "guestDescription": "Connectez-vous pour accéder à votre profil et gérer vos informations."
+    "guestDescription": "Connectez-vous pour accéder à votre profil et gérer vos informations.",
+    "languageSection": "Langue",
+    "languageFr": "Français",
+    "languageAr": "العربية",
+    "languageActive": "Actif"
   }
 }

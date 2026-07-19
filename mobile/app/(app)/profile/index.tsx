@@ -11,8 +11,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { GuestGuard } from '../../../src/components/ui/GuestGuard';
 import { useAuthStore } from '../../../src/hooks/useAuthStore';
+import { useLanguageSwitcher } from '../../../src/hooks/useLanguageSwitcher';
 import { signOut } from '../../../src/services/authService';
 import { COLORS } from '../../../src/constants';
+import { SUPPORTED_LANGUAGES, LanguageCode } from '../../../src/i18n';
 import { KycStatus } from '../../../src/types';
 
 function Row({ icon, label, value, onPress, danger }: {
@@ -39,10 +41,50 @@ function Row({ icon, label, value, onPress, danger }: {
   );
 }
 
+function LangRow({
+  code,
+  label,
+  flag,
+  isActive,
+  onPress,
+}: {
+  code: LanguageCode;
+  label: string;
+  flag: string;
+  isActive: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <TouchableOpacity
+      style={styles.row}
+      onPress={onPress}
+      activeOpacity={0.7}
+    >
+      <Text style={styles.rowIcon}>{flag}</Text>
+      <View style={styles.rowBody}>
+        <Text style={[styles.rowLabel, isActive && { color: COLORS.primary, fontWeight: '700' }]}>
+          {label}
+        </Text>
+      </View>
+      {isActive && (
+        <View style={styles.activeBadge}>
+          <Text style={styles.activeBadgeText}>✓</Text>
+        </View>
+      )}
+    </TouchableOpacity>
+  );
+}
+
+const LANG_FLAGS: Record<LanguageCode, string> = {
+  fr: '🇫🇷',
+  ar: '🇲🇷',
+};
+
 function ProfileContent() {
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
   const { user, signOut: clearStore } = useAuthStore();
+  const { currentLang, switchLanguage } = useLanguageSwitcher();
 
   const kycStatus: KycStatus = user?.kycStatus ?? 'NONE';
 
@@ -58,7 +100,6 @@ function ProfileContent() {
     VERIFIED: COLORS.success,
     REJECTED: COLORS.danger,
   };
-
   const kycBadgeText: Record<KycStatus, string> = {
     VERIFIED: t('profile.kycBadge.verified'),
     PENDING: t('profile.kycBadge.pending'),
@@ -107,6 +148,25 @@ function ProfileContent() {
           <Row icon="📧" label={t('profile.email')} value={user?.email || '—'} />
           <View style={styles.separator} />
           <Row icon="📱" label={t('profile.phone')} value={user?.phone} />
+        </View>
+      </View>
+
+      {/* Langue */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>{t('profile.languageSection')}</Text>
+        <View style={styles.card}>
+          {SUPPORTED_LANGUAGES.map((lang, i) => (
+            <View key={lang.code}>
+              {i > 0 && <View style={styles.separator} />}
+              <LangRow
+                code={lang.code}
+                label={lang.code === 'fr' ? t('profile.languageFr') : t('profile.languageAr')}
+                flag={LANG_FLAGS[lang.code]}
+                isActive={currentLang === lang.code}
+                onPress={() => switchLanguage(lang.code)}
+              />
+            </View>
+          ))}
         </View>
       </View>
 
@@ -201,7 +261,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
-  separator: { height: 1, backgroundColor: COLORS.border, marginLeft: 52 },
+  separator: { height: 1, backgroundColor: COLORS.border, marginStart: 52 },
 
   row: {
     flexDirection: 'row',
@@ -216,6 +276,16 @@ const styles = StyleSheet.create({
   rowLabelDanger: { color: COLORS.danger },
   rowValue: { fontSize: 13, color: COLORS.textSecondary, marginTop: 2 },
   rowChevron: { fontSize: 20, color: COLORS.border },
+
+  activeBadge: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: COLORS.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  activeBadgeText: { color: '#fff', fontSize: 13, fontWeight: '700' },
 
   kycBadge: {
     marginTop: 8,
