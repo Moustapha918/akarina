@@ -9,7 +9,7 @@ import {
   DocumentData,
 } from 'firebase/firestore';
 import { ref, uploadString, getDownloadURL } from 'firebase/storage';
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import { db, storage } from './firebase';
 import { updateUserKycStatus } from './userService';
 import { Document, DocType } from '../types';
