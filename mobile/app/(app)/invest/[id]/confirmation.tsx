@@ -11,6 +11,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { sharePDF, buildPDFFilename } from '../../../../src/utils/pdfShare';
+import { uploadContractPDF } from '../../../../src/utils/pdfStorage';
 import { COLORS } from '../../../../src/constants';
 import { Button } from '../../../../src/components/ui/Button';
 import { formatMRU } from '../../../../src/utils/format';
@@ -39,6 +40,14 @@ export default function InvestConfirmationScreen() {
       setProject(p);
       setInvestment(inv);
       setLoading(false);
+
+      // Auto-upload du contrat en arrière-plan si pas encore persisté
+      if (p && inv && user && !inv.contractUrl) {
+        const html = generateContractHTML(user, p, parseInt(amountParam, 10), investmentId);
+        uploadContractPDF(html, investmentId)
+          .then((url) => updateInvestmentStatus(investmentId, 'SUCCESS', { contractUrl: url }))
+          .catch(() => {}); // échec silencieux — l'utilisateur peut télécharger manuellement
+      }
     });
   }, [id, investmentId]);
 
@@ -48,7 +57,6 @@ export default function InvestConfirmationScreen() {
     try {
       const html = generateContractHTML(user, project, amount, investmentId);
       await sharePDF(html, buildPDFFilename(project.title, user.name));
-      await updateInvestmentStatus(investmentId, 'SUCCESS', { contractUrl: 'generated' });
     } catch {
       // annulation silencieuse
     } finally {

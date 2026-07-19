@@ -45,6 +45,12 @@ export async function initI18n(): Promise<void> {
   // Apply RTL before the first render so the layout engine is configured correctly.
   applyRTL(lang);
 
+  if (i18n.isInitialized) {
+    // Fast Refresh keeps the singleton alive — just switch language, skip init().
+    await i18n.changeLanguage(lang);
+    return;
+  }
+
   await i18n
     .use(initReactI18next)
     .init({

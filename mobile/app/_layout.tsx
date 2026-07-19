@@ -11,12 +11,16 @@ export default function RootLayout() {
   const [i18nReady, setI18nReady] = useState(false);
 
   useEffect(() => {
+    let active = true;
     initialize();
     // initI18n() calls applyRTL() → I18nManager.forceRTL() before this
     // component renders, so the native layout engine and React Navigation's
     // Stack (slide direction, swipe-back gesture, header back button) are
     // all configured correctly for the saved language on first paint.
-    initI18n().then(() => setI18nReady(true));
+    initI18n().then(() => {
+      if (active) setI18nReady(true);
+    });
+    return () => { active = false; };
   }, []);
 
   // I18nextProvider must be mounted before i18n.init() resolves so that
