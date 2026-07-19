@@ -24,16 +24,4 @@
       }
     }
   },
-  "submit": {
-    "prod": {
-      "ios": {
-        "appleId": "",
-        "ascAppId": "",
-        "appleTeamId": ""
-      },
-      "android": {
-        "serviceAccountKeyPath": ""
-      }
-    }
-  }
 }
