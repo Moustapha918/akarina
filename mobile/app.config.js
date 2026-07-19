@@ -50,8 +50,21 @@ module.exports = {
       bundleIdentifier: env.bundleId,
     },
 
+    splash: {
+      image: './assets/splash-icon.png',
+      resizeMode: 'contain',
+      backgroundColor: '#1B4F72',
+    },
+
     android: {
       package: env.androidPackage,
+      versionCode: 1,
+      permissions: [
+        'android.permission.INTERNET',
+        'android.permission.CAMERA',
+        'android.permission.READ_EXTERNAL_STORAGE',
+        'android.permission.WRITE_EXTERNAL_STORAGE',
+      ],
       adaptiveIcon: {
         backgroundColor: '#1B4F72',
         foregroundImage: './assets/android-icon-foreground.png',
@@ -87,6 +100,9 @@ module.exports = {
     // Accessible via Constants.expoConfig.extra dans l'app
     extra: {
       appEnv: APP_ENV,
+      eas: {
+        projectId: 'c561b900-6437-4794-b1ab-0f5ca3f34d25',
+      },
     },
   },
 };
