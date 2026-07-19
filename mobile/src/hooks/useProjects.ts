@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Project, ProjectStatus } from '../types';
+import { Project, ProjectStatus, ProjectType } from '../types';
 import { getProjects } from '../services/projectService';
 
 interface ProjectsState {
@@ -8,7 +8,15 @@ interface ProjectsState {
   error: string | null;
 }
 
-export function useProjects(status?: ProjectStatus) {
+const STATUS_ORDER: Record<ProjectStatus, number> = {
+  OPEN: 0,
+  FUNDED: 1,
+  CONSTRUCTION: 2,
+  RENTING: 3,
+  COMPLETED: 4,
+};
+
+export function useProjects(projectType?: ProjectType) {
   const [state, setState] = useState<ProjectsState>({
     projects: [],
     isLoading: true,
@@ -18,12 +26,18 @@ export function useProjects(status?: ProjectStatus) {
   const fetch = useCallback(async () => {
     setState((s) => ({ ...s, isLoading: true, error: null }));
     try {
-      const projects = await getProjects(status);
-      setState({ projects, isLoading: false, error: null });
+      const all = await getProjects();
+      const filtered = projectType
+        ? all.filter((p) => p.projectType === projectType)
+        : all;
+      const sorted = [...filtered].sort(
+        (a, b) => (STATUS_ORDER[a.status] ?? 99) - (STATUS_ORDER[b.status] ?? 99)
+      );
+      setState({ projects: sorted, isLoading: false, error: null });
     } catch (e: any) {
       setState({ projects: [], isLoading: false, error: e.message ?? 'Erreur de chargement.' });
     }
-  }, [status]);
+  }, [projectType]);
 
   useEffect(() => {
     fetch();

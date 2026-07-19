@@ -11,22 +11,20 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { COLORS } from '../../src/constants';
-import { ProjectStatus } from '../../src/types';
+import { ProjectType } from '../../src/types';
 import { useProjects } from '../../src/hooks/useProjects';
 import { ProjectCard } from '../../src/components/project/ProjectCard';
 import { useAuthStore } from '../../src/hooks/useAuthStore';
 
-const FILTERS: { label: string; value?: ProjectStatus }[] = [
-  { label: 'Tous' },
-  { label: 'Ouverts', value: 'OPEN' },
-  { label: 'En construction', value: 'CONSTRUCTION' },
-  { label: 'Terminés', value: 'COMPLETED' },
+const FILTERS: { label: string; value: ProjectType }[] = [
+  { label: '🏗️ Construction', value: 'CONSTRUCTION' },
+  { label: '🏕️ Land Flip', value: 'LAND_FLIP' },
 ];
 
 export default function ProjectsScreen() {
   const insets = useSafeAreaInsets();
   const { user } = useAuthStore();
-  const [activeFilter, setActiveFilter] = useState<ProjectStatus | undefined>(undefined);
+  const [activeFilter, setActiveFilter] = useState<ProjectType>('CONSTRUCTION');
   const { projects, isLoading, error, refetch } = useProjects(activeFilter);
 
   return (
@@ -71,6 +69,7 @@ export default function ProjectsScreen() {
                 activeFilter === item.value && styles.filterChipActive,
               ]}
               onPress={() => setActiveFilter(item.value)}
+              activeOpacity={0.75}
             >
               <Text
                 style={[
