@@ -58,7 +58,7 @@ export function generateContractHTML(
     .party-box h3 { font-size: 11px; color: #717D7E; margin-bottom: 8px; text-transform: uppercase; }
     .party-box p { font-size: 12px; line-height: 1.8; }
     .amount-banner {
-      background: linear-gradient(135deg, #1B4F72, #2E86C1);
+      background: #1B4F72;
       border-radius: 12px;
       padding: 20px;
       text-align: center;
