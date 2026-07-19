@@ -5,13 +5,11 @@ import {
   StyleSheet,
   ScrollView,
   ActivityIndicator,
-  Share,
   Platform,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import * as Print from 'expo-print';
-import * as Sharing from 'expo-sharing';
+import { sharePDF } from '../../../../src/utils/pdfShare';
 import { COLORS } from '../../../../src/constants';
 import { Button } from '../../../../src/components/ui/Button';
 import { formatMRU } from '../../../../src/utils/format';
@@ -49,27 +47,10 @@ export default function InvestConfirmationScreen() {
     setSharingPDF(true);
     try {
       const html = generateContractHTML(user, project, amount);
-      const { uri } = await Print.printToFileAsync({ html, base64: false });
-
-      // Store PDF URI in Firestore for future reference
-      await updateInvestmentStatus(investmentId, 'SUCCESS', { contractUrl: uri });
-
-      const canShare = await Sharing.isAvailableAsync();
-      if (canShare) {
-        await Sharing.shareAsync(uri, {
-          mimeType: 'application/pdf',
-          dialogTitle: 'Contrat Mousharaka — Akarina',
-          UTI: 'com.adobe.pdf',
-        });
-      } else {
-        // Fallback: native share sheet
-        await Share.share({
-          title: 'Contrat Mousharaka — Akarina',
-          message: `Contrat d'investissement Akarina disponible : ${uri}`,
-        });
-      }
+      await sharePDF(html, 'Contrat Mousharaka — Akarina');
+      await updateInvestmentStatus(investmentId, 'SUCCESS', { contractUrl: 'generated' });
     } catch {
-      // Silently ignore share cancellation
+      // annulation silencieuse
     } finally {
       setSharingPDF(false);
     }

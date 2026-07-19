@@ -11,14 +11,13 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import * as Print from 'expo-print';
-import * as Sharing from 'expo-sharing';
 import { COLORS } from '../../../src/constants';
 import { GuestGuard } from '../../../src/components/ui/GuestGuard';
 import { useAuthStore } from '../../../src/hooks/useAuthStore';
 import { useMyInvestments, InvestmentWithProject } from '../../../src/hooks/useMyInvestments';
 import { formatMRU, collectProgress, projectStatusLabel, projectStatusColor } from '../../../src/utils/format';
 import { generateContractHTML } from '../../../src/utils/contractTemplate';
+import { sharePDF } from '../../../src/utils/pdfShare';
 import { Investment, KycStatus, User } from '../../../src/types';
 
 // ─── KYC Badge ───────────────────────────────────────────────────────────────
@@ -66,15 +65,7 @@ function InvestmentCard({ item, user }: { item: InvestmentWithProject; user: Use
     setDownloadingPdf(true);
     try {
       const html = generateContractHTML(user, project, investment.amount);
-      const { uri } = await Print.printToFileAsync({ html, base64: false });
-      const canShare = await Sharing.isAvailableAsync();
-      if (canShare) {
-        await Sharing.shareAsync(uri, {
-          mimeType: 'application/pdf',
-          dialogTitle: 'Contrat Mousharaka — Akarina',
-          UTI: 'com.adobe.pdf',
-        });
-      }
+      await sharePDF(html, 'Contrat Mousharaka — Akarina');
     } catch {
       // annulation silencieuse
     } finally {
