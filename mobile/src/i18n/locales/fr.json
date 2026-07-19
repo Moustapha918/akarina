@@ -1,4 +1,19 @@
 {
+  "projectStatus": {
+    "OPEN": "Ouvert",
+    "FUNDED": "Financé",
+    "CONSTRUCTION": "En construction",
+    "RENTING": "En location",
+    "COMPLETED": "Terminé"
+  },
+  "projectType": {
+    "CONSTRUCTION": "Construction",
+    "LAND_FLIP": "Achat-Revente Terrain"
+  },
+  "exitStrategy": {
+    "RENTAL": "Location",
+    "SALE": "Vente"
+  },
   "common": {
     "cancel": "Annuler",
     "back": "← Retour",

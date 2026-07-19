@@ -1,4 +1,5 @@
 import { ProjectType, ExitStrategy } from '../types';
+import i18n from '../i18n';
 
 /**
  * Formate un montant en MRU lisible.
@@ -10,7 +11,10 @@ export function formatMRU(amount: number, compact = false): string {
     if (amount >= 1_000_000) return `${(amount / 1_000_000).toFixed(1)}M MRU`;
     if (amount >= 1_000) return `${(amount / 1_000).toFixed(0)}k MRU`;
   }
-  return `${amount.toLocaleString('fr-FR')} MRU`;
+  // ar-MA (Moroccan Arabic) keeps Western numerals (0-9) — correct for a
+  // Mauritanian financial context where Eastern numerals are not standard.
+  const locale = i18n.language === 'ar' ? 'ar-MA' : 'fr-FR';
+  return `${amount.toLocaleString(locale)} MRU`;
 }
 
 /**
@@ -22,17 +26,10 @@ export function collectProgress(collected: number, target: number): number {
 }
 
 /**
- * Label lisible du statut projet.
+ * Label lisible du statut projet — traduit selon la langue courante.
  */
 export function projectStatusLabel(status: string): string {
-  const labels: Record<string, string> = {
-    OPEN: 'Ouvert',
-    FUNDED: 'Financé',
-    CONSTRUCTION: 'En construction',
-    RENTING: 'En location',
-    COMPLETED: 'Terminé',
-  };
-  return labels[status] ?? status;
+  return i18n.t(`projectStatus.${status}`, { defaultValue: status });
 }
 
 /**
@@ -50,10 +47,10 @@ export function projectStatusColor(status: string): string {
 }
 
 /**
- * Label du type de projet.
+ * Label du type de projet — traduit selon la langue courante.
  */
 export function projectTypeLabel(type: ProjectType): string {
-  return type === 'CONSTRUCTION' ? 'Construction' : 'Achat-Revente Terrain';
+  return i18n.t(`projectType.${type}`, { defaultValue: type });
 }
 
 /**
@@ -64,10 +61,10 @@ export function projectTypeIcon(type: ProjectType): string {
 }
 
 /**
- * Label de la stratégie de sortie.
+ * Label de la stratégie de sortie — traduit selon la langue courante.
  */
 export function exitStrategyLabel(strategy: ExitStrategy): string {
-  return strategy === 'RENTAL' ? 'Location' : 'Vente';
+  return i18n.t(`exitStrategy.${strategy}`, { defaultValue: strategy });
 }
 
 /**

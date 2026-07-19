@@ -1,4 +1,19 @@
 {
+  "projectStatus": {
+    "OPEN": "مفتوح",
+    "FUNDED": "ممول",
+    "CONSTRUCTION": "قيد الإنشاء",
+    "RENTING": "قيد التأجير",
+    "COMPLETED": "مكتمل"
+  },
+  "projectType": {
+    "CONSTRUCTION": "بناء",
+    "LAND_FLIP": "بيع الأراضي"
+  },
+  "exitStrategy": {
+    "RENTAL": "إيجار",
+    "SALE": "بيع"
+  },
   "common": {
     "cancel": "إلغاء",
     "back": "→ رجوع",
