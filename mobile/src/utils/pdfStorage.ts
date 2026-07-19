@@ -17,9 +17,15 @@ export async function uploadContractPDF(
   // 1. Générer le PDF localement
   const { uri } = await Print.printToFileAsync({ html, base64: false });
 
-  // 2. Convertir le file:// URI en Blob via fetch (polyfill natif RN)
-  const response = await fetch(uri);
-  const blob = await response.blob();
+  // 2. Convertir le file:// URI en Blob via XHR (fetch().blob() non supporté sur Android)
+  const blob = await new Promise<Blob>((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onload = () => resolve(xhr.response);
+    xhr.onerror = () => reject(new Error('XHR blob fetch failed'));
+    xhr.responseType = 'blob';
+    xhr.open('GET', uri, true);
+    xhr.send(null);
+  });
 
   // 3. Uploader vers Firebase Storage — path : contracts/{userId}/{investmentId}.pdf
   const storageRef = ref(storage, `contracts/${userId}/${investmentId}.pdf`);
