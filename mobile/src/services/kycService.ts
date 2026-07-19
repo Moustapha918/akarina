@@ -8,8 +8,7 @@ import {
   serverTimestamp,
   DocumentData,
 } from 'firebase/firestore';
-import { ref, uploadString, getDownloadURL } from 'firebase/storage';
-import * as FileSystem from 'expo-file-system/legacy';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from './firebase';
 import { updateUserKycStatus } from './userService';
 import { Document, DocType } from '../types';
@@ -30,12 +29,19 @@ async function uploadImage(
   const filePath = `kyc/${userId}/${side}_${Date.now()}.jpg`;
   const storageRef = ref(storage, filePath);
 
-  // fetch().blob() ne fonctionne pas sur les URI locaux React Native —
-  // on lit le fichier en base64 via expo-file-system puis on utilise uploadString.
-  const base64 = await FileSystem.readAsStringAsync(localUri, {
-    encoding: FileSystem.EncodingType.Base64,
+  // XMLHttpRequest avec responseType 'blob' est la seule méthode fiable
+  // pour lire des URI locaux (file:// et content://) dans React Native / Hermes.
+  // fetch().blob() et uploadString(base64) échouent tous les deux sur Hermes.
+  const blob = await new Promise<Blob>((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onload = () => resolve(xhr.response as Blob);
+    xhr.onerror = () => reject(new Error('Impossible de lire le fichier image.'));
+    xhr.responseType = 'blob';
+    xhr.open('GET', localUri, true);
+    xhr.send(null);
   });
-  await uploadString(storageRef, base64, 'base64', { contentType: 'image/jpeg' });
+
+  await uploadBytes(storageRef, blob, { contentType: 'image/jpeg' });
 
   const downloadUrl = await getDownloadURL(storageRef);
   return { filePath, downloadUrl };
