@@ -21,11 +21,12 @@ const RESEND_DELAY = 60;
 
 export default function VerifyScreen() {
   const insets = useSafeAreaInsets();
-  const { phone, bypass } = useLocalSearchParams<{ phone: string; bypass: string }>();
+  const { phone, bypass, prefix: prefixParam } = useLocalSearchParams<{ phone: string; bypass: string; prefix: string }>();
+  const prefix = prefixParam ?? PHONE_PREFIX;
   const { setUser } = useAuthStore();
 
   const isDevBypass = __DEV__ && bypass === '1';
-  const devOtp = isDevBypass ? DEV_TEST_PHONES[`${PHONE_PREFIX}${phone}`] : undefined;
+  const devOtp = isDevBypass ? DEV_TEST_PHONES[`${prefix}${phone}`] : undefined;
 
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
@@ -50,7 +51,7 @@ export default function VerifyScreen() {
         router.replace('/(app)');
       } else {
         // Nouvel utilisateur → compléter le profil
-        router.push({ pathname: '/(auth)/register', params: { phone: `${PHONE_PREFIX}${phone}` } });
+        router.push({ pathname: '/(auth)/register', params: { phone: `${prefix}${phone}` } });
       }
     } catch (e: any) {
       const message = __DEV__
@@ -95,7 +96,7 @@ export default function VerifyScreen() {
             {isDevBypass
               ? 'Mode simulateur — aucun SMS envoyé.'
               : `Code envoyé au\n`}
-            {!isDevBypass && <Text style={styles.phone}>{PHONE_PREFIX} {phone}</Text>}
+            {!isDevBypass && <Text style={styles.phone}>{prefix} {phone}</Text>}
           </Text>
         </View>
 
