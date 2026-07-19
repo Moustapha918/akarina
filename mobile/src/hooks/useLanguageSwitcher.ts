@@ -1,16 +1,22 @@
 import { useCallback } from 'react';
-import { Alert } from 'react-native';
+import { Alert, NativeModules } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { applyRTL, saveLanguage, LanguageCode } from '../i18n';
 
 /**
  * Hook for switching the app language at runtime.
  *
- * - String translations update immediately (no restart needed).
- * - If the RTL layout direction changes (FR↔AR), the user is prompted to
- *   restart the app so React Native's layout engine can re-initialise.
- *   Text direction is applied eagerly via I18nManager so the next cold
- *   start is already correct without any user action on the JS side.
+ * When RTL direction changes (FR↔AR):
+ *   - Language is persisted to AsyncStorage FIRST (so initI18n reads it on reload)
+ *   - I18nManager.forceRTL() is called to set the native flag
+ *   - NativeModules.DevSettings.reload() triggers a JS bundle reload (Expo Go
+ *     and debug builds) — this re-runs initI18n() which applies the saved
+ *     language + RTL flag, giving a full RTL layout with no manual restart
+ *   - Production fallback (DevSettings not available): translations update
+ *     immediately, RTL layout requires a manual close + reopen
+ *
+ * When no RTL change (e.g. future third LTR language):
+ *   - Translations swap immediately via i18n.changeLanguage(), no reload needed
  */
 export function useLanguageSwitcher() {
   const { i18n } = useTranslation();
@@ -19,18 +25,25 @@ export function useLanguageSwitcher() {
     async (lang: LanguageCode) => {
       if (i18n.language === lang) return;
 
-      // 1. Persist choice so initI18n() picks it up on next launch.
+      // 1. Persist BEFORE any reload so initI18n() reads the new lang on restart.
       await saveLanguage(lang);
 
-      // 2. Swap translations immediately — all t() calls re-render.
-      await i18n.changeLanguage(lang);
+      // 2. Apply native RTL flag — returns true if direction changed (FR↔AR).
+      const needsRTLReload = applyRTL(lang);
 
-      // 3. Update I18nManager RTL flag. Returns true if the direction
-      //    actually changed (FR→AR or AR→FR), which requires a restart
-      //    for the layout engine and navigation stack to reflect it.
-      const needsRestart = applyRTL(lang);
+      if (needsRTLReload) {
+        // Trigger a JS bundle reload. In Expo Go and debug builds,
+        // DevSettings.reload() restarts the JS runtime while keeping the native
+        // shell alive. I18nManager.forceRTL() is already set at the native level,
+        // so initI18n() on the next run will find the flag and render full RTL.
+        if (NativeModules.DevSettings?.reload) {
+          NativeModules.DevSettings.reload();
+          return; // reload takes care of everything else
+        }
 
-      if (needsRestart) {
+        // Production builds without expo-updates: update translations now and
+        // ask the user to close + reopen for the layout direction to flip.
+        await i18n.changeLanguage(lang);
         const isAr = lang === 'ar';
         Alert.alert(
           isAr ? 'إعادة تشغيل مطلوبة' : 'Redémarrage requis',
@@ -39,7 +52,11 @@ export function useLanguageSwitcher() {
             : "Fermez et rouvrez l'application pour activer la mise en page arabe.",
           [{ text: isAr ? 'حسناً' : 'OK' }]
         );
+        return;
       }
+
+      // No RTL direction change — swap translations immediately, no reload needed.
+      await i18n.changeLanguage(lang);
     },
     [i18n]
   );
