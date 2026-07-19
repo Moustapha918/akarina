@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -10,13 +10,24 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import { COLORS, MAURITANIAN_PHONE_REGEX, PHONE_PREFIX } from '../../src/constants';
 import { Button } from '../../src/components/ui/Button';
 import { Input } from '../../src/components/ui/Input';
 import { sendOtp } from '../../src/services/authService';
 
+const firebaseConfig = {
+  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
+};
+
 export default function LoginScreen() {
   const insets = useSafeAreaInsets();
+  const recaptchaVerifier = useRef<FirebaseRecaptchaVerifierModal>(null);
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -53,7 +64,7 @@ export default function LoginScreen() {
     if (!validate()) return;
     setLoading(true);
     try {
-      const isBypass = await sendOtp(phone, null);
+      const isBypass = await sendOtp(phone, recaptchaVerifier.current);
       router.push({ pathname: '/(auth)/verify', params: { phone, bypass: isBypass ? '1' : '0' } });
     } catch (e: any) {
       Alert.alert('Erreur', e.message ?? "Impossible d'envoyer le code. Réessayez.");
@@ -67,6 +78,11 @@ export default function LoginScreen() {
       style={styles.flex}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
+      <FirebaseRecaptchaVerifierModal
+        ref={recaptchaVerifier}
+        firebaseConfig={firebaseConfig}
+        attemptInvisibleVerification
+      />
       <ScrollView contentContainerStyle={[styles.container, { paddingTop: insets.top + 20 }]} keyboardShouldPersistTaps="handled">
         {/* Header */}
         <View style={styles.header}>
