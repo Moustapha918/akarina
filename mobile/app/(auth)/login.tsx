@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import {
   View,
   Text,
@@ -13,23 +13,14 @@ import { COLORS, MAURITANIAN_PHONE_REGEX, PHONE_PREFIX } from '../../src/constan
 import { Button } from '../../src/components/ui/Button';
 import { Input } from '../../src/components/ui/Input';
 import { sendOtp } from '../../src/services/authService';
-import app from '../../src/services/firebase';
-
-// FirebaseRecaptchaVerifierModal est natif uniquement (iOS/Android)
-const isNative = Platform.OS === 'ios' || Platform.OS === 'android';
-let FirebaseRecaptchaVerifierModal: any = null;
-if (isNative) {
-  FirebaseRecaptchaVerifierModal = require('expo-firebase-recaptcha').FirebaseRecaptchaVerifierModal;
-}
 
 export default function LoginScreen() {
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const recaptchaVerifier = useRef<any>(null);
 
   // Sur web : afficher un message d'indisponibilité
-  if (!isNative) {
+  if (Platform.OS === 'web') {
     return (
       <View style={styles.webContainer}>
         <Text style={styles.logo}>أكارينا</Text>
@@ -60,7 +51,7 @@ export default function LoginScreen() {
     if (!validate()) return;
     setLoading(true);
     try {
-      const isBypass = await sendOtp(phone, recaptchaVerifier.current);
+      const isBypass = await sendOtp(phone, null);
       router.push({ pathname: '/(auth)/verify', params: { phone, bypass: isBypass ? '1' : '0' } });
     } catch (e: any) {
       Alert.alert('Erreur', e.message ?? "Impossible d'envoyer le code. Réessayez.");
@@ -74,12 +65,6 @@ export default function LoginScreen() {
       style={styles.flex}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <FirebaseRecaptchaVerifierModal
-        ref={recaptchaVerifier}
-        firebaseConfig={app.options}
-        attemptInvisibleVerification={true}
-      />
-
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
         {/* Header */}
         <View style={styles.header}>
