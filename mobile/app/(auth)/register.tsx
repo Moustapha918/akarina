@@ -9,6 +9,7 @@ import {
   Alert,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { auth } from '../../src/services/firebase';
 import { COLORS } from '../../src/constants';
 import { Button } from '../../src/components/ui/Button';
@@ -17,6 +18,7 @@ import { createUserProfile } from '../../src/services/userService';
 import { useAuthStore } from '../../src/hooks/useAuthStore';
 
 export default function RegisterScreen() {
+  const insets = useSafeAreaInsets();
   const { phone } = useLocalSearchParams<{ phone: string }>();
   const { setUser } = useAuthStore();
 
@@ -59,7 +61,7 @@ export default function RegisterScreen() {
       style={styles.flex}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerStyle={[styles.container, { paddingTop: insets.top + 16 }]} keyboardShouldPersistTaps="handled">
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.emoji}>👋</Text>
@@ -118,7 +120,6 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     paddingHorizontal: 24,
-    paddingTop: 64,
     paddingBottom: 40,
   },
   header: {

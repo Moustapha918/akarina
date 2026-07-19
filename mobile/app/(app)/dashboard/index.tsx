@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { COLORS } from '../../../src/constants';
 import { GuestGuard } from '../../../src/components/ui/GuestGuard';
 import { useAuthStore } from '../../../src/hooks/useAuthStore';
@@ -154,6 +155,7 @@ function StatCard({ label, value, sub }: { label: string; value: string; sub?: s
 // ─── Screen ───────────────────────────────────────────────────────────────────
 
 function DashboardContent() {
+  const insets = useSafeAreaInsets();
   const { user } = useAuthStore();
   const { items, isLoading, error, refresh } = useMyInvestments(user?.id ?? null);
 
@@ -175,7 +177,7 @@ function DashboardContent() {
       refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refresh} tintColor={COLORS.primary} />}
     >
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { paddingTop: insets.top + 16 }]}>
         <View>
           <Text style={styles.greeting}>Bonjour, {user?.name?.split(' ')[0]} 👋</Text>
           <Text style={styles.subGreeting}>Voici l'état de votre portefeuille</Text>
@@ -264,7 +266,7 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: COLORS.primary,
     paddingHorizontal: 20,
-    paddingTop: 60,
+    paddingTop: 16,
     paddingBottom: 24,
     flexDirection: 'row',
     justifyContent: 'space-between',

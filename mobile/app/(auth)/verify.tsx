@@ -9,6 +9,7 @@ import {
   Alert,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { COLORS, PHONE_PREFIX, DEV_TEST_PHONES } from '../../src/constants';
 import { Button } from '../../src/components/ui/Button';
 import { OtpInput } from '../../src/components/ui/OtpInput';
@@ -19,6 +20,7 @@ import { useAuthStore } from '../../src/hooks/useAuthStore';
 const RESEND_DELAY = 60;
 
 export default function VerifyScreen() {
+  const insets = useSafeAreaInsets();
   const { phone, bypass } = useLocalSearchParams<{ phone: string; bypass: string }>();
   const { setUser } = useAuthStore();
 
@@ -66,7 +68,7 @@ export default function VerifyScreen() {
       style={styles.flex}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <View style={styles.container}>
+      <View style={[styles.container, { paddingTop: insets.top + 16 }]}>
         {/* Back */}
         <TouchableOpacity onPress={() => router.back()} style={styles.back}>
           <Text style={styles.backText}>← Retour</Text>
@@ -131,7 +133,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 24,
-    paddingTop: 60,
   },
   back: {
     marginBottom: 32,

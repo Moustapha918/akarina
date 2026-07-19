@@ -9,12 +9,14 @@ import {
   Alert,
 } from 'react-native';
 import { router } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { COLORS, MAURITANIAN_PHONE_REGEX, PHONE_PREFIX } from '../../src/constants';
 import { Button } from '../../src/components/ui/Button';
 import { Input } from '../../src/components/ui/Input';
 import { sendOtp } from '../../src/services/authService';
 
 export default function LoginScreen() {
+  const insets = useSafeAreaInsets();
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -65,7 +67,7 @@ export default function LoginScreen() {
       style={styles.flex}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerStyle={[styles.container, { paddingTop: insets.top + 20 }]} keyboardShouldPersistTaps="handled">
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.logo}>أكارينا</Text>
@@ -119,7 +121,6 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     paddingHorizontal: 24,
-    paddingTop: 80,
     paddingBottom: 40,
   },
   header: {

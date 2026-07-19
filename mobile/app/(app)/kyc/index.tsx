@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { GuestGuard } from '../../../src/components/ui/GuestGuard';
 import { Button } from '../../../src/components/ui/Button';
 import { useAuthStore } from '../../../src/hooks/useAuthStore';
@@ -257,6 +258,7 @@ function UploadForm({ userId, onSuccess }: { userId: string; onSuccess: () => vo
 // ─── Screen ───────────────────────────────────────────────────────────────────
 
 function KycContent() {
+  const insets = useSafeAreaInsets();
   const { user, setUser } = useAuthStore();
   const [forceUpload, setForceUpload] = useState(false);
 
@@ -288,7 +290,7 @@ function KycContent() {
   return (
     <ScrollView style={styles.flex} contentContainerStyle={styles.container}>
       {/* Header */}
-      <View style={styles.pageHeader}>
+      <View style={[styles.pageHeader, { paddingTop: insets.top + 16 }]}>
         <Text style={styles.pageTitle}>Vérification d'identité</Text>
         <Text style={styles.pageSubtitle}>
           La vérification KYC est requise pour investir au-delà de{' '}
@@ -356,7 +358,7 @@ const styles = StyleSheet.create({
   pageHeader: {
     backgroundColor: COLORS.primary,
     paddingHorizontal: 20,
-    paddingTop: 60,
+    paddingTop: 16,
     paddingBottom: 28,
   },
   pageTitle: {
