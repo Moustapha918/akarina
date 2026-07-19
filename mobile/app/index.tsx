@@ -5,7 +5,7 @@ import { useOnboarding } from '../src/hooks/useOnboarding';
 import { COLORS } from '../src/constants';
 
 export default function Index() {
-  const { isLoading: authLoading, user } = useAuthStore();
+  const { isLoading: authLoading } = useAuthStore();
   const { isLoading: onboardingLoading, isDone } = useOnboarding();
 
   // Attendre uniquement la lecture du SecureStore pour décider de l'onboarding
@@ -31,7 +31,5 @@ export default function Index() {
     );
   }
 
-  // Admin → back-office, sinon → app investisseur
-  if (user?.role === 'ADMIN') return <Redirect href="/(admin)" />;
   return <Redirect href="/(app)" />;
 }
