@@ -17,14 +17,14 @@ import { ProjectCard } from '../../src/components/project/ProjectCard';
 import { useAuthStore } from '../../src/hooks/useAuthStore';
 
 const FILTERS: { label: string; value: ProjectType }[] = [
-  { label: '🏗️ Construction', value: 'CONSTRUCTION' },
   { label: '🏕️ Land Flip', value: 'LAND_FLIP' },
+  { label: '🏗️ Construction', value: 'CONSTRUCTION' },
 ];
 
 export default function ProjectsScreen() {
   const insets = useSafeAreaInsets();
   const { user } = useAuthStore();
-  const [activeFilter, setActiveFilter] = useState<ProjectType>('CONSTRUCTION');
+  const [activeFilter, setActiveFilter] = useState<ProjectType>('LAND_FLIP');
   const { projects, isLoading, error, refetch } = useProjects(activeFilter);
 
   return (
