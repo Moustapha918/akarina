@@ -17,7 +17,7 @@ import { useAuthStore } from '../../../src/hooks/useAuthStore';
 import { useMyInvestments, InvestmentWithProject } from '../../../src/hooks/useMyInvestments';
 import { formatMRU, collectProgress, projectStatusLabel, projectStatusColor } from '../../../src/utils/format';
 import { generateContractHTML } from '../../../src/utils/contractTemplate';
-import { sharePDF } from '../../../src/utils/pdfShare';
+import { sharePDF, buildPDFFilename } from '../../../src/utils/pdfShare';
 import { Investment, KycStatus, User } from '../../../src/types';
 
 // ─── KYC Badge ───────────────────────────────────────────────────────────────
@@ -65,7 +65,7 @@ function InvestmentCard({ item, user }: { item: InvestmentWithProject; user: Use
     setDownloadingPdf(true);
     try {
       const html = generateContractHTML(user, project, investment.amount);
-      await sharePDF(html, 'Contrat Mousharaka — Akarina');
+      await sharePDF(html, buildPDFFilename(project.title, user.name));
     } catch {
       // annulation silencieuse
     } finally {

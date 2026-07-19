@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { sharePDF } from '../../../../src/utils/pdfShare';
+import { sharePDF, buildPDFFilename } from '../../../../src/utils/pdfShare';
 import { COLORS } from '../../../../src/constants';
 import { Button } from '../../../../src/components/ui/Button';
 import { formatMRU } from '../../../../src/utils/format';
@@ -47,7 +47,7 @@ export default function InvestConfirmationScreen() {
     setSharingPDF(true);
     try {
       const html = generateContractHTML(user, project, amount);
-      await sharePDF(html, 'Contrat Mousharaka — Akarina');
+      await sharePDF(html, buildPDFFilename(project.title, user.name));
       await updateInvestmentStatus(investmentId, 'SUCCESS', { contractUrl: 'generated' });
     } catch {
       // annulation silencieuse

@@ -3,42 +3,54 @@ import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 import * as FileSystem from 'expo-file-system/legacy';
 
+/** Supprime les espaces et caractères spéciaux pour un nom de fichier propre. */
+function slugify(str: string): string {
+  return str
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // retire les accents
+    .replace(/[^a-zA-Z0-9]/g, '');  // garde uniquement alphanumérique
+}
+
+/** Génère le nom de fichier : NomProjetNomInvestisseurJJMMAAAA.pdf */
+export function buildPDFFilename(projectTitle: string, userName: string): string {
+  const now = new Date();
+  const dd = String(now.getDate()).padStart(2, '0');
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const yyyy = String(now.getFullYear());
+  return `${slugify(projectTitle)}${slugify(userName)}${dd}${mm}${yyyy}.pdf`;
+}
+
 /**
  * Génère un PDF à partir d'un template HTML et ouvre le dialogue de partage.
  *
- * Android : printToFileAsync enregistre dans le cache temporaire.
- *   getContentUriAsync exige un fichier dans documentDirectory ou cacheDirectory
- *   enregistré via le FileProvider de l'app. On copie donc explicitement le
- *   fichier dans documentDirectory avant conversion en content://.
- *   En cas d'échec du partage, on replie sur printAsync (impression native /
- *   "Enregistrer en PDF" du système Android).
- *
- * iOS : le file:// retourné par printToFileAsync est directement partageable.
+ * Android : copie le fichier vers documentDirectory (accessible par FileProvider)
+ *   avant conversion en content://, avec fallback sur Print.printAsync.
+ * iOS : partage directement le file:// retourné par printToFileAsync.
  */
-export async function sharePDF(html: string, dialogTitle: string): Promise<void> {
+export async function sharePDF(html: string, filename: string): Promise<void> {
   const { uri } = await Print.printToFileAsync({ html, base64: false });
 
   if (Platform.OS === 'android') {
     try {
-      // Copier vers documentDirectory pour garantir l'accès FileProvider
-      const destUri = `${FileSystem.documentDirectory}contrat-akarina-${Date.now()}.pdf`;
+      const destUri = `${FileSystem.documentDirectory}${filename}`;
       await FileSystem.copyAsync({ from: uri, to: destUri });
       const contentUri = await FileSystem.getContentUriAsync(destUri);
       await Sharing.shareAsync(contentUri, {
         mimeType: 'application/pdf',
-        dialogTitle,
+        dialogTitle: filename,
       });
     } catch {
-      // Fallback : boîte de dialogue d'impression Android (→ "Enregistrer en PDF")
       await Print.printAsync({ html });
     }
     return;
   }
 
-  // iOS
-  await Sharing.shareAsync(uri, {
+  // iOS : renommer le fichier avant de partager
+  const destUri = `${FileSystem.documentDirectory}${filename}`;
+  await FileSystem.copyAsync({ from: uri, to: destUri });
+  await Sharing.shareAsync(destUri, {
     mimeType: 'application/pdf',
-    dialogTitle,
+    dialogTitle: filename,
     UTI: 'com.adobe.pdf',
   });
 }
