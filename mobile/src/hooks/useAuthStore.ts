@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import { onAuthStateChanged, Unsubscribe } from 'firebase/auth';
+import auth from '@react-native-firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../services/firebase';
+import { db } from '../services/firebase';
 import { User } from '../types';
 
 interface AuthState {
@@ -12,7 +12,7 @@ interface AuthState {
 // Store global simple (sans lib externe)
 let _state: AuthState = { user: null, isLoading: true };
 const _listeners = new Set<() => void>();
-let _unsubscribeAuth: Unsubscribe | null = null;
+let _unsubscribeAuth: (() => void) | null = null;
 let _initialized = false;
 
 function setState(partial: Partial<AuthState>) {
@@ -34,7 +34,7 @@ export function useAuthStore() {
     if (_initialized) return;
     _initialized = true;
 
-    _unsubscribeAuth = onAuthStateChanged(auth, async (firebaseUser) => {
+    _unsubscribeAuth = auth().onAuthStateChanged(async (firebaseUser) => {
       if (!firebaseUser) {
         setState({ user: null, isLoading: false });
         return;

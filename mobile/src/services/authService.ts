@@ -1,26 +1,17 @@
-import {
-  signInWithPhoneNumber,
-  signInAnonymously,
-  ConfirmationResult,
-  signOut as firebaseSignOut,
-  ApplicationVerifier,
-} from 'firebase/auth';
-import { auth } from './firebase';
+import auth from '@react-native-firebase/auth';
 import { PHONE_PREFIX, DEV_TEST_PHONES } from '../constants';
 
-let _confirmationResult: ConfirmationResult | null = null;
+let _confirmationResult: ReturnType<typeof auth['signInWithPhoneNumber']> extends Promise<infer R> ? R : never | null = null;
 
 /**
  * Envoie un OTP au numéro de téléphone.
- * En mode DEV, les numéros de DEV_TEST_PHONES bypassent reCAPTCHA et l'envoi SMS.
- * @param localNumber - Chiffres du numéro sans le préfixe pays
- * @param appVerifier - Peut être null en mode dev bypass
- * @param prefix - Indicatif pays (défaut +222)
+ * En mode DEV, les numéros de DEV_TEST_PHONES bypassent l'envoi SMS.
+ * @react-native-firebase/auth gère le reCAPTCHA nativement (Play Integrity / APNs).
  */
 export async function sendOtp(
   localNumber: string,
-  appVerifier: ApplicationVerifier | null,
-  prefix: string = PHONE_PREFIX
+  _appVerifier: unknown = null, // conservé pour compatibilité signature — ignoré
+  prefix: string = PHONE_PREFIX,
 ): Promise<boolean> {
   const fullPhone = `${prefix}${localNumber}`;
 
@@ -33,15 +24,14 @@ export async function sendOtp(
         if (code !== expectedCode) {
           throw new Error(`Code invalide. Utilisez "${expectedCode}" en mode dev.`);
         }
-        return await signInAnonymously(auth);
+        return auth().signInAnonymously();
       },
-    } as unknown as ConfirmationResult;
-    return true; // indique que le bypass a été utilisé
+    } as any;
+    return true;
   }
 
-  // ── Production : reCAPTCHA + SMS réel ───────────────────────────────────────
-  if (!appVerifier) throw new Error('Vérificateur reCAPTCHA non disponible.');
-  _confirmationResult = await signInWithPhoneNumber(auth, fullPhone, appVerifier);
+  // ── Production : reCAPTCHA natif géré par react-native-firebase ─────────────
+  _confirmationResult = await auth().signInWithPhoneNumber(fullPhone);
   return false;
 }
 
@@ -54,11 +44,11 @@ export async function verifyOtp(code: string): Promise<string> {
     throw new Error('Aucun OTP en attente. Recommencez depuis le début.');
   }
   const credential = await _confirmationResult.confirm(code);
-  if (!credential.user) throw new Error('Vérification échouée.');
+  if (!credential?.user) throw new Error('Vérification échouée.');
   return credential.user.uid;
 }
 
 export async function signOut(): Promise<void> {
   _confirmationResult = null;
-  await firebaseSignOut(auth);
+  await auth().signOut();
 }

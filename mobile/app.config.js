@@ -80,6 +80,7 @@ module.exports = {
     },
 
     plugins: [
+      '@react-native-firebase/app',
       'expo-router',
       'expo-status-bar',
       'expo-secure-store',
