@@ -33,15 +33,22 @@ service cloud.firestore {
         && request.resource.data.amount >= 1000
         && request.resource.data.amount <= 500000;
 
-      // Mise à jour utilisateur : seuls contractUrl et contractAcceptedAt sont modifiables.
-      // status, amount, projectId, userId, bankilyRef sont immuables côté client.
-      // status (PENDING → SUCCESS/FAILED) est mis à jour uniquement par Cloud Function (Admin SDK).
+      // Mise à jour paiement : transition de statut autorisée uniquement depuis PENDING.
+      // Empêche toute rétro-modification (FAILED→SUCCESS, SUCCESS→autre).
+      // TODO: migrer vers Cloud Function quand Bankily webhook sera réel (C1).
+      allow update: if request.auth != null
+        && resource.data.userId == request.auth.uid
+        && resource.data.status == 'PENDING'
+        && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['status', 'bankilyRef', 'paidAt']);
+
+      // Mise à jour contrat PDF : uniquement contractUrl et contractAcceptedAt.
       allow update: if request.auth != null
         && resource.data.userId == request.auth.uid
         && request.resource.data.diff(resource.data).affectedKeys()
             .hasOnly(['contractUrl', 'contractAcceptedAt']);
 
-      // Admin (Cloud Function via Admin SDK) bypass toutes les restrictions
+      // Admin (Cloud Function via Admin SDK) bypass toutes les restrictions.
       allow update: if request.auth != null && request.auth.token.role == 'ADMIN';
     }
 

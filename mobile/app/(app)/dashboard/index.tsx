@@ -20,7 +20,7 @@ import { formatMRU, collectProgress, projectStatusLabel, projectStatusColor } fr
 import { generateContractHTML } from '../../../src/utils/contractTemplate';
 import { sharePDF, buildPDFFilename } from '../../../src/utils/pdfShare';
 import { uploadContractPDF } from '../../../src/utils/pdfStorage';
-import { updateInvestmentStatus } from '../../../src/services/investmentService';
+import { updateContractUrl } from '../../../src/services/investmentService';
 import { Investment, KycStatus, User } from '../../../src/types';
 
 function InvestmentCard({ item, user }: { item: InvestmentWithProject; user: User }) {
@@ -49,7 +49,7 @@ function InvestmentCard({ item, user }: { item: InvestmentWithProject; user: Use
       // Si le contrat n'est pas encore persisté en Storage, l'uploader maintenant
       if (!investment.contractUrl) {
         uploadContractPDF(html, investment.id, user.id)
-          .then((url) => updateInvestmentStatus(investment.id, 'SUCCESS', { contractUrl: url }))
+          .then((url) => updateContractUrl(investment.id, url))
           .catch((err) => console.error('[Contract] Upload Storage échoué:', err));
       }
     } catch {

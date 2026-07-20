@@ -41,20 +41,25 @@ export async function markContractAccepted(investmentId: string): Promise<void> 
   });
 }
 
-/** Met à jour le statut après traitement du paiement. */
+/** Met à jour le statut après traitement du paiement (simulation Bankily). */
 export async function updateInvestmentStatus(
   investmentId: string,
   status: InvestmentStatus,
-  extras?: {
-    bankilyRef?: string;
-    contractUrl?: string;
-  }
+  extras?: { bankilyRef?: string }
 ): Promise<void> {
   await updateDoc(doc(db, 'investments', investmentId), {
     status,
     ...(status === 'SUCCESS' ? { paidAt: serverTimestamp() } : {}),
     ...extras,
   });
+}
+
+/** Persiste l'URL du contrat PDF uploadé sur Storage. */
+export async function updateContractUrl(
+  investmentId: string,
+  contractUrl: string,
+): Promise<void> {
+  await updateDoc(doc(db, 'investments', investmentId), { contractUrl });
 }
 
 /** Récupère un investissement par son ID. */

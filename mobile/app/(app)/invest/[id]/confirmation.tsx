@@ -16,7 +16,7 @@ import { COLORS } from '../../../../src/constants';
 import { Button } from '../../../../src/components/ui/Button';
 import { formatMRU } from '../../../../src/utils/format';
 import { getProject } from '../../../../src/services/projectService';
-import { getInvestment, updateInvestmentStatus } from '../../../../src/services/investmentService';
+import { getInvestment, updateContractUrl } from '../../../../src/services/investmentService';
 import { generateContractHTML } from '../../../../src/utils/contractTemplate';
 import { useAuthStore } from '../../../../src/hooks/useAuthStore';
 import { Investment, Project } from '../../../../src/types';
@@ -45,7 +45,7 @@ export default function InvestConfirmationScreen() {
       if (p && inv && user && !inv.contractUrl) {
         const html = generateContractHTML(user, p, parseInt(amountParam, 10), investmentId);
         uploadContractPDF(html, investmentId, user.id)
-          .then((url) => updateInvestmentStatus(investmentId, 'SUCCESS', { contractUrl: url }))
+          .then((url) => updateContractUrl(investmentId, url))
           .catch((err) => console.error('[Contract] Auto-upload Storage échoué:', err));
       }
     });
@@ -60,7 +60,7 @@ export default function InvestConfirmationScreen() {
       // Upload vers Firebase Storage si pas encore persisté
       if (investment && !investment.contractUrl) {
         uploadContractPDF(html, investmentId, user.id)
-          .then((url) => updateInvestmentStatus(investmentId, 'SUCCESS', { contractUrl: url }))
+          .then((url) => updateContractUrl(investmentId, url))
           .catch((err) => console.error('[Contract] Upload Storage échoué:', err));
       }
     } catch (err) {

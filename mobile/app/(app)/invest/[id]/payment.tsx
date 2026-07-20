@@ -88,10 +88,13 @@ export default function InvestPaymentScreen() {
         setErrorMessage(result.errorMessage ?? t('invest.payment.failed'));
         setPaymentState('failed');
       }
-    } catch {
+    } catch (err) {
       pulseAnim.stopAnimation();
       if (countdownRef.current) clearInterval(countdownRef.current);
-      await updateInvestmentStatus(investmentId, 'FAILED').catch(() => {});
+      await updateInvestmentStatus(investmentId, 'FAILED').catch((updateErr) => {
+        console.error('[Payment] Failed to mark investment as FAILED in Firestore:', updateErr);
+      });
+      console.error('[Payment] Unexpected error during payment flow:', err);
       setErrorMessage(t('invest.payment.networkError'));
       setPaymentState('failed');
     }
