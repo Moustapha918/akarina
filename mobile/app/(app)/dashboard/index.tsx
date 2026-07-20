@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Image,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -52,8 +53,9 @@ function InvestmentCard({ item, user }: { item: InvestmentWithProject; user: Use
           .then((url) => updateContractUrl(investment.id, url))
           .catch((err) => console.error('[Contract] Upload Storage échoué:', err));
       }
-    } catch {
-      // annulation silencieuse
+    } catch (err) {
+      console.error('[Contract] Génération PDF échouée:', err);
+      Alert.alert(t('common.error'), t('invest.contract.pdfError'));
     } finally {
       setDownloadingPdf(false);
     }

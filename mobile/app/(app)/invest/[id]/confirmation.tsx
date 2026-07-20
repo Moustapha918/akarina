@@ -6,6 +6,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Platform,
+  Alert,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -65,6 +66,7 @@ export default function InvestConfirmationScreen() {
       }
     } catch (err) {
       console.error('[Contract] Partage PDF échoué:', err);
+      Alert.alert(t('common.error'), t('invest.contract.pdfError'));
     } finally {
       setSharingPDF(false);
     }

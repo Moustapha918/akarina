@@ -220,7 +220,8 @@
       "acceptCheckbox": "J'ai lu et j'accepte les termes du contrat de partenariat Mousharaka ci-dessus.",
       "mustAccept": "Veuillez cocher la case pour accepter les termes du contrat.",
       "signAndPay": "Signer et procéder au paiement →",
-      "createError": "Impossible de créer l'investissement. Réessayez."
+      "createError": "Impossible de créer l'investissement. Réessayez.",
+      "pdfError": "Impossible de générer le contrat PDF. Réessayez."
     },
     "payment": {
       "amountLabel": "Montant du paiement",
