@@ -6,7 +6,7 @@ import {
   query,
   orderBy,
   DocumentData,
-} from 'firebase/firestore';
+} from '@react-native-firebase/firestore';
 import { db } from './firebase';
 import { Project, ProjectUpdate } from '../types';
 

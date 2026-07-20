@@ -17,8 +17,11 @@ const APP_ENV = process.env.APP_ENV ?? 'dev';
 const envConfig = {
   dev: {
     appName: 'Akarina Dev',
-    bundleId: 'mr.akarina.dev',
-    androidPackage: 'mr.akarina.dev',
+    // Temporairement aligné sur le package prod — google-services.json /
+    // GoogleService-Info.plist ne sont enregistrés que pour mr.akarina.app.
+    // TODO: reséparer dev/staging/prod une fois l'organisation des env revue.
+    bundleId: 'mr.akarina.app',
+    androidPackage: 'mr.akarina.app',
   },
   staging: {
     appName: 'Akarina Staging',
@@ -48,6 +51,7 @@ module.exports = {
     ios: {
       supportsTablet: false,
       bundleIdentifier: env.bundleId,
+      googleServicesFile: './GoogleService-Info.plist',
     },
 
     splash: {
@@ -82,6 +86,17 @@ module.exports = {
 
     plugins: [
       '@react-native-firebase/app',
+      '@react-native-firebase/auth',
+      'expo-dev-client',
+      [
+        'expo-build-properties',
+        {
+          ios: {
+            useFrameworks: 'static',
+            forceStaticLinking: ['RNFBApp', 'RNFBAuth'],
+          },
+        },
+      ],
       'expo-router',
       'expo-status-bar',
       'expo-secure-store',

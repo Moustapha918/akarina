@@ -10,7 +10,7 @@ import {
   orderBy,
   serverTimestamp,
   DocumentData,
-} from 'firebase/firestore';
+} from '@react-native-firebase/firestore';
 import { db } from './firebase';
 import { Investment, InvestmentStatus, CreateInvestmentDTO } from '../types';
 

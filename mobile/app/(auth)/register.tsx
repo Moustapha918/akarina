@@ -11,7 +11,7 @@ import {
 import { router, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
-import { auth } from '../../src/services/firebase';
+import auth from '@react-native-firebase/auth';
 import { COLORS } from '../../src/constants';
 import { Button } from '../../src/components/ui/Button';
 import { Input } from '../../src/components/ui/Input';
@@ -39,7 +39,7 @@ export default function RegisterScreen() {
 
   async function handleRegister() {
     if (!validate()) return;
-    const uid = auth.currentUser?.uid;
+    const uid = auth().currentUser?.uid;
     if (!uid) {
       Alert.alert(t('auth.register.sessionExpired'), t('auth.register.sessionExpiredMsg'));
       router.replace('/(auth)/login');

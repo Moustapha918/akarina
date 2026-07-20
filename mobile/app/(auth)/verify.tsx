@@ -50,8 +50,10 @@ export default function VerifyScreen() {
       } else {
         router.push({ pathname: '/(auth)/register', params: { phone: `${prefix}${phone}` } });
       }
-    } catch {
-      Alert.alert(t('common.error'), t('auth.verify.invalidCode'));
+    } catch (e: any) {
+      console.error('OTP verify error:', e?.code, e?.message, e);
+      const message = e?.code ? `${e.code}\n${e.message ?? ''}` : t('auth.verify.invalidCode');
+      Alert.alert(t('common.error'), message);
       setCode('');
     } finally {
       setLoading(false);

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import auth from '@react-native-firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc } from '@react-native-firebase/firestore';
 import { db } from '../services/firebase';
 import { User } from '../types';
 
