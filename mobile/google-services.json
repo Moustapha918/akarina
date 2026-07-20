@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "175082742297",
+    "project_id": "akarina-bf84b",
+    "storage_bucket": "akarina-bf84b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:175082742297:android:e2b4e0f31e7d60bff8c088",
+        "android_client_info": {
+          "package_name": "mr.akarina.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmTAtj76cL_64T8I-RLApNxLdu_0EX-8I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

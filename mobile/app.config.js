@@ -58,6 +58,7 @@ module.exports = {
 
     android: {
       package: env.androidPackage,
+      googleServicesFile: './google-services.json',
       versionCode: 1,
       permissions: [
         'android.permission.INTERNET',
