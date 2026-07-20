@@ -1,38 +1,19 @@
 import auth from '@react-native-firebase/auth';
-import { PHONE_PREFIX, DEV_TEST_PHONES } from '../constants';
+import { PHONE_PREFIX } from '../constants';
 
-let _confirmationResult: ReturnType<typeof auth['signInWithPhoneNumber']> extends Promise<infer R> ? R : never | null = null;
+let _confirmationResult: Awaited<ReturnType<ReturnType<typeof auth>['signInWithPhoneNumber']>> | null = null;
 
 /**
- * Envoie un OTP au numéro de téléphone.
- * En mode DEV, les numéros de DEV_TEST_PHONES bypassent l'envoi SMS.
- * @react-native-firebase/auth gère le reCAPTCHA nativement (Play Integrity / APNs).
+ * Envoie un OTP au numéro de téléphone via Firebase Auth.
+ * Le reCAPTCHA est géré nativement par @react-native-firebase (Play Integrity / APNs).
  */
 export async function sendOtp(
   localNumber: string,
-  _appVerifier: unknown = null, // conservé pour compatibilité signature — ignoré
+  _appVerifier: unknown = null,
   prefix: string = PHONE_PREFIX,
-): Promise<boolean> {
+): Promise<void> {
   const fullPhone = `${prefix}${localNumber}`;
-
-  // ── Dev bypass : Simulator / Expo Go ────────────────────────────────────────
-  if (__DEV__ && DEV_TEST_PHONES[fullPhone] !== undefined) {
-    const expectedCode = DEV_TEST_PHONES[fullPhone];
-    _confirmationResult = {
-      verificationId: 'dev-bypass',
-      confirm: async (code: string) => {
-        if (code !== expectedCode) {
-          throw new Error(`Code invalide. Utilisez "${expectedCode}" en mode dev.`);
-        }
-        return auth().signInAnonymously();
-      },
-    } as any;
-    return true;
-  }
-
-  // ── Production : reCAPTCHA natif géré par react-native-firebase ─────────────
   _confirmationResult = await auth().signInWithPhoneNumber(fullPhone);
-  return false;
 }
 
 /**

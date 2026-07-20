@@ -53,8 +53,8 @@ export default function LoginScreen() {
     if (!validate()) return;
     setLoading(true);
     try {
-      const isBypass = await sendOtp(phone, null, country.prefix);
-      router.push({ pathname: '/(auth)/verify', params: { phone, bypass: isBypass ? '1' : '0', prefix: country.prefix } });
+      await sendOtp(phone, null, country.prefix);
+      router.push({ pathname: '/(auth)/verify', params: { phone, prefix: country.prefix } });
     } catch (e: any) {
       Alert.alert(t('common.error'), e.message ?? t('auth.login.sendError'));
     } finally {

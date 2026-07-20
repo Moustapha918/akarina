@@ -11,7 +11,7 @@ import {
 import { router, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
-import { COLORS, PHONE_PREFIX, DEV_TEST_PHONES } from '../../src/constants';
+import { COLORS, PHONE_PREFIX } from '../../src/constants';
 import { Button } from '../../src/components/ui/Button';
 import { OtpInput } from '../../src/components/ui/OtpInput';
 import { verifyOtp } from '../../src/services/authService';
@@ -23,12 +23,9 @@ const RESEND_DELAY = 60;
 export default function VerifyScreen() {
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
-  const { phone, bypass, prefix: prefixParam } = useLocalSearchParams<{ phone: string; bypass: string; prefix: string }>();
+  const { phone, prefix: prefixParam } = useLocalSearchParams<{ phone: string; prefix: string }>();
   const prefix = prefixParam ?? PHONE_PREFIX;
   const { setUser } = useAuthStore();
-
-  const isDevBypass = __DEV__ && bypass === '1';
-  const devOtp = isDevBypass ? DEV_TEST_PHONES[`${prefix}${phone}`] : undefined;
 
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
@@ -53,11 +50,8 @@ export default function VerifyScreen() {
       } else {
         router.push({ pathname: '/(auth)/register', params: { phone: `${prefix}${phone}` } });
       }
-    } catch (e: any) {
-      const message = __DEV__
-        ? (e?.message ?? String(e))
-        : t('auth.verify.invalidCode');
-      Alert.alert(t('common.error'), message);
+    } catch {
+      Alert.alert(t('common.error'), t('auth.verify.invalidCode'));
       setCode('');
     } finally {
       setLoading(false);
@@ -75,28 +69,12 @@ export default function VerifyScreen() {
           <Text style={styles.backText}>{t('common.back')}</Text>
         </TouchableOpacity>
 
-        {/* Dev bypass banner */}
-        {isDevBypass && (
-          <TouchableOpacity
-            style={styles.devBanner}
-            onPress={() => setCode(devOtp ?? '')}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.devBannerText}>
-              {t('auth.verify.devOtpLabel')}<Text style={styles.devBannerCode}>{devOtp}</Text>
-            </Text>
-            <Text style={styles.devBannerHint}>{t('auth.verify.devFill')}</Text>
-          </TouchableOpacity>
-        )}
-
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.title}>{t('auth.verify.title')}</Text>
           <Text style={styles.subtitle}>
-            {isDevBypass
-              ? t('auth.verify.devMode')
-              : t('auth.verify.codeSentTo')}
-            {!isDevBypass && <Text style={styles.phone}>{prefix} {phone}</Text>}
+            {t('auth.verify.codeSentTo')}
+            <Text style={styles.phone}>{prefix} {phone}</Text>
           </Text>
         </View>
 
@@ -119,7 +97,7 @@ export default function VerifyScreen() {
               {t('auth.verify.resendIn', { count: countdown })}
             </Text>
           ) : (
-            <TouchableOpacity onPress={() => { router.back(); }}>
+            <TouchableOpacity onPress={() => router.back()}>
               <Text style={styles.resend}>{t('auth.verify.resend')}</Text>
             </TouchableOpacity>
           )}
@@ -177,29 +155,5 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     fontWeight: '600',
     textDecorationLine: 'underline',
-  },
-  devBanner: {
-    backgroundColor: '#FFF3CD',
-    borderWidth: 1,
-    borderColor: '#FFEAA7',
-    borderRadius: 10,
-    padding: 12,
-    marginBottom: 20,
-  },
-  devBannerText: {
-    fontSize: 13,
-    color: '#856404',
-    fontWeight: '600',
-  },
-  devBannerCode: {
-    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
-    fontSize: 15,
-    fontWeight: '700',
-  },
-  devBannerHint: {
-    fontSize: 11,
-    color: '#856404',
-    marginTop: 4,
-    opacity: 0.8,
   },
 });
