@@ -24,11 +24,25 @@ service cloud.firestore {
     match /investments/{investmentId} {
       allow read: if request.auth != null &&
         (resource.data.userId == request.auth.uid || request.auth.token.role == 'ADMIN');
-      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
-      // L'utilisateur peut mettre à jour son propre investissement (simulation Bankily).
-      // En production, la mise à jour viendrait d'un webhook via Cloud Function (admin SDK).
-      allow update: if request.auth != null &&
-        (resource.data.userId == request.auth.uid || request.auth.token.role == 'ADMIN');
+
+      // Création : userId doit correspondre à l'auth, statut initial forcé à PENDING
+      allow create: if request.auth != null
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.status == 'PENDING'
+        && request.resource.data.amount is int
+        && request.resource.data.amount >= 1000
+        && request.resource.data.amount <= 500000;
+
+      // Mise à jour utilisateur : seuls contractUrl et contractAcceptedAt sont modifiables.
+      // status, amount, projectId, userId, bankilyRef sont immuables côté client.
+      // status (PENDING → SUCCESS/FAILED) est mis à jour uniquement par Cloud Function (Admin SDK).
+      allow update: if request.auth != null
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['contractUrl', 'contractAcceptedAt']);
+
+      // Admin (Cloud Function via Admin SDK) bypass toutes les restrictions
+      allow update: if request.auth != null && request.auth.token.role == 'ADMIN';
     }
 
     // Documents KYC : lecture par le propriétaire ou admin
