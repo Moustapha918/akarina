@@ -23,9 +23,13 @@ export type DocType = 'ID_CARD' | 'PASSPORT' | 'CONTRACT';
 /** Collection: users/{userId} */
 export interface User {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string; // format +222XXXXXXXX
+  dateOfBirth: Timestamp;
+  photoUrl?: string;
+  address?: string; // facultatif
   role: UserRole;
   kycStatus: KycStatus;
   kycRejectionReason?: string;
@@ -110,9 +114,13 @@ export interface ProjectUpdate {
 // ─── DTO / Forms ─────────────────────────────────────────────────────────────
 
 export interface RegisterDTO {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
+  dateOfBirth: Date;
+  address?: string;
+  photoUri?: string; // URI locale à uploader vers Firebase Storage
 }
 
 export interface CreateInvestmentDTO {

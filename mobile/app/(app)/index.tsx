@@ -43,7 +43,7 @@ export default function ProjectsScreen() {
             onPress={() => router.push('/(app)/profile')}
           >
             <Text style={styles.avatarText}>
-              {user.name.charAt(0).toUpperCase()}
+              {user.firstName.charAt(0).toUpperCase()}
             </Text>
           </TouchableOpacity>
         ) : (

@@ -1,5 +1,5 @@
 import { User, Project } from '../types';
-import { formatMRU } from './format';
+import { formatMRU, getFullName } from './format';
 
 function buildContractNumber(investmentId: string): string {
   const now = new Date();
@@ -76,7 +76,7 @@ export function generateLandFlipContractHTML(
     </div>
     <div class="party-box">
       <h3>L'Associé Investisseur</h3>
-      <p><strong>${user.name}</strong><br>Tél : ${user.phone}<br>Email : ${user.email}</p>
+      <p><strong>${getFullName(user)}</strong><br>Tél : ${user.phone}<br>Email : ${user.email}</p>
     </div>
   </div>
 
@@ -138,7 +138,7 @@ export function generateLandFlipContractHTML(
     </div>
     <div class="sig-block">
       <div class="sig-title">L'Associé Investisseur</div>
-      <div class="sig-line">${user.name}</div>
+      <div class="sig-line">${getFullName(user)}</div>
     </div>
   </div>
 

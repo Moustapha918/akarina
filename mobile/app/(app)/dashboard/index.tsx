@@ -17,7 +17,7 @@ import { COLORS } from '../../../src/constants';
 import { GuestGuard } from '../../../src/components/ui/GuestGuard';
 import { useAuthStore } from '../../../src/hooks/useAuthStore';
 import { useMyInvestments, InvestmentWithProject } from '../../../src/hooks/useMyInvestments';
-import { formatMRU, collectProgress, projectStatusLabel, projectStatusColor } from '../../../src/utils/format';
+import { formatMRU, collectProgress, projectStatusLabel, projectStatusColor, getFullName } from '../../../src/utils/format';
 import { generateContractHTML } from '../../../src/utils/contractTemplate';
 import { sharePDF, buildPDFFilename } from '../../../src/utils/pdfShare';
 import { uploadContractPDF } from '../../../src/utils/pdfStorage';
@@ -46,7 +46,7 @@ function InvestmentCard({ item, user }: { item: InvestmentWithProject; user: Use
     try {
       const html = generateContractHTML(user, project, investment.amount, investment.id);
       // Partage local (rapide, fonctionne hors-ligne)
-      await sharePDF(html, buildPDFFilename(project.title, user.name));
+      await sharePDF(html, buildPDFFilename(project.title, getFullName(user)));
       // Si le contrat n'est pas encore persisté en Storage, l'uploader maintenant
       if (!investment.contractUrl) {
         uploadContractPDF(html, investment.id, user.id)
@@ -205,7 +205,7 @@ function DashboardContent() {
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 16 }]}>
         <View>
-          <Text style={styles.greeting}>{t('dashboard.greeting', { name: user?.name?.split(' ')[0] })}</Text>
+          <Text style={styles.greeting}>{t('dashboard.greeting', { name: user?.firstName })}</Text>
           <Text style={styles.subGreeting}>{t('dashboard.portfolioState')}</Text>
         </View>
         <TouchableOpacity

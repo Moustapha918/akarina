@@ -1,5 +1,6 @@
-import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from '@react-native-firebase/firestore';
-import { db } from './firebase';
+import { doc, getDoc, setDoc, updateDoc, serverTimestamp, Timestamp } from '@react-native-firebase/firestore';
+import { ref, putFile, getDownloadURL } from '@react-native-firebase/storage';
+import { db, storage } from './firebase';
 import { User, RegisterDTO, KycStatus } from '../types';
 
 /**
@@ -13,16 +14,33 @@ export async function getUser(uid: string): Promise<User | null> {
 }
 
 /**
+ * Upload la photo de profil vers Firebase Storage et retourne son URL.
+ */
+async function uploadProfilePhoto(uid: string, localUri: string): Promise<string> {
+  const filePath = `profile/${uid}/photo_${Date.now()}.jpg`;
+  const storageRef = ref(storage, filePath);
+  await putFile(storageRef, localUri, { contentType: 'image/jpeg' });
+  return getDownloadURL(storageRef);
+}
+
+/**
  * Crée le profil d'un nouvel investisseur après vérification OTP.
  */
 export async function createUserProfile(uid: string, dto: RegisterDTO): Promise<User> {
+  const photoUrl = dto.photoUri ? await uploadProfilePhoto(uid, dto.photoUri) : undefined;
+  const address = dto.address?.trim();
+
   const newUser: Omit<User, 'id'> = {
-    name: dto.name.trim(),
+    firstName: dto.firstName.trim(),
+    lastName: dto.lastName.trim(),
     email: dto.email.trim().toLowerCase(),
     phone: dto.phone,
+    dateOfBirth: Timestamp.fromDate(dto.dateOfBirth),
     role: 'INVESTOR',
     kycStatus: 'NONE',
     createdAt: serverTimestamp() as any,
+    ...(address ? { address } : {}),
+    ...(photoUrl ? { photoUrl } : {}),
   };
 
   await setDoc(doc(db, 'users', uid), newUser);
