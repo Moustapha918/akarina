@@ -15,7 +15,7 @@ import { sharePDF, buildPDFFilename } from '../../../../src/utils/pdfShare';
 import { uploadContractPDF } from '../../../../src/utils/pdfStorage';
 import { COLORS } from '../../../../src/constants';
 import { Button } from '../../../../src/components/ui/Button';
-import { formatMRU } from '../../../../src/utils/format';
+import { formatMRU, getFullName } from '../../../../src/utils/format';
 import { getProject } from '../../../../src/services/projectService';
 import { getInvestment, updateContractUrl } from '../../../../src/services/investmentService';
 import { generateContractHTML } from '../../../../src/utils/contractTemplate';
@@ -57,7 +57,7 @@ export default function InvestConfirmationScreen() {
     setSharingPDF(true);
     try {
       const html = generateContractHTML(user, project, amount, investmentId);
-      await sharePDF(html, buildPDFFilename(project.title, user.name));
+      await sharePDF(html, buildPDFFilename(project.title, getFullName(user)));
       // Upload vers Firebase Storage si pas encore persisté
       if (investment && !investment.contractUrl) {
         uploadContractPDF(html, investmentId, user.id)

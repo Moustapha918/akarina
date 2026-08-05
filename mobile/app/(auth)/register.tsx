@@ -15,8 +15,31 @@ import auth from '@react-native-firebase/auth';
 import { COLORS } from '../../src/constants';
 import { Button } from '../../src/components/ui/Button';
 import { Input } from '../../src/components/ui/Input';
+import { DateInput } from '../../src/components/ui/DateInput';
+import { AvatarPicker } from '../../src/components/ui/AvatarPicker';
 import { createUserProfile } from '../../src/services/userService';
 import { useAuthStore } from '../../src/hooks/useAuthStore';
+
+const MIN_AGE = 18;
+
+function maxBirthDate(): Date {
+  const d = new Date();
+  d.setFullYear(d.getFullYear() - MIN_AGE);
+  return d;
+}
+
+function minBirthDate(): Date {
+  const d = new Date();
+  d.setFullYear(d.getFullYear() - 100);
+  return d;
+}
+
+interface FormErrors {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  dateOfBirth?: string;
+}
 
 export default function RegisterScreen() {
   const insets = useSafeAreaInsets();
@@ -24,15 +47,25 @@ export default function RegisterScreen() {
   const { phone } = useLocalSearchParams<{ phone: string }>();
   const { setUser } = useAuthStore();
 
-  const [name, setName] = useState('');
+  const [photoUri, setPhotoUri] = useState<string | null>(null);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
+  const [address, setAddress] = useState('');
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<{ name?: string; email?: string }>({});
+  const [errors, setErrors] = useState<FormErrors>({});
 
   function validate(): boolean {
-    const newErrors: { name?: string; email?: string } = {};
-    if (name.trim().length < 3) newErrors.name = t('auth.register.nameTooShort');
+    const newErrors: FormErrors = {};
+    if (firstName.trim().length < 2) newErrors.firstName = t('auth.register.firstNameTooShort');
+    if (lastName.trim().length < 2) newErrors.lastName = t('auth.register.lastNameTooShort');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) newErrors.email = t('auth.register.invalidEmail');
+    if (!dateOfBirth) {
+      newErrors.dateOfBirth = t('auth.register.dateOfBirthRequired');
+    } else if (dateOfBirth > maxBirthDate()) {
+      newErrors.dateOfBirth = t('auth.register.dateOfBirthTooYoung', { minAge: MIN_AGE });
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }
@@ -48,7 +81,15 @@ export default function RegisterScreen() {
 
     setLoading(true);
     try {
-      const user = await createUserProfile(uid, { name, email, phone });
+      const user = await createUserProfile(uid, {
+        firstName,
+        lastName,
+        email,
+        phone,
+        dateOfBirth: dateOfBirth!,
+        address: address.trim() || undefined,
+        photoUri: photoUri ?? undefined,
+      });
       setUser(user);
       router.replace('/(app)');
     } catch (e: any) {
@@ -57,6 +98,8 @@ export default function RegisterScreen() {
       setLoading(false);
     }
   }
+
+  const canSubmit = !!firstName && !!lastName && !!email && !!dateOfBirth;
 
   return (
     <KeyboardAvoidingView
@@ -77,14 +120,27 @@ export default function RegisterScreen() {
           <Text style={styles.phoneValue}>{phone}</Text>
         </View>
 
+        {/* Photo */}
+        <View style={styles.avatarSection}>
+          <AvatarPicker uri={photoUri} onPick={setPhotoUri} hint={t('auth.register.photoHint')} />
+        </View>
+
         {/* Form */}
         <View style={styles.form}>
           <Input
-            label={t('auth.register.fullName')}
-            placeholder={t('auth.register.namePlaceholder')}
-            value={name}
-            onChangeText={(text) => { setErrors((e) => ({ ...e, name: undefined })); setName(text); }}
-            error={errors.name}
+            label={t('auth.register.firstName')}
+            placeholder={t('auth.register.firstNamePlaceholder')}
+            value={firstName}
+            onChangeText={(text) => { setErrors((e) => ({ ...e, firstName: undefined })); setFirstName(text); }}
+            error={errors.firstName}
+            autoCapitalize="words"
+          />
+          <Input
+            label={t('auth.register.lastName')}
+            placeholder={t('auth.register.lastNamePlaceholder')}
+            value={lastName}
+            onChangeText={(text) => { setErrors((e) => ({ ...e, lastName: undefined })); setLastName(text); }}
+            error={errors.lastName}
             autoCapitalize="words"
           />
           <Input
@@ -95,7 +151,22 @@ export default function RegisterScreen() {
             error={errors.email}
             keyboardType="email-address"
             autoCapitalize="none"
-            containerStyle={styles.inputGap}
+          />
+          <DateInput
+            label={t('auth.register.dateOfBirth')}
+            placeholder={t('auth.register.dateOfBirthPlaceholder')}
+            value={dateOfBirth}
+            onChange={(date) => { setErrors((e) => ({ ...e, dateOfBirth: undefined })); setDateOfBirth(date); }}
+            error={errors.dateOfBirth}
+            maximumDate={maxBirthDate()}
+            minimumDate={minBirthDate()}
+          />
+          <Input
+            label={t('auth.register.addressOptional')}
+            placeholder={t('auth.register.addressPlaceholder')}
+            value={address}
+            onChangeText={setAddress}
+            autoCapitalize="sentences"
           />
         </View>
 
@@ -103,7 +174,7 @@ export default function RegisterScreen() {
           label={t('auth.register.createAccount')}
           onPress={handleRegister}
           loading={loading}
-          disabled={!name || !email}
+          disabled={!canSubmit}
           style={styles.button}
         />
 
@@ -142,7 +213,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#EBF5FB',
     borderRadius: 12,
     padding: 16,
-    marginBottom: 28,
+    marginBottom: 24,
     borderStartWidth: 4,
     borderStartColor: COLORS.primary,
   },
@@ -159,12 +230,12 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: COLORS.primary,
   },
+  avatarSection: {
+    marginBottom: 24,
+  },
   form: {
     gap: 16,
     marginBottom: 28,
-  },
-  inputGap: {
-    marginTop: 4,
   },
   button: {},
   notice: {

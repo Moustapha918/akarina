@@ -13,7 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { COLORS } from '../../../../src/constants';
 import { Button } from '../../../../src/components/ui/Button';
-import { formatMRU } from '../../../../src/utils/format';
+import { formatMRU, getFullName } from '../../../../src/utils/format';
 import { getProject } from '../../../../src/services/projectService';
 import { createInvestment, markContractAccepted } from '../../../../src/services/investmentService';
 import { useAuthStore } from '../../../../src/hooks/useAuthStore';
@@ -134,7 +134,7 @@ export default function InvestContractScreen() {
             <Text style={styles.bold}>{t('invest.contract.managingCompany')}</Text>{' '}
             {t('invest.contract.managingCompanyDesc')}{'\n\n'}
             <Text style={styles.bold}>{t('invest.contract.investor')}</Text>{' '}
-            {user?.name ?? '—'} · {user?.phone ?? '—'}
+            {user ? getFullName(user) : '—'} · {user?.phone ?? '—'}
           </Text>
         </Section>
 

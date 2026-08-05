@@ -4,6 +4,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Image,
   Alert,
 } from 'react-native';
 import { router } from 'expo-router';
@@ -16,6 +17,7 @@ import { signOut } from '../../../src/services/authService';
 import { COLORS } from '../../../src/constants';
 import { SUPPORTED_LANGUAGES, LanguageCode } from '../../../src/i18n';
 import { KycStatus } from '../../../src/types';
+import { getFullName, formatDate } from '../../../src/utils/format';
 
 function Row({ icon, label, value, onPress, danger }: {
   icon: string;
@@ -131,11 +133,15 @@ function ProfileContent() {
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 16 }]}>
         <View style={styles.avatar}>
-          <Text style={styles.avatarText}>
-            {user?.name?.charAt(0).toUpperCase() ?? '?'}
-          </Text>
+          {user?.photoUrl ? (
+            <Image source={{ uri: user.photoUrl }} style={styles.avatarImage} resizeMode="cover" />
+          ) : (
+            <Text style={styles.avatarText}>
+              {user?.firstName?.charAt(0).toUpperCase() ?? '?'}
+            </Text>
+          )}
         </View>
-        <Text style={styles.name}>{user?.name}</Text>
+        <Text style={styles.name}>{user ? getFullName(user) : ''}</Text>
         <Text style={styles.phone}>{user?.phone}</Text>
       </View>
 
@@ -143,11 +149,23 @@ function ProfileContent() {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>{t('profile.infoSection')}</Text>
         <View style={styles.card}>
-          <Row icon="👤" label={t('profile.fullName')} value={user?.name} />
+          <Row icon="👤" label={t('profile.fullName')} value={user ? getFullName(user) : undefined} />
           <View style={styles.separator} />
           <Row icon="📧" label={t('profile.email')} value={user?.email || '—'} />
           <View style={styles.separator} />
           <Row icon="📱" label={t('profile.phone')} value={user?.phone} />
+          <View style={styles.separator} />
+          <Row
+            icon="🎂"
+            label={t('profile.dateOfBirth')}
+            value={user?.dateOfBirth ? formatDate(user.dateOfBirth.toDate()) : '—'}
+          />
+          {user?.address ? (
+            <>
+              <View style={styles.separator} />
+              <Row icon="🏠" label={t('profile.address')} value={user.address} />
+            </>
+          ) : null}
         </View>
       </View>
 
@@ -237,7 +255,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 12,
+    overflow: 'hidden',
   },
+  avatarImage: { width: '100%', height: '100%' },
   avatarText: { fontSize: 30, fontWeight: '700', color: '#fff' },
   name: { fontSize: 20, fontWeight: '700', color: '#fff', marginBottom: 4 },
   phone: { fontSize: 14, color: 'rgba(255,255,255,0.7)' },

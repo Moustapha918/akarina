@@ -2,6 +2,21 @@ import { ProjectType, ExitStrategy } from '../types';
 import i18n from '../i18n';
 
 /**
+ * Nom complet affichable — prénom + nom.
+ */
+export function getFullName(user: { firstName: string; lastName: string }): string {
+  return `${user.firstName} ${user.lastName}`.trim();
+}
+
+/**
+ * Formate une date courte selon la langue courante (JJ/MM/AAAA).
+ */
+export function formatDate(date: Date): string {
+  const locale = i18n.language === 'ar' ? 'ar-MA' : 'fr-FR';
+  return date.toLocaleDateString(locale, { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+
+/**
  * Formate un montant en MRU lisible.
  * Ex: 1200000 → "1 200 000 MRU"
  * Ex: 1500000 → "1,5M MRU"

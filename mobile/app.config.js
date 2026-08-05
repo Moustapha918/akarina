@@ -104,10 +104,11 @@ module.exports = {
       [
         'expo-image-picker',
         {
-          photosPermission: 'Akarina a besoin d\'accéder à vos photos pour le KYC.',
-          cameraPermission: 'Akarina a besoin d\'accéder à la caméra pour photographier votre pièce d\'identité.',
+          photosPermission: 'Akarina a besoin d\'accéder à vos photos pour votre profil et le KYC.',
+          cameraPermission: 'Akarina a besoin d\'accéder à la caméra pour prendre une photo de profil ou de votre pièce d\'identité.',
         },
       ],
+      '@react-native-community/datetimepicker',
     ],
 
     experiments: {
