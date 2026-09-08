@@ -119,7 +119,7 @@ export default function InvestConfirmationScreen() {
           <Divider />
           <Row label={t('invest.confirmation.rowRoi')} value={`${project.roiEstimate}%`} />
           <Row label={t('invest.confirmation.rowDuration')} value={t('invest.confirmation.rowDurationValue', { count: project.roiDurationMonths })} />
-          <Row label={t('invest.confirmation.rowBankilyRef')} value={investment.bankilyRef ?? '—'} mono />
+          <Row label={t('invest.confirmation.rowBankilyRef')} value={investment.transactionId ?? '—'} mono />
         </View>
 
         {/* Mousharaka info */}

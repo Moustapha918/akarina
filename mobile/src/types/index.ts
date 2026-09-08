@@ -12,7 +12,7 @@ export type ExitStrategy = 'SALE' | 'RENTAL';
 
 export type ProjectStatus = 'OPEN' | 'FUNDED' | 'CONSTRUCTION' | 'RENTING' | 'COMPLETED';
 
-export type InvestmentStatus = 'PENDING' | 'SUCCESS' | 'FAILED';
+export type InvestmentStatus = 'PENDING' | 'PROCESSING' | 'SUCCESS' | 'FAILED';
 
 export type PayoutType = 'RENTAL' | 'PROFIT';
 
@@ -75,10 +75,14 @@ export interface Investment {
   userId: string;
   projectId: string;
   amount: number; // MRU
-  bankilyRef?: string;
+  transactionId?: string; // ID transaction renvoyé par Bankily
+  bankilyPhone?: string; // numéro Bankily utilisé pour le paiement
+  bankilyError?: string; // message d'erreur Bankily si FAILED
   status: InvestmentStatus;
   contractUrl?: string;
   contractAcceptedAt?: Timestamp;
+  processingAt?: Timestamp; // passage en PROCESSING (déclenche l'éligibilité à la réconciliation)
+  reconciledAt?: Timestamp; // résolu par le job de réconciliation planifié plutôt que par le polling client
   paidAt?: Timestamp;
   createdAt: Timestamp;
 }

@@ -16,7 +16,6 @@ import { useTranslation } from 'react-i18next';
 import {
   COLORS,
   INVESTMENT_PRESETS,
-  MIN_INVESTMENT_AMOUNT,
   MAX_INVESTMENT_AMOUNT,
   KYC_FREE_THRESHOLD,
 } from '../../../../src/constants';
@@ -72,10 +71,6 @@ export default function InvestAmountScreen() {
     }
     if (project && num < project.minInvestment) {
       setError(t('invest.amount.errorMinProject', { amount: formatMRU(project.minInvestment) }));
-      return false;
-    }
-    if (num < MIN_INVESTMENT_AMOUNT) {
-      setError(t('invest.amount.errorMinGlobal', { amount: formatMRU(MIN_INVESTMENT_AMOUNT) }));
       return false;
     }
     if (num > MAX_INVESTMENT_AMOUNT) {

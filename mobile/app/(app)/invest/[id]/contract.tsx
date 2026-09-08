@@ -19,6 +19,17 @@ import { createInvestment, markContractAccepted } from '../../../../src/services
 import { useAuthStore } from '../../../../src/hooks/useAuthStore';
 import { Project } from '../../../../src/types';
 
+const NETWORK_TIMEOUT_MS = 15_000;
+
+function withTimeout<T>(promise: Promise<T>, label: string): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(`[${label}] Timeout après ${NETWORK_TIMEOUT_MS}ms`)), NETWORK_TIMEOUT_MS)
+    ),
+  ]);
+}
+
 export default function InvestContractScreen() {
   const { id, amount: amountParam } = useLocalSearchParams<{ id: string; amount: string }>();
   const router = useRouter();
@@ -62,10 +73,20 @@ export default function InvestContractScreen() {
 
     setSubmitting(true);
     try {
-      const investment = await createInvestment({ projectId: id, amount }, user.id);
-      await markContractAccepted(investment.id);
+      console.log('[Contract] createInvestment...');
+      const investment = await withTimeout(
+        createInvestment({ projectId: id, amount }, user.id),
+        'createInvestment'
+      );
+      console.log('[Contract] createInvestment OK', investment.id);
+
+      console.log('[Contract] markContractAccepted...');
+      await withTimeout(markContractAccepted(investment.id), 'markContractAccepted');
+      console.log('[Contract] markContractAccepted OK');
+
       router.push(`/invest/${id}/payment?investmentId=${investment.id}&amount=${amount}`);
-    } catch {
+    } catch (err) {
+      console.error('[Contract] handleAccept a échoué:', err);
       Alert.alert(t('common.error'), t('invest.contract.createError'));
       setSubmitting(false);
     }

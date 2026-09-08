@@ -93,7 +93,7 @@ module.exports = {
         {
           ios: {
             useFrameworks: 'static',
-            forceStaticLinking: ['RNFBApp', 'RNFBAuth'],
+            forceStaticLinking: ['RNFBApp', 'RNFBAuth', 'RNFBFunctions'],
           },
         },
       ],

@@ -26,8 +26,12 @@
  un tunel d'investissement doit etre fait avec une expertise UX/UI pour maximiser la chance d'accrocher un nouveau client sur plusieurs etape: 
 1. Sélection du projet -> Choix du montant.
 2. Acceptation du contrat (Checkbox) -> Génération du contrat temporaire.
-3. Déclenchement paiement Bankily via API (Push OTP sur mobile).
-4. Webhook de confirmation -> Update statut Investment -> Génération PDF final.
+3. Paiement Bankily (B-PAY) — échange manuel entre les deux apps, pas de push OTP :
+   a. L'utilisateur bascule sur l'app Bankily, ouvre B-PAY, saisit le code marchand + le montant, confirme avec son code PIN Bankily.
+   b. Bankily affiche un **passcode** à usage unique côté utilisateur.
+   c. L'utilisateur revient dans Akarina et saisit son numéro Bankily + ce passcode dans l'écran de checkout.
+   d. Akarina (backend) appelle `POST /payment` (Bearer = token marchand obtenu via `/authentification`) avec `clientPhone`, `passcode`, `amount`, `operationId` (généré par Akarina, ex. l'ID de l'`Investment`), `language`.
+4. Confirmation par polling (pas de webhook entrant dans l'API B-PAY) : Akarina interroge `POST /checkTransaction` avec `operationId` jusqu'à recevoir `status: TS` (succès) ou `TF` (échec) -> Update statut Investment -> Génération PDF final.
 
 ### B. Automatisation KYC
 * Upload de pièce d'identité (Front-end).
@@ -43,7 +47,7 @@
 * **Security:** * Toutes les routes `/api/admin/**` doivent être protégées par le rôle ADMIN.
     * Validation stricte des montants.
     * Sanitisation des fichiers uploadés.
-* **Bankily Simulation:** Créer un `BankilyService` avec une méthode `initiatePayment` et un endpoint de `callback` (Webhook) simulant la réponse de la banque.
+* **Bankily Simulation:** Créer un `BankilyService` avec une méthode `initiatePayment` (appel `/payment` avec le passcode saisi manuellement par l'utilisateur après son passage sur l'app Bankily) et une méthode `checkTransactionStatus` (polling `/checkTransaction` par `operationId`) simulant la réponse de la banque — l'API B-PAY ne pousse pas de webhook, la confirmation s'obtient en interrogeant activement le statut de la transaction.
 * **Contract Service:** Créer un service utilisant un template HTML pour générer le PDF du contrat de partenariat.
 
 ## 6. Development Roadmap (3 Months)

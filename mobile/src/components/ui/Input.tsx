@@ -5,8 +5,8 @@ import {
   StyleSheet,
   TextInputProps,
   ViewStyle,
-  ReactNode,
 } from 'react-native';
+import { ReactNode } from 'react';
 import { COLORS } from '../../constants';
 
 interface InputProps extends TextInputProps {

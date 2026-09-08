@@ -1,0 +1,62 @@
+### Généré depuis "BPAY TEST.postman_collection.json"
+### Utilisable directement dans IntelliJ IDEA (HTTP Client intégré).
+### Le token récupéré par "Get Token" est mémorisé automatiquement (client.global)
+### et réutilisé par "Payment" et "Check transaction" — pas besoin de le copier à la main.
+
+@baseUrl = https://ebankily-tst.appspot.com
+@username = AKARINA DIGITAL
+@password = 12345
+@clientId = ebankily
+
+
+### Get Token
+# @name getToken
+POST {{baseUrl}}/authentification
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=password&username={{username}}&password={{password}}&client_id={{clientId}}
+
+> {%
+    client.global.set("access_token", response.body.access_token);
+    client.global.set("refresh_token", response.body.refresh_token);
+    client.log("access_token enregistré: " + response.body.access_token);
+%}
+
+
+### Refresh Token
+# @name refreshToken
+POST {{baseUrl}}/authentification
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=refresh_token&client_id={{clientId}}&refresh_token={{refresh_token}}
+
+> {%
+    client.global.set("access_token", response.body.access_token);
+    client.global.set("refresh_token", response.body.refresh_token);
+%}
+
+
+### Payment
+# @name payment
+POST {{baseUrl}}/payment
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+  "clientPhone": "34212133",
+  "passcode": "1242",
+  "amount": "100",
+  "language": "fr",
+  "operationId": "110028"
+}
+
+
+### Check transaction
+# @name checkTransaction
+POST {{baseUrl}}/checkTransaction
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+  "operationId": "110041"
+}

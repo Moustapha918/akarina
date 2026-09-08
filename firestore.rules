@@ -25,22 +25,21 @@ service cloud.firestore {
       allow read: if request.auth != null &&
         (resource.data.userId == request.auth.uid || request.auth.token.role == 'ADMIN');
 
-      // Création : userId doit correspondre à l'auth, statut initial forcé à PENDING
+      // Création : userId doit correspondre à l'auth, statut initial forcé à PENDING.
+      // Pas de plancher métier ici (>= 1 uniquement, anti-abus) : le vrai minimum est
+      // project.minInvestment, configurable par projet côté admin et vérifié côté client
+      // (amount.tsx) — dupliquer ce seuil ici obligerait à lire le projet à chaque
+      // création et créerait la même désynchronisation qui a causé ce bug.
       allow create: if request.auth != null
         && request.resource.data.userId == request.auth.uid
         && request.resource.data.status == 'PENDING'
         && request.resource.data.amount is int
-        && request.resource.data.amount >= 1000
+        && request.resource.data.amount >= 1
         && request.resource.data.amount <= 500000;
 
-      // Mise à jour paiement : transition de statut autorisée uniquement depuis PENDING.
-      // Empêche toute rétro-modification (FAILED→SUCCESS, SUCCESS→autre).
-      // TODO: migrer vers Cloud Function quand Bankily webhook sera réel (C1).
-      allow update: if request.auth != null
-        && resource.data.userId == request.auth.uid
-        && resource.data.status == 'PENDING'
-        && request.resource.data.diff(resource.data).affectedKeys()
-            .hasOnly(['status', 'bankilyRef', 'paidAt']);
+      // Le statut (PENDING → PROCESSING → SUCCESS/FAILED) n'est plus modifiable par le
+      // client : il transite uniquement via les Cloud Functions initiateBankilyPayment /
+      // checkBankilyTransaction, qui écrivent avec l'Admin SDK (bypass ces règles).
 
       // Mise à jour contrat PDF : uniquement contractUrl et contractAcceptedAt.
       allow update: if request.auth != null
@@ -56,6 +55,13 @@ service cloud.firestore {
     match /documents/{documentId} {
       allow read, write: if request.auth != null &&
         (resource.data.userId == request.auth.uid || request.auth.token.role == 'ADMIN');
+    }
+
+    // Journal d'incidents Bankily (erreurs/absences de réponse) : écrit uniquement par les
+    // Cloud Functions (Admin SDK, bypass ces règles). Lecture réservée à l'admin (support/audit) —
+    // jamais au client, qui n'a pas à voir ce niveau de détail technique sur ses paiements.
+    match /bankilyLogs/{logId} {
+      allow read: if request.auth != null && request.auth.token.role == 'ADMIN';
     }
   }
 }

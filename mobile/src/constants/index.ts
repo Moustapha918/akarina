@@ -3,8 +3,8 @@
 export const KYC_FREE_THRESHOLD = 5_000;
 
 // ─── Investissement ──────────────────────────────────────────────────────────
-/** Montant minimum par investissement (en MRU) */
-export const MIN_INVESTMENT_AMOUNT = 1_000;
+// Pas de plancher global : le minimum d'investissement est entièrement défini
+// par project.minInvestment (configuré par l'admin projet par projet).
 
 /** Montant maximum par investissement (en MRU) */
 export const MAX_INVESTMENT_AMOUNT = 500_000;
@@ -68,6 +68,15 @@ export const COLORS = {
 } as const;
 
 // ─── Bankily ─────────────────────────────────────────────────────────────────
-/** Délai de timeout de la simulation Bankily (ms) */
-export const BANKILY_SIMULATION_DELAY = 5_000;
+/** Intervalle entre deux vérifications de statut de transaction (ms) */
+export const BANKILY_POLL_INTERVAL = 3_000;
+
+/** Durée max de polling avant de considérer le paiement "en attente" (ms) */
+export const BANKILY_POLL_TIMEOUT = 90_000;
+
+/**
+ * Code marchand affiché à l'utilisateur pour la fonctionnalité B-PAY de l'app Bankily.
+ * TODO: remplacer par le vrai code fourni par Bankily lors de l'onboarding marchand.
+ */
+export const BANKILY_MERCHANT_CODE = 'AKARINA';
 

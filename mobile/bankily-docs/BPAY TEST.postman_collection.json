@@ -1,0 +1,198 @@
+{
+	"info": {
+		"_postman_id": "0b8c46cf-8794-4d5b-83d6-5fea0298d321",
+		"name": "BPAY TEST",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24164626",
+		"_collection_link": "https://lively-flare-6635.postman.co/workspace/Workspace~e02a6ffd-0c60-4e19-80de-97c2d5e39860/collection/24164626-0b8c46cf-8794-4d5b-83d6-5fea0298d321?action=share&source=collection_link&creator=24164626"
+	},
+	"item": [
+		{
+			"name": "Get Token",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "ETS_EWE",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "12345",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "ebankily",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://ebankily-tst.appspot.com/authentification",
+					"protocol": "https",
+					"host": [
+						"ebankily-tst",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"authentification"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Refresh Token",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "refresh_token",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "ebankily",
+							"type": "text"
+						},
+						{
+							"key": "refresh_token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJlZDU4MzMwZi0xZGRkLTQwYmUtOWQ0MS01NGI4YzE5ODc3ZjYifQ.eyJleHAiOjE3NDc5OTU3NDcsImlhdCI6MTc0Nzk5Mzk0NywianRpIjoiMzJjNzk1MGMtMjBlMy00MmIyLTg3OTItODJmMDNiMGI1NDlhIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrL3JlYWxtcy9iYW5raWx5IiwiYXVkIjoiaHR0cDovL2tleWNsb2FrL3JlYWxtcy9iYW5raWx5Iiwic3ViIjoiMGFjMmMxNjAtMzViMS00ZDM5LTljZjItMmU5OTNmNzZmOTVlIiwidHlwIjoiUmVmcmVzaCIsImF6cCI6ImViYW5raWx5Iiwic2Vzc2lvbl9zdGF0ZSI6IjY2MzAwZmY4LTBjNDQtNGMyZC1hMTU2LTZjMTcyNjc5NTQzYyIsInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsInNpZCI6IjY2MzAwZmY4LTBjNDQtNGMyZC1hMTU2LTZjMTcyNjc5NTQzYyJ9.Owh1ZU1Hgn2d39AAcyDg_i6nv3LSC0CJtRm4tGkUiBw",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://ebankily-tst.appspot.com/authentification",
+					"protocol": "https",
+					"host": [
+						"ebankily-tst",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"authentification"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Payment",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJqSlBDQ2tvNzZKNm5KQ1NBcV9WdzE1dnZQMnZ1d19FTnBQV1FYUXFQYy1NIn0.eyJleHAiOjE3NDc5OTQyNzMsImlhdCI6MTc0Nzk5Mzk3MywianRpIjoiNjQ4NmIyMzUtNDEwYS00MzU4LWIyNDMtY2RmZDlhOWJmYjRlIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrL3JlYWxtcy9iYW5raWx5IiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjBhYzJjMTYwLTM1YjEtNGQzOS05Y2YyLTJlOTkzZjc2Zjk1ZSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImViYW5raWx5Iiwic2Vzc2lvbl9zdGF0ZSI6IjY2MzAwZmY4LTBjNDQtNGMyZC1hMTU2LTZjMTcyNjc5NTQzYyIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJkZWZhdWx0LXJvbGVzLWJhbmtpbHkiLCJvZmZsaW5lX2FjY2VzcyIsImVfYmFua2lseSIsImViYW5raWx5IiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJzaWQiOiI2NjMwMGZmOC0wYzQ0LTRjMmQtYTE1Ni02YzE3MjY3OTU0M2MiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6ImV0c19ld2UifQ.oXfW4xfCW-_6-UWSSgtPBwGwM-K59LP5s7aLNw5eQ0oqbRnq20L04j9gCil4KcCb7aGAoR5kOspvEyFVuuKP_cW4etWWKcxnle1XTWqyIdJe31Q0Mi-rtVO_tUBsTOLi6llXmRZ3LnsyGKUCL_Fihmk8ZdLXQFdQSfzrGeiKpx1gxAMevJdHQIgD5H4b6GwCr_JBdY8-d9_KeRJ2uNoPuubRkClXVJbTPyI1xhUaFH-tfbPlKdubILBk9kZmYiamsrRJuoa_DdEjDb57Eq8ba-5kOuDCU_As8INBlFmPL6hB27SerG-tbHeZ_kqwr1ZOdOEL2oVLW5TqaqO8oNePRQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJqSlBDQ2tvNzZKNm5KQ1NBcV9WdzE1dnZQMnZ1d19FTnBQV1FYUXFQYy1NIn0.eyJleHAiOjE2OTM4NDUxMDEsImlhdCI6MTY5Mzg0NDgwMSwianRpIjoiMzJmMDc3ZDctNWQxYy00OTEyLTgzNjctZjZhODQ0NWRkNzVkIiwiaXNzIjoiaHR0cDovLzMwLjMwLjEuMTQ4OjcwNzAvYXV0aC9yZWFsbXMvYmFua2lseSIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiI2NzU1MDAzMS00ZTkwLTQyMjQtYWJjNy0wYTY4MDRlMjQ4ZTUiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJlYmFua2lseSIsInNlc3Npb25fc3RhdGUiOiI3NDAxZDA2OC03NzBkLTRiNmItYjgwZi01MDEyZjEyNGU0YzEiLCJhY3IiOiIxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwiZV9iYW5raWx5IiwiZWJhbmtpbHkiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwicHJlZmVycmVkX3VzZXJuYW1lIjoidGZhZyJ9.XneZu-ck5OwI-Jo0vtvBdle12Vt3kMeVBYf0tW_pbO5qUPQ7RKiBqdUyN_3dpgzpoZD-M90wftt6YNMoCFH5m7Grhk-X2KNfUYPKzNA1zRDeTSUk1uql6JRMTikuiIW_XH-OaueVQEElrXdA-hvG8TN9ABKE600Rw34Ug2XMApjCXnXLCjc6KBLw5Lp4iO6qGEZo0hMQ6U-if0XqIV4Iv9-wjGtd7ZZ-kBJvOMcrp3Rda9QEuxFAbTjhTcmvaqmqU_hYdZvn_TeiY0EdbSChjSp3BC6tn1M60ArDmh-llu0oht2RwPt8m-bsHpK7ITHlDj4FLQ-EJauQ44nbgZQGww",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"clientPhone\": \"48110011\",\r\n    \"passcode\": \"2580\",\r\n    \"amount\": \"120\",\r\n    \"language\" :\"fr\",\r\n    \"operationId\" : \"TEST_2\"\r\n}"
+				},
+				"url": {
+					"raw": "https://ebankily-tst.appspot.com/payment",
+					"protocol": "https",
+					"host": [
+						"ebankily-tst",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"payment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check transaction",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJqSlBDQ2tvNzZKNm5KQ1NBcV9WdzE1dnZQMnZ1d19FTnBQV1FYUXFQYy1NIn0.eyJleHAiOjE3NDc5OTQyNzMsImlhdCI6MTc0Nzk5Mzk3MywianRpIjoiNjQ4NmIyMzUtNDEwYS00MzU4LWIyNDMtY2RmZDlhOWJmYjRlIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrL3JlYWxtcy9iYW5raWx5IiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjBhYzJjMTYwLTM1YjEtNGQzOS05Y2YyLTJlOTkzZjc2Zjk1ZSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImViYW5raWx5Iiwic2Vzc2lvbl9zdGF0ZSI6IjY2MzAwZmY4LTBjNDQtNGMyZC1hMTU2LTZjMTcyNjc5NTQzYyIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJkZWZhdWx0LXJvbGVzLWJhbmtpbHkiLCJvZmZsaW5lX2FjY2VzcyIsImVfYmFua2lseSIsImViYW5raWx5IiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6InByb2ZpbGUgZW1haWwiLCJzaWQiOiI2NjMwMGZmOC0wYzQ0LTRjMmQtYTE1Ni02YzE3MjY3OTU0M2MiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInByZWZlcnJlZF91c2VybmFtZSI6ImV0c19ld2UifQ.oXfW4xfCW-_6-UWSSgtPBwGwM-K59LP5s7aLNw5eQ0oqbRnq20L04j9gCil4KcCb7aGAoR5kOspvEyFVuuKP_cW4etWWKcxnle1XTWqyIdJe31Q0Mi-rtVO_tUBsTOLi6llXmRZ3LnsyGKUCL_Fihmk8ZdLXQFdQSfzrGeiKpx1gxAMevJdHQIgD5H4b6GwCr_JBdY8-d9_KeRJ2uNoPuubRkClXVJbTPyI1xhUaFH-tfbPlKdubILBk9kZmYiamsrRJuoa_DdEjDb57Eq8ba-5kOuDCU_As8INBlFmPL6hB27SerG-tbHeZ_kqwr1ZOdOEL2oVLW5TqaqO8oNePRQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJqSlBDQ2tvNzZKNm5KQ1NBcV9WdzE1dnZQMnZ1d19FTnBQV1FYUXFQYy1NIn0.eyJleHAiOjE2OTE1OTcyNjEsImlhdCI6MTY5MTU5Njk2MSwianRpIjoiOWZhNGU5NTItYTE2ZC00MzQ2LWI2ZjQtMzFiYTg4ZjMzMDk3IiwiaXNzIjoiaHR0cDovLzMwLjMwLjEuMTQ4OjcwNzAvYXV0aC9yZWFsbXMvYmFua2lseSIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiJlMjU1MjMxNS02NTMyLTQ5ZGMtYjdkOS0wMjA4MmFhOWI5NDIiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJlYmFua2lseSIsInNlc3Npb25fc3RhdGUiOiJiOTE5M2Y2Ny00YmFlLTQ4NjktYTU0Ny1jZGNmNDJmNjM2NDgiLCJhY3IiOiIxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwiZV9iYW5raWx5IiwiZWJhbmtpbHkiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7ImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwicHJlZmVycmVkX3VzZXJuYW1lIjoic3RwX3Rlc3QifQ.AA6OzAmla6WNN-fCrQe26qES8Tu0hLK6JK4Be-dkOLBj9oCJTIG5rvtJaQgOwMB8dlC229j4mf9FjorZmhS21OSuZa7mCklhnCr17c7HO8Q_Q9GPpf74HQyUFq2YScQy7d1wMTLDzA8T5XkiekGgnsrAdCKSuCkugIMvxjxz7jOeCjjPmx5LUkWQMTEGWcc47OXbQpQgur8_bi45eMgCR126ijwVVsmHWkf5Bbk5ybwEzp7YldkNWf259P8xNw1zTzAz3joD1wb0Z-qSt5DI_KYAdLNubw_jJl9pWQGmh90bZ_9HIoOJuFfB36WBjJKokP19EABPXBC1lZZaru5VyQ",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"operationId\" : \"TEST_2\"\r\n}"
+				},
+				"url": {
+					"raw": "https://ebankily-tst.appspot.com/checkTransaction",
+					"protocol": "https",
+					"host": [
+						"ebankily-tst",
+						"appspot",
+						"com"
+					],
+					"path": [
+						"checkTransaction"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

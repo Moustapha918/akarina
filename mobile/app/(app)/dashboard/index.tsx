@@ -31,11 +31,13 @@ function InvestmentCard({ item, user }: { item: InvestmentWithProject; user: Use
 
   const STATUS_LABEL: Record<Investment['status'], string> = {
     PENDING: t('dashboard.investmentStatus.pending'),
+    PROCESSING: t('dashboard.investmentStatus.processing'),
     SUCCESS: t('dashboard.investmentStatus.success'),
     FAILED: t('dashboard.investmentStatus.failed'),
   };
   const STATUS_COLOR: Record<Investment['status'], string> = {
     PENDING: COLORS.warning,
+    PROCESSING: COLORS.warning,
     SUCCESS: COLORS.success,
     FAILED: COLORS.danger,
   };
