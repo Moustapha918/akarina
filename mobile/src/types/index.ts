@@ -39,7 +39,7 @@ export interface Project {
   description: string;
   location: string;
   targetAmount: number; // MRU
-  collectedAmount: number; // MRU
+  collectedAmount: number; // MRU — calculé à la volée (getProjectFundingStats), pas fiable en lecture Firestore brute
   roiEstimate: number; // pourcentage annuel, ex: 15.5
   roiDurationMonths: number; // durée estimée du projet en mois
   status: ProjectStatus;
@@ -50,7 +50,7 @@ export interface Project {
   coverImageUrl: string;
   imageUrls: string[];
   maxInvestors: number;
-  currentInvestors: number;
+  currentInvestors: number; // calculé à la volée (getProjectFundingStats) — nombre d'investisseurs distincts
   minInvestment: number; // MRU
   createdAt: Timestamp;
   updatedAt: Timestamp;

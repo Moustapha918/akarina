@@ -50,7 +50,7 @@ export default function RegisterScreen() {
     try {
       const user = await createUserProfile(uid, { name, email, phone });
       setUser(user);
-      router.replace('/(app)');
+      router.replace('/(app)/(tabs)');
     } catch (e: any) {
       Alert.alert(t('common.error'), e.message ?? t('auth.register.createError'));
     } finally {

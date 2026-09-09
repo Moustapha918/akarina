@@ -84,7 +84,7 @@ export default function InvestContractScreen() {
       await withTimeout(markContractAccepted(investment.id), 'markContractAccepted');
       console.log('[Contract] markContractAccepted OK');
 
-      router.push(`/invest/${id}/payment?investmentId=${investment.id}&amount=${amount}`);
+      router.replace(`/invest/${id}/payment?investmentId=${investment.id}&amount=${amount}`);
     } catch (err) {
       console.error('[Contract] handleAccept a échoué:', err);
       Alert.alert(t('common.error'), t('invest.contract.createError'));

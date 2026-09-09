@@ -11,11 +11,11 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { COLORS } from '../../src/constants';
-import { ProjectType } from '../../src/types';
-import { useProjects } from '../../src/hooks/useProjects';
-import { ProjectCard } from '../../src/components/project/ProjectCard';
-import { useAuthStore } from '../../src/hooks/useAuthStore';
+import { COLORS } from '../../../src/constants';
+import { ProjectType } from '../../../src/types';
+import { useProjects } from '../../../src/hooks/useProjects';
+import { ProjectCard } from '../../../src/components/project/ProjectCard';
+import { useAuthStore } from '../../../src/hooks/useAuthStore';
 
 export default function ProjectsScreen() {
   const insets = useSafeAreaInsets();
@@ -40,7 +40,7 @@ export default function ProjectsScreen() {
         {user ? (
           <TouchableOpacity
             style={styles.avatarButton}
-            onPress={() => router.push('/(app)/profile')}
+            onPress={() => router.push('/(app)/(tabs)/profile')}
           >
             <Text style={styles.avatarText}>
               {user.name.charAt(0).toUpperCase()}

@@ -1,9 +1,5 @@
-import { getApp } from '@react-native-firebase/app';
-import { getFunctions, httpsCallable } from '@react-native-firebase/functions';
-
-// Les Cloud Functions Bankily sont déployées en europe-west1 (voir functions/src/bankily/*.ts) —
-// @react-native-firebase cible us-central1 par défaut, la région doit donc être explicite ici.
-const functionsInstance = getFunctions(getApp(), 'europe-west1');
+import { httpsCallable } from '@react-native-firebase/functions';
+import { functionsInstance } from './functionsClient';
 
 export type BankilyTransactionStatus = 'TS' | 'TF' | 'TA';
 

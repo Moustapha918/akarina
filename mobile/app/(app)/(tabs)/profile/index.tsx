@@ -9,13 +9,13 @@ import {
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
-import { GuestGuard } from '../../../src/components/ui/GuestGuard';
-import { useAuthStore } from '../../../src/hooks/useAuthStore';
-import { useLanguageSwitcher } from '../../../src/hooks/useLanguageSwitcher';
-import { signOut } from '../../../src/services/authService';
-import { COLORS } from '../../../src/constants';
-import { SUPPORTED_LANGUAGES, LanguageCode } from '../../../src/i18n';
-import { KycStatus } from '../../../src/types';
+import { GuestGuard } from '../../../../src/components/ui/GuestGuard';
+import { useAuthStore } from '../../../../src/hooks/useAuthStore';
+import { useLanguageSwitcher } from '../../../../src/hooks/useLanguageSwitcher';
+import { signOut } from '../../../../src/services/authService';
+import { COLORS } from '../../../../src/constants';
+import { SUPPORTED_LANGUAGES, LanguageCode } from '../../../../src/i18n';
+import { KycStatus } from '../../../../src/types';
 
 function Row({ icon, label, value, onPress, danger }: {
   icon: string;
@@ -178,7 +178,7 @@ function ProfileContent() {
             icon="🪪"
             label={t('profile.kycStatus')}
             value={KYC_LABEL[kycStatus]}
-            onPress={() => router.push('/(app)/kyc')}
+            onPress={() => router.push('/(app)/(tabs)/kyc')}
           />
         </View>
         <View style={[styles.kycBadge, { borderColor: KYC_COLOR[kycStatus] + '40', backgroundColor: KYC_COLOR[kycStatus] + '10' }]}>

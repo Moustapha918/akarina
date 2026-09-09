@@ -3,6 +3,7 @@ import { FieldValue, Timestamp, getFirestore } from 'firebase-admin/firestore';
 import { BANKILY_SECRETS, callCheckTransaction } from './client';
 import { getMerchantAccessToken } from './tokenCache';
 import { logBankilyIncident } from './auditLog';
+import { resolveInvestmentSuccess } from './resolveInvestment';
 
 /**
  * Un investissement PROCESSING depuis plus longtemps que ça n'a probablement plus
@@ -49,12 +50,10 @@ export const reconcileBankilyPayments = onSchedule(
         const status = result.status ?? 'TA';
 
         if (status === 'TS') {
-          await doc.ref.update({
-            status: 'SUCCESS',
-            paidAt: FieldValue.serverTimestamp(),
-            transactionId: result.transactionId ?? doc.data().transactionId ?? null,
-            reconciledAt: FieldValue.serverTimestamp(),
-          });
+          const resolved = await resolveInvestmentSuccess(db, doc.id, result.transactionId ?? null);
+          if (resolved) {
+            await doc.ref.update({ reconciledAt: FieldValue.serverTimestamp() });
+          }
           console.log(`[reconcileBankilyPayments] ${doc.id} résolu par réconciliation : SUCCESS`);
         } else if (status === 'TF') {
           await doc.ref.update({

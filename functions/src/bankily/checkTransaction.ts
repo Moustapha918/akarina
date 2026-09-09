@@ -1,8 +1,9 @@
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
-import { getFirestore, FieldValue } from 'firebase-admin/firestore';
+import { getFirestore } from 'firebase-admin/firestore';
 import { BANKILY_SECRETS, BankilyTransactionStatus, callCheckTransaction } from './client';
 import { getMerchantAccessToken } from './tokenCache';
 import { logBankilyIncident } from './auditLog';
+import { resolveInvestmentSuccess } from './resolveInvestment';
 
 interface CheckTransactionRequest {
   investmentId: string;
@@ -75,11 +76,7 @@ export const checkBankilyTransaction = onCall<CheckTransactionRequest>(
     const status = result.status ?? 'TA';
 
     if (status === 'TS') {
-      await investmentRef.update({
-        status: 'SUCCESS',
-        paidAt: FieldValue.serverTimestamp(),
-        transactionId: result.transactionId ?? investment.transactionId ?? null,
-      });
+      await resolveInvestmentSuccess(db, investmentId, result.transactionId ?? null);
     } else if (status === 'TF') {
       await investmentRef.update({
         status: 'FAILED',

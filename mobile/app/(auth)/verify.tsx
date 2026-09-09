@@ -46,7 +46,7 @@ export default function VerifyScreen() {
 
       if (user) {
         setUser(user);
-        router.replace('/(app)');
+        router.replace('/(app)/(tabs)');
       } else {
         router.push({ pathname: '/(auth)/register', params: { phone: `${prefix}${phone}` } });
       }

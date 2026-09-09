@@ -145,7 +145,7 @@ export default function OnboardingScreen() {
   async function handleNext() {
     if (isLast) {
       await markDone();
-      router.replace('/(app)');
+      router.replace('/(app)/(tabs)');
     } else {
       flatListRef.current?.scrollToIndex({ index: activeIndex + 1, animated: true });
     }
@@ -153,7 +153,7 @@ export default function OnboardingScreen() {
 
   async function handleSkip() {
     await markDone();
-    router.replace('/(app)');
+    router.replace('/(app)/(tabs)');
   }
 
   return (

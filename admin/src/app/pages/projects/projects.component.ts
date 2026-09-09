@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   collection, getDocs, addDoc, updateDoc, doc,
-  orderBy, query, serverTimestamp, getFirestore
+  orderBy, query, where, serverTimestamp, getFirestore, Firestore
 } from 'firebase/firestore';
 
 export type ProjectType = 'CONSTRUCTION' | 'LAND_FLIP';
@@ -30,6 +30,35 @@ export interface Project {
   minInvestment: number;
   createdAt?: any;
   updatedAt?: any;
+}
+
+/**
+ * Calcule à la volée le montant collecté et le nombre d'investisseurs distincts
+ * d'un projet, depuis les investissements SUCCESS — `collectedAmount`/
+ * `currentInvestors` stockés sur le document projet ne sont pas fiables (rien
+ * ne les maintient en écriture, voir mobile/src/services/projectService.ts).
+ */
+async function getProjectFundingStats(
+  db: Firestore,
+  projectId: string
+): Promise<{ collectedAmount: number; currentInvestors: number }> {
+  const snap = await getDocs(
+    query(
+      collection(db, 'investments'),
+      where('projectId', '==', projectId),
+      where('status', '==', 'SUCCESS')
+    )
+  );
+
+  let collectedAmount = 0;
+  const investorIds = new Set<string>();
+  snap.docs.forEach((d) => {
+    const data = d.data() as { amount?: number; userId?: string };
+    collectedAmount += data.amount ?? 0;
+    if (data.userId) investorIds.add(data.userId);
+  });
+
+  return { collectedAmount, currentInvestors: investorIds.size };
 }
 
 function statusFlow(p: Project): ProjectStatus[] {
@@ -84,7 +113,11 @@ export class ProjectsComponent implements OnInit {
       const snap = await getDocs(
         query(collection(this.db, 'projects'), orderBy('createdAt', 'desc'))
       );
-      this.projects.set(snap.docs.map(d => ({ id: d.id, ...d.data() } as Project)));
+      const projects = snap.docs.map(d => ({ id: d.id, ...d.data() } as Project));
+      const withStats = await Promise.all(
+        projects.map(async (p) => ({ ...p, ...(await getProjectFundingStats(this.db, p.id)) }))
+      );
+      this.projects.set(withStats);
     } catch (err) {
       console.error('Projects load error', err);
     } finally {

@@ -13,16 +13,16 @@ import {
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
-import { COLORS } from '../../../src/constants';
-import { GuestGuard } from '../../../src/components/ui/GuestGuard';
-import { useAuthStore } from '../../../src/hooks/useAuthStore';
-import { useMyInvestments, InvestmentWithProject } from '../../../src/hooks/useMyInvestments';
-import { formatMRU, collectProgress, projectStatusLabel, projectStatusColor } from '../../../src/utils/format';
-import { generateContractHTML } from '../../../src/utils/contractTemplate';
-import { sharePDF, buildPDFFilename } from '../../../src/utils/pdfShare';
-import { uploadContractPDF } from '../../../src/utils/pdfStorage';
-import { updateContractUrl } from '../../../src/services/investmentService';
-import { Investment, KycStatus, User } from '../../../src/types';
+import { COLORS } from '../../../../src/constants';
+import { GuestGuard } from '../../../../src/components/ui/GuestGuard';
+import { useAuthStore } from '../../../../src/hooks/useAuthStore';
+import { useMyInvestments, InvestmentWithProject } from '../../../../src/hooks/useMyInvestments';
+import { formatMRU, collectProgress, projectStatusLabel, projectStatusColor } from '../../../../src/utils/format';
+import { generateContractHTML } from '../../../../src/utils/contractTemplate';
+import { sharePDF, buildPDFFilename } from '../../../../src/utils/pdfShare';
+import { uploadContractPDF } from '../../../../src/utils/pdfStorage';
+import { updateContractUrl } from '../../../../src/services/investmentService';
+import { Investment, KycStatus, User } from '../../../../src/types';
 
 function InvestmentCard({ item, user }: { item: InvestmentWithProject; user: User }) {
   const { t } = useTranslation();
@@ -212,7 +212,7 @@ function DashboardContent() {
         </View>
         <TouchableOpacity
           style={[styles.kycBadge, { borderColor: KYC_COLORS[kycStatus] }]}
-          onPress={() => router.push('/(app)/kyc')}
+          onPress={() => router.push('/(app)/(tabs)/kyc')}
         >
           <Text style={[styles.kycIcon, { color: KYC_COLORS[kycStatus] }]}>{KYC_ICONS[kycStatus]}</Text>
           <Text style={[styles.kycLabel, { color: KYC_COLORS[kycStatus] }]}>{KYC_LABELS[kycStatus]}</Text>
@@ -243,7 +243,7 @@ function DashboardContent() {
             <Text style={styles.emptyIcon}>📈</Text>
             <Text style={styles.emptyTitle}>{t('dashboard.noInvestments')}</Text>
             <Text style={styles.emptyText}>{t('dashboard.noInvestmentsText')}</Text>
-            <TouchableOpacity style={styles.emptyButton} onPress={() => router.push('/(app)')}>
+            <TouchableOpacity style={styles.emptyButton} onPress={() => router.push('/(app)/(tabs)')}>
               <Text style={styles.emptyButtonText}>{t('dashboard.viewProjects')}</Text>
             </TouchableOpacity>
           </View>

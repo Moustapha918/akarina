@@ -12,12 +12,12 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
-import { GuestGuard } from '../../../src/components/ui/GuestGuard';
-import { Button } from '../../../src/components/ui/Button';
-import { useAuthStore } from '../../../src/hooks/useAuthStore';
-import { submitKycDocuments } from '../../../src/services/kycService';
-import { COLORS } from '../../../src/constants';
-import { KycStatus } from '../../../src/types';
+import { GuestGuard } from '../../../../src/components/ui/GuestGuard';
+import { Button } from '../../../../src/components/ui/Button';
+import { useAuthStore } from '../../../../src/hooks/useAuthStore';
+import { submitKycDocuments } from '../../../../src/services/kycService';
+import { COLORS } from '../../../../src/constants';
+import { KycStatus } from '../../../../src/types';
 
 async function pickImage(t: (key: string) => string): Promise<string | null> {
   const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
