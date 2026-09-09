@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { I18nextProvider } from 'react-i18next';
 import { useAuthStore } from '../src/hooks/useAuthStore';
+import { initFeatureFlags } from '../src/services/featureFlags';
 import i18n, { initI18n } from '../src/i18n';
 
 export default function RootLayout() {
@@ -13,6 +14,10 @@ export default function RootLayout() {
   useEffect(() => {
     let active = true;
     initialize();
+    // Best-effort, ne bloque pas le rendu : les écrans qui lisent un flag via
+    // useFeatureFlags() retombent sur les valeurs par défaut tant que ce fetch
+    // n'a pas abouti.
+    initFeatureFlags().catch(() => {});
     // initI18n() calls applyRTL() → I18nManager.forceRTL() before this
     // component renders, so the native layout engine and React Navigation's
     // Stack (slide direction, swipe-back gesture, header back button) are

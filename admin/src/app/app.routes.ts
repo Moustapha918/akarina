@@ -37,6 +37,11 @@ export const routes: Routes = [
         path: 'investments',
         loadComponent: () =>
           import('./pages/investments/investments.component').then(m => m.InvestmentsComponent)
+      },
+      {
+        path: 'feature-flags',
+        loadComponent: () =>
+          import('./pages/feature-flags/feature-flags.component').then(m => m.FeatureFlagsComponent)
       }
     ]
   },
