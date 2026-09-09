@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Project } from '../../types';
 import { COLORS } from '../../constants';
+import { useFeatureFlags } from '../../hooks/useFeatureFlags';
 import {
   formatMRU,
   collectProgress,
@@ -16,6 +17,8 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project }: ProjectCardProps) {
   const { t } = useTranslation();
+  const { isEnabled } = useFeatureFlags();
+  const roiVisible = isEnabled('feature_roi_estimate');
   const progress = collectProgress(project.collectedAmount, project.targetAmount);
   const statusColor = projectStatusColor(project.status);
 
@@ -59,11 +62,15 @@ export function ProjectCard({ project }: ProjectCardProps) {
             <Text style={styles.statValue}>{formatMRU(project.collectedAmount, true)}</Text>
             <Text style={styles.statLabel}>{t('project.collected')}</Text>
           </View>
-          <View style={styles.statDivider} />
-          <View style={styles.stat}>
-            <Text style={styles.statValue}>{project.roiEstimate}%</Text>
-            <Text style={styles.statLabel}>{t('project.roiEstimate')}</Text>
-          </View>
+          {roiVisible && (
+            <>
+              <View style={styles.statDivider} />
+              <View style={styles.stat}>
+                <Text style={styles.statValue}>{project.roiEstimate}%</Text>
+                <Text style={styles.statLabel}>{t('project.roiEstimate')}</Text>
+              </View>
+            </>
+          )}
           <View style={styles.statDivider} />
           <View style={styles.stat}>
             <Text style={styles.statValue}>{project.roiDurationMonths} {t('project.duration')}</Text>

@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { COLORS } from '../../../src/constants';
 import { ProjectType } from '../../../src/types';
 import { useProjects } from '../../../src/hooks/useProjects';
+import { useFeatureFlags } from '../../../src/hooks/useFeatureFlags';
 import { ProjectCard } from '../../../src/components/project/ProjectCard';
 import { useAuthStore } from '../../../src/hooks/useAuthStore';
 
@@ -21,8 +22,13 @@ export default function ProjectsScreen() {
   const insets = useSafeAreaInsets();
   const { user } = useAuthStore();
   const { t } = useTranslation();
+  const { isEnabled } = useFeatureFlags();
+  const constructionEnabled = isEnabled('feature_construction');
   const [activeFilter, setActiveFilter] = useState<ProjectType>('LAND_FLIP');
-  const { projects, isLoading, error, refetch } = useProjects(activeFilter);
+  // Tant que le flag est désactivé, seul LAND_FLIP existe pour l'utilisateur —
+  // même si `activeFilter` était resté sur CONSTRUCTION d'une session précédente.
+  const effectiveFilter = constructionEnabled ? activeFilter : 'LAND_FLIP';
+  const { projects, isLoading, error, refetch } = useProjects(effectiveFilter);
 
   const FILTERS: { label: string; value: ProjectType }[] = [
     { label: t('projects.filterLandFlip'), value: 'LAND_FLIP' },
@@ -57,34 +63,36 @@ export default function ProjectsScreen() {
       </View>
 
       {/* Filtres */}
-      <View style={styles.filtersContainer}>
-        <FlatList
-          horizontal
-          data={FILTERS}
-          keyExtractor={(f) => f.value}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.filters}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={[
-                styles.filterChip,
-                activeFilter === item.value && styles.filterChipActive,
-              ]}
-              onPress={() => setActiveFilter(item.value)}
-              activeOpacity={0.75}
-            >
-              <Text
+      {constructionEnabled && (
+        <View style={styles.filtersContainer}>
+          <FlatList
+            horizontal
+            data={FILTERS}
+            keyExtractor={(f) => f.value}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.filters}
+            renderItem={({ item }) => (
+              <TouchableOpacity
                 style={[
-                  styles.filterText,
-                  activeFilter === item.value && styles.filterTextActive,
+                  styles.filterChip,
+                  activeFilter === item.value && styles.filterChipActive,
                 ]}
+                onPress={() => setActiveFilter(item.value)}
+                activeOpacity={0.75}
               >
-                {item.label}
-              </Text>
-            </TouchableOpacity>
-          )}
-        />
-      </View>
+                <Text
+                  style={[
+                    styles.filterText,
+                    activeFilter === item.value && styles.filterTextActive,
+                  ]}
+                >
+                  {item.label}
+                </Text>
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+      )}
 
       {/* Contenu */}
       {isLoading ? (

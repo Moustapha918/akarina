@@ -22,10 +22,13 @@ import { generateContractHTML } from '../../../../src/utils/contractTemplate';
 import { sharePDF, buildPDFFilename } from '../../../../src/utils/pdfShare';
 import { uploadContractPDF } from '../../../../src/utils/pdfStorage';
 import { updateContractUrl } from '../../../../src/services/investmentService';
+import { useFeatureFlags } from '../../../../src/hooks/useFeatureFlags';
 import { Investment, KycStatus, User } from '../../../../src/types';
 
 function InvestmentCard({ item, user }: { item: InvestmentWithProject; user: User }) {
   const { t } = useTranslation();
+  const { isEnabled } = useFeatureFlags();
+  const roiVisible = isEnabled('feature_roi_estimate');
   const { investment, project } = item;
   const [downloadingPdf, setDownloadingPdf] = useState(false);
 
@@ -114,13 +117,13 @@ function InvestmentCard({ item, user }: { item: InvestmentWithProject; user: Use
           <Text style={styles.amountLabel}>{t('dashboard.invested')}</Text>
           <Text style={styles.amountValue}>{formatMRU(investment.amount)}</Text>
         </View>
-        {estimatedGain !== null && (
+        {roiVisible && estimatedGain !== null && (
           <View style={styles.roiBox}>
             <Text style={styles.amountLabel}>{t('dashboard.gain')}</Text>
             <Text style={styles.roiValue}>+{formatMRU(estimatedGain)}</Text>
           </View>
         )}
-        {project && (
+        {roiVisible && project && (
           <View>
             <Text style={styles.amountLabel}>{t('dashboard.roi')}</Text>
             <Text style={styles.roiRate}>{project.roiEstimate}%</Text>
@@ -170,6 +173,8 @@ function DashboardContent() {
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
   const { user } = useAuthStore();
+  const { isEnabled } = useFeatureFlags();
+  const roiVisible = isEnabled('feature_roi_estimate');
   const { items, isLoading, error, refresh } = useMyInvestments(user?.id ?? null);
 
   const confirmed = items.filter((i) => i.investment.status === 'SUCCESS');
@@ -223,11 +228,13 @@ function DashboardContent() {
       <View style={styles.statsRow}>
         <StatCard label={t('dashboard.totalInvested')} value={totalInvested > 0 ? formatMRU(totalInvested, true) : '—'} />
         <StatCard label={t('dashboard.projects')} value={String(activeProjects)} />
-        <StatCard
-          label={t('dashboard.estimatedGain')}
-          value={totalGain > 0 ? '+' + formatMRU(totalGain, true) : '—'}
-          sub={totalInvested > 0 ? `${Math.round(totalGain / totalInvested * 100)}%` : undefined}
-        />
+        {roiVisible && (
+          <StatCard
+            label={t('dashboard.estimatedGain')}
+            value={totalGain > 0 ? '+' + formatMRU(totalGain, true) : '—'}
+            sub={totalInvested > 0 ? `${Math.round(totalGain / totalInvested * 100)}%` : undefined}
+          />
+        )}
       </View>
 
       {/* Liste */}

@@ -20,6 +20,7 @@ import { getProject } from '../../../../src/services/projectService';
 import { getInvestment, updateContractUrl } from '../../../../src/services/investmentService';
 import { generateContractHTML } from '../../../../src/utils/contractTemplate';
 import { useAuthStore } from '../../../../src/hooks/useAuthStore';
+import { useFeatureFlags } from '../../../../src/hooks/useFeatureFlags';
 import { Investment, Project } from '../../../../src/types';
 
 export default function InvestConfirmationScreen() {
@@ -29,6 +30,8 @@ export default function InvestConfirmationScreen() {
   const router = useRouter();
   const { t } = useTranslation();
   const { user } = useAuthStore();
+  const { isEnabled } = useFeatureFlags();
+  const roiVisible = isEnabled('feature_roi_estimate');
 
   const amount = parseInt(amountParam, 10);
   const [project, setProject] = useState<Project | null>(null);
@@ -114,10 +117,16 @@ export default function InvestConfirmationScreen() {
           <Divider />
           <Row label={t('invest.confirmation.rowInvested')} value={formatMRU(amount)} highlight />
           <Row label={t('invest.confirmation.rowShare')} value={`${sharePercent}%`} />
-          <Row label={t('invest.confirmation.rowReturn')} value={`+${formatMRU(estimatedReturn)}`} valueColor={COLORS.success} />
-          <Row label={t('invest.confirmation.rowTotal')} value={formatMRU(amount + estimatedReturn)} />
+          {roiVisible && (
+            <>
+              <Row label={t('invest.confirmation.rowReturn')} value={`+${formatMRU(estimatedReturn)}`} valueColor={COLORS.success} />
+              <Row label={t('invest.confirmation.rowTotal')} value={formatMRU(amount + estimatedReturn)} />
+            </>
+          )}
           <Divider />
-          <Row label={t('invest.confirmation.rowRoi')} value={`${project.roiEstimate}%`} />
+          {roiVisible && (
+            <Row label={t('invest.confirmation.rowRoi')} value={`${project.roiEstimate}%`} />
+          )}
           <Row label={t('invest.confirmation.rowDuration')} value={t('invest.confirmation.rowDurationValue', { count: project.roiDurationMonths })} />
           <Row label={t('invest.confirmation.rowBankilyRef')} value={investment.transactionId ?? '—'} mono />
         </View>

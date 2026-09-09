@@ -17,6 +17,7 @@ import { formatMRU } from '../../../../src/utils/format';
 import { getProject } from '../../../../src/services/projectService';
 import { createInvestment, markContractAccepted } from '../../../../src/services/investmentService';
 import { useAuthStore } from '../../../../src/hooks/useAuthStore';
+import { useFeatureFlags } from '../../../../src/hooks/useFeatureFlags';
 import { Project } from '../../../../src/types';
 
 const NETWORK_TIMEOUT_MS = 15_000;
@@ -35,6 +36,8 @@ export default function InvestContractScreen() {
   const router = useRouter();
   const { t } = useTranslation();
   const { user } = useAuthStore();
+  const { isEnabled } = useFeatureFlags();
+  const roiVisible = isEnabled('feature_roi_estimate');
 
   const STEPS = [
     t('invest.steps.amount'),
@@ -132,8 +135,17 @@ export default function InvestContractScreen() {
           </View>
           <View style={styles.summaryDivider} />
           <View style={styles.summaryItem}>
-            <Text style={styles.summaryLabel}>{t('invest.contract.estimatedReturn')}</Text>
-            <Text style={[styles.summaryValue, { color: COLORS.success }]}>+{formatMRU(estimatedReturn)}</Text>
+            {roiVisible ? (
+              <>
+                <Text style={styles.summaryLabel}>{t('invest.contract.estimatedReturn')}</Text>
+                <Text style={[styles.summaryValue, { color: COLORS.success }]}>+{formatMRU(estimatedReturn)}</Text>
+              </>
+            ) : (
+              <>
+                <Text style={styles.summaryLabel}>{t('invest.contract.months')}</Text>
+                <Text style={styles.summaryValue}>{project.roiDurationMonths}</Text>
+              </>
+            )}
           </View>
         </View>
       </View>

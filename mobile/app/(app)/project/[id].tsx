@@ -17,6 +17,7 @@ import { COLORS } from '../../../src/constants';
 import { Project, ProjectUpdate } from '../../../src/types';
 import { getProject, getProjectUpdates } from '../../../src/services/projectService';
 import { useAuthStore } from '../../../src/hooks/useAuthStore';
+import { useFeatureFlags } from '../../../src/hooks/useFeatureFlags';
 import { AuthPromptModal } from '../../../src/components/ui/AuthPromptModal';
 import { Button } from '../../../src/components/ui/Button';
 import {
@@ -35,6 +36,8 @@ export default function ProjectDetailScreen() {
   const insets = useSafeAreaInsets();
   const { user } = useAuthStore();
   const { t } = useTranslation();
+  const { isEnabled } = useFeatureFlags();
+  const roiVisible = isEnabled('feature_roi_estimate');
 
   const [project, setProject] = useState<Project | null>(null);
   const [updates, setUpdates] = useState<ProjectUpdate[]>([]);
@@ -162,9 +165,9 @@ export default function ProjectDetailScreen() {
                 value={formatMRU(project.monthlyRent, true)}
                 icon="🏠"
               />
-            ) : (
+            ) : roiVisible ? (
               <StatCard label={t('project.roiEstimate')} value={`${project.roiEstimate}%`} icon="📈" />
-            )}
+            ) : null}
             <StatCard label={t('project.durationLabel')} value={`${project.roiDurationMonths} ${t('project.duration')}`} icon="📅" />
             <StatCard label={t('project.minInvestment')} value={formatMRU(project.minInvestment, true)} icon="💰" />
             <StatCard

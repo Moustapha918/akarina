@@ -23,6 +23,7 @@ import { Button } from '../../../../src/components/ui/Button';
 import { formatMRU, estimatedMonthlyRent } from '../../../../src/utils/format';
 import { getProject } from '../../../../src/services/projectService';
 import { useAuthStore } from '../../../../src/hooks/useAuthStore';
+import { useFeatureFlags } from '../../../../src/hooks/useFeatureFlags';
 import { Project } from '../../../../src/types';
 
 export default function InvestAmountScreen() {
@@ -30,6 +31,8 @@ export default function InvestAmountScreen() {
   const router = useRouter();
   const { t } = useTranslation();
   const { user } = useAuthStore();
+  const { isEnabled } = useFeatureFlags();
+  const roiVisible = isEnabled('feature_roi_estimate');
 
   const STEPS = [
     t('invest.steps.amount'),
@@ -149,7 +152,10 @@ export default function InvestAmountScreen() {
             <Text style={styles.projectTitle} numberOfLines={2}>{project.title}</Text>
             <View style={styles.projectMeta}>
               <Text style={styles.metaChip}>📍 {project.location}</Text>
-              <Text style={styles.metaChip}>📈 {project.roiEstimate}% / {project.roiDurationMonths} {t('project.duration')}</Text>
+              <Text style={styles.metaChip}>
+                {roiVisible ? `📈 ${project.roiEstimate}% / ` : '📅 '}
+                {project.roiDurationMonths} {t('project.duration')}
+              </Text>
               <Text style={styles.metaChip}>💰 Min: {formatMRU(project.minInvestment)}</Text>
             </View>
           </View>
@@ -216,7 +222,7 @@ export default function InvestAmountScreen() {
                     <Text style={[styles.roiValue, { color: COLORS.success }]}>+{formatMRU(monthlyRent * 12)}</Text>
                   </View>
                 </>
-              ) : (
+              ) : roiVisible ? (
                 <>
                   <View style={[styles.roiRow, { marginTop: 8 }]}>
                     <Text style={styles.roiLabel}>
@@ -231,7 +237,7 @@ export default function InvestAmountScreen() {
                     <Text style={[styles.roiValue, { fontWeight: '700' }]}>{formatMRU(num + estimatedROI)}</Text>
                   </View>
                 </>
-              )}
+              ) : null}
               <Text style={styles.roiDisclaimer}>{t('invest.amount.disclaimer')}</Text>
             </View>
           )}
