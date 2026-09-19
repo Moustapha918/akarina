@@ -84,9 +84,6 @@ export function ProjectCard({ project }: ProjectCardProps) {
             {t('project.fromAmount')}{' '}
             <Text style={styles.minInvestAmount}>{formatMRU(project.minInvestment)}</Text>
           </Text>
-          <Text style={styles.investors}>
-            👥 {project.currentInvestors}/{project.maxInvestors}
-          </Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -212,9 +209,5 @@ const styles = StyleSheet.create({
   minInvestAmount: {
     fontWeight: '700',
     color: COLORS.primary,
-  },
-  investors: {
-    fontSize: 12,
-    color: COLORS.textSecondary,
   },
 });

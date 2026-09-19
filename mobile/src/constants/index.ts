@@ -78,5 +78,5 @@ export const BANKILY_POLL_TIMEOUT = 90_000;
  * Code marchand affiché à l'utilisateur pour la fonctionnalité B-PAY de l'app Bankily.
  * TODO: remplacer par le vrai code fourni par Bankily lors de l'onboarding marchand.
  */
-export const BANKILY_MERCHANT_CODE = 'AKARINA';
+export const BANKILY_MERCHANT_CODE = '07467';
 

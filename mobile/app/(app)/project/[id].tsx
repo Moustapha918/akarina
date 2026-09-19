@@ -170,11 +170,6 @@ export default function ProjectDetailScreen() {
             ) : null}
             <StatCard label={t('project.durationLabel')} value={`${project.roiDurationMonths} ${t('project.duration')}`} icon="📅" />
             <StatCard label={t('project.minInvestment')} value={formatMRU(project.minInvestment, true)} icon="💰" />
-            <StatCard
-              label={t('project.investors')}
-              value={`${project.currentInvestors}/${project.maxInvestors}`}
-              icon="👥"
-            />
           </View>
 
           {/* Description */}

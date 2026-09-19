@@ -40,21 +40,21 @@
     "alreadyAccount": "Déjà un compte ?",
     "signIn": "Se connecter",
     "slide1": {
-      "title": "Investissez dans\nl'immobilier mauritanien",
-      "description": "Akarina vous permet de co-investir dans des projets immobiliers sélectionnés en Mauritanie, depuis votre téléphone, en toute simplicité."
+      "title": "Achetez\nl'immobilier mauritanien",
+      "description": "Akarina vous permet de co-acheter des projets immobiliers sélectionnés en Mauritanie, depuis votre téléphone, en toute simplicité."
     },
     "slide2": {
       "tag": "✓ Conforme Sharia",
       "title": "Partenariat Halal\navec Mousharaka",
-      "description": "Chaque investissement est structuré selon un contrat de partenariat islamique (Mousharaka). Vous devenez co-propriétaire du projet et partagez les bénéfices à terme.",
+      "description": "Chaque achat est structuré selon un contrat de partenariat islamique (Mousharaka). Vous devenez co-propriétaire du projet et partagez les bénéfices à terme.",
       "highlightLabel": "Rendement estimé (à titre d'exemple)",
       "highlightValue": "12 – 18 %",
       "highlightNote": "Les rendements réels varient selon les projets"
     },
     "slide3": {
-      "title": "Investissez en\n3 minutes",
+      "title": "Achetez en\n3 minutes",
       "description": "Un processus simple et guidé, du choix du projet au paiement via Bankily.",
-      "highlightLabel": "Investissement minimum (à titre d'exemple)",
+      "highlightLabel": "Mensualité minimum (à titre d'exemple)",
       "highlightValue": "1 000 MRU",
       "highlightNote": "Accessible à tous les Mauritaniens",
       "step1": "Choisissez un projet",
@@ -71,7 +71,7 @@
   },
   "auth": {
     "login": {
-      "tagline": "Investissez dans l'immobilier mauritanien",
+      "tagline": "Achetez l'immobilier mauritanien",
       "title": "Connexion",
       "subtitle": "Entrez votre numéro de téléphone pour recevoir un code de vérification.",
       "phoneLabel": "Numéro de téléphone",
@@ -84,7 +84,7 @@
       "invalidNumber": "Numéro invalide. Ex: {{placeholder}}",
       "sendError": "Impossible d'envoyer le code. Réessayez.",
       "webTitle": "Application mobile",
-      "webMessage": "La connexion par SMS est disponible uniquement sur l'application mobile.\n\nTéléchargez Akarina sur iOS ou Android pour investir."
+      "webMessage": "La connexion par SMS est disponible uniquement sur l'application mobile.\n\nTéléchargez Akarina sur iOS ou Android pour acheter."
     },
     "verify": {
       "title": "Vérification",
@@ -115,7 +115,7 @@
     },
     "prompt": {
       "title": "Rejoignez Akarina",
-      "defaultMessage": "Créez un compte gratuitement pour investir dans ce projet.",
+      "defaultMessage": "Créez un compte gratuitement pour acheter ce projet.",
       "benefit1": "✓  Contrat Mousharaka sécurisé",
       "benefit2": "✓  Paiement rapide via Bankily",
       "benefit3": "✓  Suivi du chantier en temps réel",
@@ -139,20 +139,19 @@
     "on": "sur",
     "roiEstimate": "ROI estimé",
     "duration": "mois",
-    "minInvestment": "Min. investissement",
-    "investors": "Investisseurs",
+    "minInvestment": "Min. mensualité",
     "monthlyRent": "Loyer mensuel total",
     "about": "À propos du projet",
-    "mousharakaTitle": "🤝 Contrat Mousharaka",
+    "mousharakaTitle": "🤝 Terrain avec titre foncier",
     "mousharakaRental": "Vous devenez co-propriétaire du bien. En phase de location, vous percevez chaque mois votre quote-part du loyer, proportionnellement à votre mise de fonds.",
     "mousharakaLandFlip": "Vous co-financez l'acquisition de ce terrain. À sa revente, vous percevez votre part de la plus-value nette réalisée, proportionnellement à votre apport.",
-    "mousharakaConstruction": "Votre investissement est structuré selon un contrat Mousharaka. Vous devenez co-propriétaire proportionnellement à votre mise et partagez les bénéfices à l'issue du projet.",
+    "mousharakaConstruction": "Votre achat est structuré selon un contrat Mousharaka. Vous devenez co-propriétaire proportionnellement à votre mise et partagez les bénéfices à l'issue du projet.",
     "shariaCompliant": "✓ Conforme Sharia",
     "updates": "Actualités du chantier",
-    "closedBanner": "Ce projet n'accepte plus de nouveaux investissements",
-    "investBtn": "Investir dans ce projet",
-    "investSignIn": "Se connecter pour investir",
-    "authPrompt": "Créez un compte pour investir dans \"{{title}}\".",
+    "closedBanner": "Ce projet n'accepte plus de nouveaux achats",
+    "investBtn": "Acheter ce projet",
+    "investSignIn": "Se connecter pour acheter",
+    "authPrompt": "Créez un compte pour acheter \"{{title}}\".",
     "durationLabel": "Durée",
     "exitRental": "🏠 Location",
     "exitSale": "💼 Vente",
@@ -186,7 +185,7 @@
       "errorKyc": "Au-delà de {{amount}}, une vérification d'identité (KYC) est requise. Complétez votre KYC depuis votre profil."
     },
     "contract": {
-      "yourInvestment": "Votre investissement",
+      "yourInvestment": "Votre achat",
       "shareOfProject": "Part du projet",
       "estimatedReturn": "Retour estimé",
       "title": "CONTRAT DE PARTENARIAT MOUSHARAKA",
@@ -194,7 +193,7 @@
       "sectionParties": "PARTIES CONTRACTANTES",
       "managingCompany": "La Société Gérante :",
       "managingCompanyDesc": "Akarina SARL, société mauritanienne enregistrée au registre de commerce de Nouakchott.",
-      "investor": "L'Associé Investisseur :",
+      "investor": "L'Associé Acheteur :",
       "sectionObject": "OBJET DU PARTENARIAT",
       "objectDesc": "Ce contrat définit les termes d'un partenariat de type Mousharaka pour le co-financement du projet immobilier \"{{title}}\", situé à {{location}}, Mauritanie.",
       "totalAmount": "Montant total du projet :",
@@ -205,7 +204,7 @@
       "art1Body": "Ce partenariat est de type Mousharaka, approuvé selon les principes de la finance islamique. Aucun intérêt (Riba) n'est appliqué. Les profits sont partagés proportionnellement aux apports ; les pertes éventuelles sont supportées à proportion des participations.",
       "art2Title": "Utilisation exclusive des fonds",
       "art2Body": "Les fonds versés par l'associé sont exclusivement dédiés au financement du projet mentionné. Aucun détournement ni activité prohibée (Haram) n'est autorisé.",
-      "art3Title": "Retour sur investissement",
+      "art3Title": "Retour sur achat",
       "art3Body": "Le taux de retour estimé de {{roi}}% sur {{duration}} mois est basé sur les études de marché immobilier mauritanien. Il ne constitue pas une garantie contractuelle de rendement. Les conditions réelles peuvent varier.",
       "art4Title": "Transparence et reporting",
       "art4Body": "L'associé a accès en temps réel via l'application Akarina aux rapports d'avancement du chantier : photos, vidéos, jalons. Des rapports financiers trimestriels seront communiqués.",
@@ -219,7 +218,7 @@
       "acceptCheckbox": "J'ai lu et j'accepte les termes du contrat de partenariat Mousharaka ci-dessus.",
       "mustAccept": "Veuillez cocher la case pour accepter les termes du contrat.",
       "signAndPay": "Signer et procéder au paiement →",
-      "createError": "Impossible de créer l'investissement. Réessayez.",
+      "createError": "Impossible de créer l'achat. Réessayez.",
       "pdfError": "Impossible de générer le contrat PDF. Réessayez."
     },
     "payment": {
@@ -252,12 +251,12 @@
       "viewPortfolio": "Voir mon portfolio"
     },
     "confirmation": {
-      "title": "Investissement confirmé !",
+      "title": "Achat confirmé !",
       "subtitle": "Bienvenue dans le projet {{title}}. Votre participation a bien été enregistrée.",
-      "summaryTitle": "Récapitulatif de votre investissement",
+      "summaryTitle": "Récapitulatif de votre achat",
       "rowProject": "Projet",
       "rowLocation": "Localisation",
-      "rowInvested": "Montant investi",
+      "rowInvested": "Montant payé",
       "rowShare": "Part du projet",
       "rowReturn": "Retour estimé",
       "rowTotal": "Total estimé",
@@ -265,25 +264,25 @@
       "rowDuration": "Durée",
       "rowDurationValue": "{{count}} mois",
       "rowBankilyRef": "Référence Bankily",
-      "mousharakaTitle": "🤝 Votre partenariat Mousharaka",
-      "mousharakaText": "En tant qu'associé, vous pouvez suivre l'avancement du chantier en temps réel depuis l'onglet Projets. Des photos et vidéos sont publiées régulièrement par l'équipe de construction.",
+      "mousharakaTitle": "La transaction est validé",
+      "mousharakaText": "Felicitations, Vous etes maintenant proprietaire de ce produit. vous pouvez a tout moment consulter votre portefeuille de produits",
       "downloadPdf": "Télécharger le contrat PDF",
       "viewPortfolio": "Voir mon portfolio",
       "backHome": "Retour à l'accueil",
-      "notFound": "Investissement introuvable."
+      "notFound": "Achat introuvable."
     }
   },
   "dashboard": {
     "greeting": "Bonjour, {{name}} 👋",
     "portfolioState": "Voici l'état de votre portefeuille",
-    "totalInvested": "Total investi",
+    "totalInvested": "Total payé",
     "projects": "Projets",
     "estimatedGain": "Gain estimé",
-    "myInvestments": "Mes investissements",
-    "noInvestments": "Aucun investissement",
-    "noInvestmentsText": "Découvrez nos projets immobiliers et réalisez votre premier investissement.",
+    "myInvestments": "Mes achats",
+    "noInvestments": "Aucun achat",
+    "noInvestmentsText": "Découvrez nos projets immobiliers et réalisez votre premier achat.",
     "viewProjects": "Voir les projets",
-    "invested": "Investi",
+    "invested": "Payé",
     "gain": "Gain estimé",
     "roi": "ROI",
     "downloadPdf": "📄 Télécharger le contrat PDF",
@@ -300,11 +299,11 @@
       "failed": "Échoué"
     },
     "guestTitle": "Votre portfolio",
-    "guestDescription": "Connectez-vous pour suivre vos investissements et l'évolution de vos projets."
+    "guestDescription": "Connectez-vous pour suivre vos achats et l'évolution de vos projets."
   },
   "kyc": {
     "title": "Vérification d'identité",
-    "subtitle": "La vérification KYC est requise pour investir au-delà de",
+    "subtitle": "La vérification KYC est requise pour acheter au-delà de",
     "threshold": "5 000 MRU",
     "stepSubmit": "Soumission",
     "stepReview": "Examen",
@@ -339,9 +338,9 @@
     },
     "verified": {
       "title": "Identité vérifiée",
-      "text": "Votre identité a été confirmée. Vous pouvez investir sans limite de montant.",
+      "text": "Votre identité a été confirmée. Vous pouvez acheter sans limite de montant.",
       "benefitsTitle": "Avantages débloqués",
-      "benefit1": "• Investissement illimité (sans plafond KYC)",
+      "benefit1": "• Achat illimité (sans plafond KYC)",
       "benefit2": "• Contrats Mousharaka complets",
       "benefit3": "• Accès aux projets exclusifs"
     },
@@ -352,7 +351,7 @@
       "resubmit": "Soumettre à nouveau"
     },
     "guestTitle": "Vérification d'identité",
-    "guestDescription": "Connectez-vous pour soumettre votre pièce d'identité et débloquer l'investissement complet."
+    "guestDescription": "Connectez-vous pour soumettre votre pièce d'identité et débloquer l'achat complet."
   },
   "profile": {
     "infoSection": "Informations",
@@ -373,10 +372,10 @@
       "rejected": "Rejeté"
     },
     "kycBadge": {
-      "verified": "✓ Investissement illimité débloqué",
+      "verified": "✓ Achat illimité débloqué",
       "pending": "⏳ En cours de vérification par notre équipe",
       "rejected": "✗ Documents rejetés — soumettez à nouveau",
-      "none": "○ Requis pour investir au-delà de 5 000 MRU"
+      "none": "○ Requis pour acheter au-delà de 5 000 MRU"
     },
     "guestTitle": "Votre profil",
     "guestDescription": "Connectez-vous pour accéder à votre profil et gérer vos informations.",
