@@ -16,7 +16,7 @@ const APP_ENV = process.env.APP_ENV ?? 'dev';
 
 const envConfig = {
   dev: {
-    appName: 'Akarina Dev',
+    appName: 'Osool Dev',
     // Temporairement aligné sur le package prod — google-services.json /
     // GoogleService-Info.plist ne sont enregistrés que pour mr.akarina.app.
     // TODO: reséparer dev/staging/prod une fois l'organisation des env revue.
@@ -24,12 +24,12 @@ const envConfig = {
     androidPackage: 'mr.akarina.app',
   },
   staging: {
-    appName: 'Akarina Staging',
+    appName: 'Osool Staging',
     bundleId: 'mr.akarina.staging',
     androidPackage: 'mr.akarina.staging',
   },
   prod: {
-    appName: 'Akarina',
+    appName: 'Osool',
     bundleId: 'mr.akarina.app',
     androidPackage: 'mr.akarina.app',
   },
@@ -41,12 +41,12 @@ const env = envConfig[APP_ENV] ?? envConfig.dev;
 module.exports = {
   expo: {
     name: env.appName,
-    slug: 'akarina',
+    slug: 'osool',
     version: '1.0.0',
     orientation: 'portrait',
     icon: './assets/icon.png',
     userInterfaceStyle: 'light',
-    scheme: 'akarina',
+    scheme: 'osool',
 
     ios: {
       supportsTablet: false,
@@ -104,8 +104,8 @@ module.exports = {
       [
         'expo-image-picker',
         {
-          photosPermission: 'Akarina a besoin d\'accéder à vos photos pour le KYC.',
-          cameraPermission: 'Akarina a besoin d\'accéder à la caméra pour photographier votre pièce d\'identité.',
+          photosPermission: 'Osool a besoin d\'accéder à vos photos pour le KYC.',
+          cameraPermission: 'Osool a besoin d\'accéder à la caméra pour photographier votre pièce d\'identité.',
         },
       ],
     ],

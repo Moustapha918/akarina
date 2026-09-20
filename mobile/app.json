@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "Akarina",
-    "slug": "akarina",
+    "name": "Osool",
+    "slug": "osool",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "scheme": "akarina",
+    "scheme": "osool",
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
@@ -45,8 +45,8 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Akarina a besoin d'accéder à vos photos pour le KYC.",
-          "cameraPermission": "Akarina a besoin d'accéder à la caméra pour photographier votre pièce d'identité."
+          "photosPermission": "Osool a besoin d'accéder à vos photos pour le KYC.",
+          "cameraPermission": "Osool a besoin d'accéder à la caméra pour photographier votre pièce d'identité."
         }
       ]
     ],

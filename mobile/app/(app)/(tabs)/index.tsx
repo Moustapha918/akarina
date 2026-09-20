@@ -40,7 +40,7 @@ export default function ProjectsScreen() {
       {/* Header */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.headerTitle}>أكارينا — Akarina</Text>
+          <Text style={styles.headerTitle}>اصول — Osool</Text>
           <Text style={styles.headerSub}>{t('projects.header')}</Text>
         </View>
         {user ? (

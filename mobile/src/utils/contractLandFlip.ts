@@ -62,7 +62,7 @@ export function generateLandFlipContractHTML(
 </head>
 <body>
   <div class="header">
-    <div class="logo">AKARINA</div>
+    <div class="logo">OSOOL</div>
     <div class="doc-title">Contrat de Partenariat Mousharaka — Achat-Revente Terrain</div>
     <div class="doc-subtitle">Conforme aux principes de la Finance Islamique (Sharia) · Droit mauritanien</div>
     <div class="contract-number">N° ${contractNumber}</div>
@@ -72,7 +72,7 @@ export function generateLandFlipContractHTML(
   <div class="parties-grid">
     <div class="party-box">
       <h3>La Société Gérante</h3>
-      <p><strong>Akarina SARL</strong><br>Société à Responsabilité Limitée<br>Registre de commerce : Mauritanie<br>Siège : Nouakchott, Mauritanie</p>
+      <p><strong>Osool SARL</strong><br>Société à Responsabilité Limitée<br>Registre de commerce : Mauritanie<br>Siège : Nouakchott, Mauritanie</p>
     </div>
     <div class="party-box">
       <h3>L'Associé Investisseur</h3>
@@ -124,16 +124,16 @@ export function generateLandFlipContractHTML(
     <strong>${formatMRU(amount)}</strong>. La plus-value estimée est de <strong>+${formatMRU(estimatedReturn)}</strong>
     (ROI ${project.roiEstimate}%), sans garantie contractuelle de rendement.
     En cas de moins-value, la perte est supportée dans la même proportion.</p>
-  <p class="clause"><strong>Art. 4 – Délai de revente :</strong> Akarina SARL s'engage à procéder à la revente du terrain dans un délai estimé de <strong>${project.roiDurationMonths} mois</strong> à compter de la date de signature. Ce délai est indicatif et peut varier selon les conditions du marché.</p>
-  <p class="clause"><strong>Art. 5 – Transparence :</strong> L'associé est informé de l'avancement des négociations et de la finalisation de la vente via l'application Akarina.</p>
-  <p class="clause"><strong>Art. 6 – Liquidité :</strong> La participation ne peut être cédée avant la revente du terrain, sauf accord exprès d'Akarina SARL.</p>
+  <p class="clause"><strong>Art. 4 – Délai de revente :</strong> Osool SARL s'engage à procéder à la revente du terrain dans un délai estimé de <strong>${project.roiDurationMonths} mois</strong> à compter de la date de signature. Ce délai est indicatif et peut varier selon les conditions du marché.</p>
+  <p class="clause"><strong>Art. 5 – Transparence :</strong> L'associé est informé de l'avancement des négociations et de la finalisation de la vente via l'application Osool.</p>
+  <p class="clause"><strong>Art. 6 – Liquidité :</strong> La participation ne peut être cédée avant la revente du terrain, sauf accord exprès d'Osool SARL.</p>
   <p class="clause"><strong>Art. 7 – Droit applicable :</strong> Ce contrat est régi par le droit mauritanien et les principes de la finance islamique. Tout litige relève des juridictions compétentes de Nouakchott.</p>
 
   <h2>Date et Signatures</h2>
   <p>Fait à Nouakchott, le <strong>${today}</strong></p>
   <div class="signatures">
     <div class="sig-block">
-      <div class="sig-title">Pour Akarina SARL</div>
+      <div class="sig-title">Pour Osool SARL</div>
       <div class="sig-line">Le Gérant</div>
     </div>
     <div class="sig-block">
@@ -143,7 +143,7 @@ export function generateLandFlipContractHTML(
   </div>
 
   <div class="footer">
-    <p>Contrat N° <strong>${contractNumber}</strong> · Généré le ${today} via l'application Akarina.</p>
+    <p>Contrat N° <strong>${contractNumber}</strong> · Généré le ${today} via l'application Osool.</p>
     <p>Ce contrat est juridiquement contraignant selon la législation mauritanienne.</p>
   </div>
 </body>

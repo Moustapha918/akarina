@@ -41,7 +41,7 @@
     "signIn": "Se connecter",
     "slide1": {
       "title": "Investissez dans\nl'immobilier mauritanien",
-      "description": "Akarina vous permet de co-investir dans des projets immobiliers sélectionnés en Mauritanie, depuis votre téléphone, en toute simplicité."
+      "description": "Osool vous permet de co-investir dans des projets immobiliers sélectionnés en Mauritanie, depuis votre téléphone, en toute simplicité."
     },
     "slide2": {
       "tag": "✓ Conforme Sharia",
@@ -84,7 +84,7 @@
       "invalidNumber": "Numéro invalide. Ex: {{placeholder}}",
       "sendError": "Impossible d'envoyer le code. Réessayez.",
       "webTitle": "Application mobile",
-      "webMessage": "La connexion par SMS est disponible uniquement sur l'application mobile.\n\nTéléchargez Akarina sur iOS ou Android pour investir."
+      "webMessage": "La connexion par SMS est disponible uniquement sur l'application mobile.\n\nTéléchargez Osool sur iOS ou Android pour investir."
     },
     "verify": {
       "title": "Vérification",
@@ -114,7 +114,7 @@
       "emailPlaceholder": "exemple@email.com"
     },
     "prompt": {
-      "title": "Rejoignez Akarina",
+      "title": "Rejoignez Osool",
       "defaultMessage": "Créez un compte gratuitement pour investir dans ce projet.",
       "benefit1": "✓  Contrat Mousharaka sécurisé",
       "benefit2": "✓  Paiement rapide via Bankily",
@@ -202,7 +202,7 @@
       "subtitle": "Conforme aux principes de la Finance Islamique (Sharia) · Droit mauritanien",
       "sectionParties": "PARTIES CONTRACTANTES",
       "managingCompany": "La Société Gérante :",
-      "managingCompanyDesc": "Akarina SARL, société mauritanienne enregistrée au registre de commerce de Nouakchott.",
+      "managingCompanyDesc": "Osool SARL, société mauritanienne enregistrée au registre de commerce de Nouakchott.",
       "investor": "L'Associé Investisseur :",
       "sectionObject": "OBJET DU PARTENARIAT",
       "objectDesc": "Ce contrat définit les termes d'un partenariat de type Mousharaka pour le co-financement du projet immobilier \"{{title}}\", situé à {{location}}, Mauritanie.",
@@ -217,11 +217,11 @@
       "art3Title": "Retour sur investissement",
       "art3Body": "Le taux de retour estimé de {{roi}}% sur {{duration}} mois est basé sur les études de marché immobilier mauritanien. Il ne constitue pas une garantie contractuelle de rendement. Les conditions réelles peuvent varier.",
       "art4Title": "Transparence et reporting",
-      "art4Body": "L'associé a accès en temps réel via l'application Akarina aux rapports d'avancement du chantier : photos, vidéos, jalons. Des rapports financiers trimestriels seront communiqués.",
+      "art4Body": "L'associé a accès en temps réel via l'application Osool aux rapports d'avancement du chantier : photos, vidéos, jalons. Des rapports financiers trimestriels seront communiqués.",
       "art5Title": "Gouvernance",
-      "art5Body": "Akarina SARL assure la gestion opérationnelle du projet. L'associé n'intervient pas dans les décisions de gestion courante mais est informé de toute décision majeure affectant sa participation.",
+      "art5Body": "Osool SARL assure la gestion opérationnelle du projet. L'associé n'intervient pas dans les décisions de gestion courante mais est informé de toute décision majeure affectant sa participation.",
       "art6Title": "Liquidité",
-      "art6Body": "La participation n'est pas librement cessible avant l'achèvement du projet, sauf accord exprès d'Akarina SARL ou mise en place d'un mécanisme de marché secondaire ultérieur.",
+      "art6Body": "La participation n'est pas librement cessible avant l'achèvement du projet, sauf accord exprès d'Osool SARL ou mise en place d'un mécanisme de marché secondaire ultérieur.",
       "art7Title": "Droit applicable",
       "art7Body": "Ce contrat est régi par le droit mauritanien et les principes de la finance islamique. Tout litige sera soumis aux juridictions compétentes de Nouakchott.",
       "scrollHint": "↓ Défiler pour lire la totalité du contrat",
@@ -331,8 +331,8 @@
     "stepSubmit": "Soumission",
     "stepReview": "Examen",
     "stepDecision": "Décision",
-    "galleryPermission": "Akarina a besoin d'accéder à vos photos.",
-    "cameraPermission": "Akarina a besoin d'accéder à la caméra.",
+    "galleryPermission": "Osool a besoin d'accéder à vos photos.",
+    "cameraPermission": "Osool a besoin d'accéder à la caméra.",
     "addPhoto": "Ajouter une photo",
     "takePhoto": "Prendre une photo",
     "pickGallery": "Choisir dans la galerie",
@@ -387,7 +387,7 @@
     "signOut": "Déconnexion",
     "signOutTitle": "Déconnexion",
     "signOutMsg": "Voulez-vous vraiment vous déconnecter ?",
-    "version": "Akarina v1.0.0",
+    "version": "Osool v1.0.0",
     "kycLabel": {
       "none": "Non soumis",
       "pending": "En attente",

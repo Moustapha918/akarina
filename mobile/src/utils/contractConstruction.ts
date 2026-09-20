@@ -77,12 +77,12 @@ export function generateConstructionContractHTML(
         </div>
       </div>
       <div class="info-box">
-        ℹ️ Les versements de loyer sont effectués mensuellement par Akarina SARL à proportion de votre participation (${sharePercent}%) sur le loyer total du bien.
+        ℹ️ Les versements de loyer sont effectués mensuellement par Osool SARL à proportion de votre participation (${sharePercent}%) sur le loyer total du bien.
       </div>`;
     returnClause = `
       <p class="clause">
         <strong>Art. 3 – Partage des loyers :</strong> Le bien immobilier "${project.title}" est destiné à la location.
-        L'associé percevra <strong>${sharePercent}%</strong> du loyer mensuel brut collecté par Akarina SARL,
+        L'associé percevra <strong>${sharePercent}%</strong> du loyer mensuel brut collecté par Osool SARL,
         soit un revenu mensuel estimé à <strong>${formatMRU(investorMonthly)}</strong> basé sur un loyer total
         mensuel de <strong>${formatMRU(project.monthlyRent)}</strong>. Les versements sont effectués chaque mois
         via le système de paiement Bankily, sous réserve de perception effective des loyers.
@@ -126,7 +126,7 @@ export function generateConstructionContractHTML(
 </head>
 <body>
   <div class="header">
-    <div class="logo">AKARINA</div>
+    <div class="logo">OSOOL</div>
     <div class="doc-title">Contrat de Partenariat Mousharaka — Construction</div>
     <div class="doc-subtitle">Conforme aux principes de la Finance Islamique (Sharia) · Droit mauritanien</div>
     <div class="contract-number">N° ${contractNumber}</div>
@@ -136,7 +136,7 @@ export function generateConstructionContractHTML(
   <div class="parties-grid">
     <div class="party-box">
       <h3>La Société Gérante</h3>
-      <p><strong>Akarina SARL</strong><br>Société à Responsabilité Limitée<br>Registre de commerce : Mauritanie<br>Siège : Nouakchott, Mauritanie</p>
+      <p><strong>Osool SARL</strong><br>Société à Responsabilité Limitée<br>Registre de commerce : Mauritanie<br>Siège : Nouakchott, Mauritanie</p>
     </div>
     <div class="party-box">
       <h3>L'Associé Investisseur</h3>
@@ -163,16 +163,16 @@ export function generateConstructionContractHTML(
   <p class="clause"><strong>Art. 1 – Nature Sharia-compliant :</strong> Ce partenariat est de type Mousharaka. Aucun intérêt (Riba) n'est appliqué. Les profits et pertes sont partagés proportionnellement aux apports.</p>
   <p class="clause"><strong>Art. 2 – Utilisation des fonds :</strong> Les fonds sont exclusivement dédiés à la construction du bien mentionné. Aucune activité prohibée (Haram) n'est autorisée.</p>
   ${returnClause}
-  <p class="clause"><strong>Art. 4 – Transparence :</strong> L'associé accède en temps réel via Akarina aux rapports d'avancement (photos, vidéos, jalons financiers).</p>
-  <p class="clause"><strong>Art. 5 – Gouvernance :</strong> Akarina SARL assure la gestion opérationnelle. L'associé est informé de toute décision majeure affectant sa participation.</p>
-  <p class="clause"><strong>Art. 6 – Liquidité :</strong> La participation n'est pas librement cessible avant l'achèvement du projet, sauf accord exprès d'Akarina SARL.</p>
+  <p class="clause"><strong>Art. 4 – Transparence :</strong> L'associé accède en temps réel via Osool aux rapports d'avancement (photos, vidéos, jalons financiers).</p>
+  <p class="clause"><strong>Art. 5 – Gouvernance :</strong> Osool SARL assure la gestion opérationnelle. L'associé est informé de toute décision majeure affectant sa participation.</p>
+  <p class="clause"><strong>Art. 6 – Liquidité :</strong> La participation n'est pas librement cessible avant l'achèvement du projet, sauf accord exprès d'Osool SARL.</p>
   <p class="clause"><strong>Art. 7 – Droit applicable :</strong> Ce contrat est régi par le droit mauritanien et les principes de la finance islamique. Tout litige relève des juridictions de Nouakchott.</p>
 
   <h2>Date et Signatures</h2>
   <p>Fait à Nouakchott, le <strong>${today}</strong></p>
   <div class="signatures">
     <div class="sig-block">
-      <div class="sig-title">Pour Akarina SARL</div>
+      <div class="sig-title">Pour Osool SARL</div>
       <div class="sig-line">Le Gérant</div>
     </div>
     <div class="sig-block">
@@ -182,7 +182,7 @@ export function generateConstructionContractHTML(
   </div>
 
   <div class="footer">
-    <p>Contrat N° <strong>${contractNumber}</strong> · Généré le ${today} via l'application Akarina.</p>
+    <p>Contrat N° <strong>${contractNumber}</strong> · Généré le ${today} via l'application Osool.</p>
     <p>Ce contrat est juridiquement contraignant selon la législation mauritanienne.</p>
   </div>
 </body>

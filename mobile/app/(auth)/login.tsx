@@ -65,8 +65,8 @@ export default function LoginScreen() {
   if (Platform.OS === 'web') {
     return (
       <View style={styles.webContainer}>
-        <Text style={styles.logo}>أكارينا</Text>
-        <Text style={styles.logoLatin}>Akarina</Text>
+        <Text style={styles.logo}>اصول</Text>
+        <Text style={styles.logoLatin}>Osool</Text>
         <View style={styles.webCard}>
           <Text style={styles.webEmoji}>📱</Text>
           <Text style={styles.webTitle}>{t('auth.login.webTitle')}</Text>
@@ -84,8 +84,8 @@ export default function LoginScreen() {
       <ScrollView contentContainerStyle={[styles.container, { paddingTop: insets.top + 20 }]} keyboardShouldPersistTaps="handled">
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.logo}>أكارينا</Text>
-          <Text style={styles.logoLatin}>Akarina</Text>
+          <Text style={styles.logo}>اصول</Text>
+          <Text style={styles.logoLatin}>Osool</Text>
           <Text style={styles.tagline}>{t('auth.login.tagline')}</Text>
         </View>
 
