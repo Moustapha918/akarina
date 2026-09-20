@@ -64,6 +64,13 @@ export default function InvestPaymentScreen() {
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const pollStartRef = useRef(0);
+  /**
+   * Référence renvoyée par initiatePayment(). En production, checkTransaction
+   * la persiste sur l'Investment via l'Admin SDK ; sur la branche mock (voir
+   * bankilyService.ts), rien n'écrit en Firestore, donc on la transmet
+   * directement à l'écran de confirmation pour l'affichage.
+   */
+  const transactionIdRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
     return () => {
@@ -97,7 +104,8 @@ export default function InvestPaymentScreen() {
     setSubmitting(true);
     setErrorMessage('');
     try {
-      await initiatePayment(investmentId, phoneDigits, passcode.trim());
+      const result = await initiatePayment(investmentId, phoneDigits, passcode.trim());
+      transactionIdRef.current = result.transactionId;
       setPasscode('');
       setStep('processing');
       startPulse();
@@ -142,7 +150,8 @@ export default function InvestPaymentScreen() {
           stopPolling();
           setStep('success');
           setTimeout(() => {
-            router.replace(`/invest/${id}/confirmation?investmentId=${investmentId}&amount=${amount}`);
+            const ref = transactionIdRef.current ? `&transactionId=${encodeURIComponent(transactionIdRef.current)}` : '';
+            router.replace(`/invest/${id}/confirmation?investmentId=${investmentId}&amount=${amount}${ref}`);
           }, 1200);
           return;
         }

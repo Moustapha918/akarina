@@ -24,8 +24,8 @@ import { useFeatureFlags } from '../../../../src/hooks/useFeatureFlags';
 import { Investment, Project } from '../../../../src/types';
 
 export default function InvestConfirmationScreen() {
-  const { id, investmentId, amount: amountParam } = useLocalSearchParams<{
-    id: string; investmentId: string; amount: string;
+  const { id, investmentId, amount: amountParam, transactionId: transactionIdParam } = useLocalSearchParams<{
+    id: string; investmentId: string; amount: string; transactionId?: string;
   }>();
   const router = useRouter();
   const { t } = useTranslation();
@@ -96,7 +96,7 @@ export default function InvestConfirmationScreen() {
   const sharePercent = ((amount / project.targetAmount) * 100).toFixed(2);
 
   return (
-    <SafeAreaView style={styles.container} edges={['bottom']}>
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         {/* Success header */}
         <View style={styles.successHeader}>
@@ -128,7 +128,7 @@ export default function InvestConfirmationScreen() {
             <Row label={t('invest.confirmation.rowRoi')} value={`${project.roiEstimate}%`} />
           )}
           <Row label={t('invest.confirmation.rowDuration')} value={t('invest.confirmation.rowDurationValue', { count: project.roiDurationMonths })} />
-          <Row label={t('invest.confirmation.rowBankilyRef')} value={investment.transactionId ?? '—'} mono />
+          <Row label={t('invest.confirmation.rowBankilyRef')} value={investment.transactionId ?? transactionIdParam ?? '—'} mono />
         </View>
 
         {/* Mousharaka info */}

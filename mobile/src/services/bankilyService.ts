@@ -1,5 +1,14 @@
-import { httpsCallable } from '@react-native-firebase/functions';
-import { functionsInstance } from './functionsClient';
+import { BankilyFakeApi } from './bankilyFakeApi';
+
+/**
+ * FAKE (branche feature/mock-bankily-api) : les appels ci-dessous ne passent
+ * plus par les Cloud Functions `initiateBankilyPayment`/`checkBankilyTransaction`,
+ * ils sont servis localement par BankilyFakeApi (toujours succès, aucun appel
+ * réseau). Le champ `status` de l'Investment en Firestore n'est donc plus mis à
+ * jour (ce n'est possible que côté Admin SDK) : seul l'écran de paiement voit le
+ * succès, le dashboard/portfolio continuera d'afficher "En attente".
+ */
+const bankilyFakeApi = new BankilyFakeApi();
 
 export type BankilyTransactionStatus = 'TS' | 'TF' | 'TA';
 
@@ -43,43 +52,34 @@ export function toBankilyCallError(err: unknown): BankilyCallError {
 }
 
 /**
- * Déclenche le paiement B-PAY côté serveur (Cloud Function `initiateBankilyPayment`).
- *
- * Le client ne détient jamais les identifiants marchand Bankily : il transmet
- * uniquement le numéro Bankily et le passcode que l'utilisateur est allé chercher
- * dans l'app Bankily (fonctionnalité B-PAY) — voir CLAUDE.md section 4.A.
+ * Déclenche le paiement B-PAY. En production, appelle la Cloud Function
+ * `initiateBankilyPayment` (le client ne détient jamais les identifiants
+ * marchand — voir CLAUDE.md section 4.A) ; sur cette branche, servi par
+ * BankilyFakeApi (voir note en tête de fichier).
  */
 export async function initiatePayment(
   investmentId: string,
   clientPhone: string,
   passcode: string
 ): Promise<InitiatePaymentResult> {
-  const call = httpsCallable<
-    { investmentId: string; clientPhone: string; passcode: string },
-    InitiatePaymentResult
-  >(functionsInstance, 'initiateBankilyPayment');
   try {
-    const { data } = await call({ investmentId, clientPhone, passcode });
-    return data;
+    return await bankilyFakeApi.initiatePayment(investmentId, clientPhone, passcode);
   } catch (err) {
     throw toBankilyCallError(err);
   }
 }
 
 /**
- * Interroge le statut réel de la transaction (Cloud Function `checkBankilyTransaction`).
- * À appeler en polling depuis l'écran de paiement tant que le statut est `TA`.
+ * Interroge le statut de la transaction. En production, appelle la Cloud
+ * Function `checkBankilyTransaction` ; sur cette branche, servi par
+ * BankilyFakeApi (toujours `TS`). À appeler en polling depuis l'écran de
+ * paiement tant que le statut est `TA`.
  */
 export async function checkTransactionStatus(
   investmentId: string
 ): Promise<BankilyTransactionStatus> {
-  const call = httpsCallable<
-    { investmentId: string },
-    { status: BankilyTransactionStatus }
-  >(functionsInstance, 'checkBankilyTransaction');
   try {
-    const { data } = await call({ investmentId });
-    return data.status;
+    return await bankilyFakeApi.checkTransactionStatus(investmentId);
   } catch (err) {
     throw toBankilyCallError(err);
   }
