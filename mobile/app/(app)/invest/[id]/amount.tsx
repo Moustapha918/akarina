@@ -37,6 +37,7 @@ export default function InvestAmountScreen() {
   const STEPS = [
     t('invest.steps.amount'),
     t('invest.steps.contract'),
+    t('invest.steps.method'),
     t('invest.steps.payment'),
     t('invest.steps.confirmation'),
   ];
@@ -118,11 +119,21 @@ export default function InvestAmountScreen() {
   const availablePresets = INVESTMENT_PRESETS.filter((p) => p >= project.minInvestment);
 
   return (
-    <SafeAreaView style={styles.container} edges={['bottom']}>
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
+        <View style={styles.topBar}>
+          <Button
+            label={t('common.back')}
+            onPress={() => router.back()}
+            variant="ghost"
+            style={styles.backButton}
+            textStyle={styles.backButtonText}
+          />
+        </View>
+
         {/* Step indicator */}
         <View style={styles.stepsRow}>
           {STEPS.map((step, i) => (
@@ -258,6 +269,13 @@ export default function InvestAmountScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.background },
+  topBar: {
+    paddingHorizontal: 12,
+    paddingTop: 6,
+    backgroundColor: COLORS.surface,
+  },
+  backButton: { height: 36, paddingHorizontal: 8, alignSelf: 'flex-start' },
+  backButtonText: { fontSize: 14 },
   stepsRow: {
     flexDirection: 'row',
     alignItems: 'center',

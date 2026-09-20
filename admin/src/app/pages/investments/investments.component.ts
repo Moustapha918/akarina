@@ -106,7 +106,8 @@ export class InvestmentsComponent implements OnInit {
     const map: Record<string, string> = {
       SUCCESS: 'badge-success',
       PENDING: 'badge-warning',
-      FAILED:  'badge-danger'
+      FAILED:  'badge-danger',
+      CANCELLED: 'badge-secondary'
     };
     return map[status] ?? 'badge-secondary';
   }
@@ -115,7 +116,8 @@ export class InvestmentsComponent implements OnInit {
     const map: Record<string, string> = {
       SUCCESS: 'Succès',
       PENDING: 'En attente',
-      FAILED:  'Échoué'
+      FAILED:  'Échoué',
+      CANCELLED: 'Annulé'
     };
     return map[status] ?? status;
   }

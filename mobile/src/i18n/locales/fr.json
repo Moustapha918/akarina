@@ -164,8 +164,17 @@
     "steps": {
       "amount": "Montant",
       "contract": "Contrat",
+      "method": "Méthode",
       "payment": "Paiement",
       "confirmation": "Confirmation"
+    },
+    "cancel": {
+      "button": "Annuler l'investissement",
+      "confirmTitle": "Annuler l'investissement ?",
+      "confirmMessage": "Votre investissement en attente sera annulé. Vous pourrez en créer un nouveau à tout moment.",
+      "confirmDismiss": "Non",
+      "confirmConfirm": "Oui, annuler",
+      "error": "Impossible d'annuler l'investissement. Réessayez."
     },
     "amount": {
       "suggested": "Montants suggérés",
@@ -222,6 +231,16 @@
       "createError": "Impossible de créer l'investissement. Réessayez.",
       "pdfError": "Impossible de générer le contrat PDF. Réessayez."
     },
+    "method": {
+      "title": "Choisissez votre moyen de paiement",
+      "subtitle": "Sélectionnez comment vous souhaitez régler votre investissement.",
+      "bankilyTitle": "Bankily",
+      "bankilySubtitle": "Paiement via B-PAY Bankily",
+      "masriviTitle": "Masrivi",
+      "masriviSubtitle": "Paiement via Masrivi",
+      "comingSoon": "Bientôt disponible",
+      "continueBtn": "Continuer"
+    },
     "payment": {
       "amountLabel": "Montant du paiement",
       "instructionsTitle": "Paiement via Bankily",
@@ -243,10 +262,12 @@
       "success": "Paiement accepté !",
       "redirecting": "Redirection vers la confirmation...",
       "failed": "Paiement échoué",
+      "failedMessage": "Nous sommes désolés, votre paiement Bankily n'a pas pu être finalisé. Veuillez réessayer ou contacter notre support si le problème persiste.",
       "pendingTitle": "Paiement en cours de traitement",
       "pendingMessage": "Nous n'avons pas encore reçu la confirmation de Bankily. Vous serez notifié dès que le paiement sera confirmé.",
       "networkError": "Erreur réseau. Vérifiez votre connexion et réessayez.",
-      "genericError": "Une erreur est survenue pendant le paiement.",
+      "abortedMessage": "Nous sommes désolés, ce passcode n'a pas été accepté par Bankily. Retournez sur l'application Bankily pour générer un nouveau passcode et réessayez.",
+      "genericError": "Nous sommes désolés, une erreur est survenue pendant le paiement. Veuillez réessayer ou contacter notre support.",
       "retry": "Réessayer",
       "cancel": "Annuler",
       "viewPortfolio": "Voir mon portfolio"
@@ -297,7 +318,8 @@
       "pending": "En attente",
       "processing": "Paiement en cours",
       "success": "Confirmé",
-      "failed": "Échoué"
+      "failed": "Échoué",
+      "cancelled": "Annulé"
     },
     "guestTitle": "Votre portfolio",
     "guestDescription": "Connectez-vous pour suivre vos investissements et l'évolution de vos projets."

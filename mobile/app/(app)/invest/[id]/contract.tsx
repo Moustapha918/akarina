@@ -42,6 +42,7 @@ export default function InvestContractScreen() {
   const STEPS = [
     t('invest.steps.amount'),
     t('invest.steps.contract'),
+    t('invest.steps.method'),
     t('invest.steps.payment'),
     t('invest.steps.confirmation'),
   ];
@@ -87,7 +88,7 @@ export default function InvestContractScreen() {
       await withTimeout(markContractAccepted(investment.id), 'markContractAccepted');
       console.log('[Contract] markContractAccepted OK');
 
-      router.replace(`/invest/${id}/payment?investmentId=${investment.id}&amount=${amount}`);
+      router.replace(`/invest/${id}/method?investmentId=${investment.id}&amount=${amount}`);
     } catch (err) {
       console.error('[Contract] handleAccept a échoué:', err);
       Alert.alert(t('common.error'), t('invest.contract.createError'));
@@ -107,7 +108,18 @@ export default function InvestContractScreen() {
   const estimatedReturn = Math.round(amount * (project.roiEstimate / 100));
 
   return (
-    <SafeAreaView style={styles.container} edges={['bottom']}>
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+      <View style={styles.topBar}>
+        <Button
+          label={t('common.back')}
+          onPress={() => router.back()}
+          variant="ghost"
+          disabled={submitting}
+          style={styles.backButton}
+          textStyle={styles.backButtonText}
+        />
+      </View>
+
       {/* Step indicator */}
       <View style={styles.stepsRow}>
         {STEPS.map((step, i) => (
@@ -249,6 +261,13 @@ function Clause({ num, title, children }: { num: number; title: string; children
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.background },
+  topBar: {
+    paddingHorizontal: 12,
+    paddingTop: 6,
+    backgroundColor: COLORS.surface,
+  },
+  backButton: { height: 36, paddingHorizontal: 8, alignSelf: 'flex-start' },
+  backButtonText: { fontSize: 14 },
   stepsRow: {
     flexDirection: 'row', alignItems: 'center',
     paddingHorizontal: 20, paddingVertical: 12,

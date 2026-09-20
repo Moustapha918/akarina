@@ -37,12 +37,14 @@ function InvestmentCard({ item, user }: { item: InvestmentWithProject; user: Use
     PROCESSING: t('dashboard.investmentStatus.processing'),
     SUCCESS: t('dashboard.investmentStatus.success'),
     FAILED: t('dashboard.investmentStatus.failed'),
+    CANCELLED: t('dashboard.investmentStatus.cancelled'),
   };
   const STATUS_COLOR: Record<Investment['status'], string> = {
     PENDING: COLORS.warning,
     PROCESSING: COLORS.warning,
     SUCCESS: COLORS.success,
     FAILED: COLORS.danger,
+    CANCELLED: COLORS.textSecondary,
   };
 
   async function handleDownloadContract() {

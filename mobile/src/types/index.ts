@@ -12,7 +12,7 @@ export type ExitStrategy = 'SALE' | 'RENTAL';
 
 export type ProjectStatus = 'OPEN' | 'FUNDED' | 'CONSTRUCTION' | 'RENTING' | 'COMPLETED';
 
-export type InvestmentStatus = 'PENDING' | 'PROCESSING' | 'SUCCESS' | 'FAILED';
+export type InvestmentStatus = 'PENDING' | 'PROCESSING' | 'SUCCESS' | 'FAILED' | 'CANCELLED';
 
 export type PayoutType = 'RENTAL' | 'PROFIT';
 
@@ -84,6 +84,7 @@ export interface Investment {
   processingAt?: Timestamp; // passage en PROCESSING (déclenche l'éligibilité à la réconciliation)
   reconciledAt?: Timestamp; // résolu par le job de réconciliation planifié plutôt que par le polling client
   paidAt?: Timestamp;
+  cancelledAt?: Timestamp;
   createdAt: Timestamp;
 }
 

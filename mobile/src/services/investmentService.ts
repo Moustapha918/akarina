@@ -11,8 +11,11 @@ import {
   serverTimestamp,
   DocumentData,
 } from '@react-native-firebase/firestore';
+import { httpsCallable } from '@react-native-firebase/functions';
 import { db } from './firebase';
+import { functionsInstance } from './functionsClient';
 import { Investment, InvestmentStatus, CreateInvestmentDTO } from '../types';
+import { toBankilyCallError } from './bankilyService';
 
 function toInvestment(id: string, data: DocumentData): Investment {
   return { id, ...data } as Investment;
@@ -54,6 +57,24 @@ export async function getInvestment(investmentId: string): Promise<Investment | 
   const snap = await getDoc(doc(db, 'investments', investmentId));
   if (!snap.exists()) return null;
   return toInvestment(snap.id, snap.data());
+}
+
+/**
+ * Annule un investissement encore PENDING (contrat signé, aucun paiement Bankily
+ * initié). Le champ `status` n'étant pas modifiable côté client par les règles
+ * Firestore, cette transition passe par la Cloud Function `cancelInvestment`
+ * (Admin SDK), comme initiatePayment/checkTransactionStatus.
+ */
+export async function cancelInvestment(investmentId: string): Promise<void> {
+  const call = httpsCallable<{ investmentId: string }, { status: 'CANCELLED' }>(
+    functionsInstance,
+    'cancelInvestment'
+  );
+  try {
+    await call({ investmentId });
+  } catch (err) {
+    throw toBankilyCallError(err);
+  }
 }
 
 /** Récupère tous les investissements d'un utilisateur. */

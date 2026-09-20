@@ -9,6 +9,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -25,6 +26,7 @@ import { Button } from '../../../../src/components/ui/Button';
 import { Input } from '../../../../src/components/ui/Input';
 import { formatMRU } from '../../../../src/utils/format';
 import { initiatePayment, checkTransactionStatus, BankilyCallError } from '../../../../src/services/bankilyService';
+import { cancelInvestment } from '../../../../src/services/investmentService';
 import { useAuthStore } from '../../../../src/hooks/useAuthStore';
 
 type PaymentStep = 'instructions' | 'form' | 'processing' | 'success' | 'failed' | 'pending';
@@ -40,6 +42,7 @@ export default function InvestPaymentScreen() {
   const STEPS = [
     t('invest.steps.amount'),
     t('invest.steps.contract'),
+    t('invest.steps.method'),
     t('invest.steps.payment'),
     t('invest.steps.confirmation'),
   ];
@@ -56,6 +59,7 @@ export default function InvestPaymentScreen() {
   const [errorMessage, setErrorMessage] = useState('');
   /** true si le paiement est définitivement refusé par Bankily (operationId consommé, pas de retry). */
   const [terminal, setTerminal] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
 
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -116,9 +120,12 @@ export default function InvestPaymentScreen() {
       // 'aborted' = rejet Bankily propre (passcode invalide...) : non terminal, un nouveau
       // passcode peut être retenté sur le même investissement (toujours PENDING).
       // Tout le reste (permission/auth/erreur interne...) : terminal, retenter ne réglera rien.
+      // Le message de err (BankilyCallError) reflète le texte brut renvoyé par Bankily
+      // (souvent en anglais, parfois cryptique) : on ne l'affiche jamais tel quel, on
+      // choisit toujours notre propre message traduit selon la nature de l'échec.
       setTerminal(code !== 'aborted');
       setErrorMessage(
-        err instanceof BankilyCallError && err.message ? err.message : t('invest.payment.genericError')
+        code === 'aborted' ? t('invest.payment.abortedMessage') : t('invest.payment.genericError')
       );
       setStep('failed');
     } finally {
@@ -142,7 +149,7 @@ export default function InvestPaymentScreen() {
         if (status === 'TF') {
           stopPolling();
           setTerminal(true);
-          setErrorMessage(t('invest.payment.failed'));
+          setErrorMessage(t('invest.payment.failedMessage'));
           setStep('failed');
           return;
         }
@@ -179,16 +186,55 @@ export default function InvestPaymentScreen() {
     router.replace('/');
   }
 
+  function handleCancelInvestment() {
+    Alert.alert(
+      t('invest.cancel.confirmTitle'),
+      t('invest.cancel.confirmMessage'),
+      [
+        { text: t('invest.cancel.confirmDismiss'), style: 'cancel' },
+        {
+          text: t('invest.cancel.confirmConfirm'),
+          style: 'destructive',
+          onPress: async () => {
+            setCancelling(true);
+            try {
+              await cancelInvestment(investmentId);
+              router.replace('/');
+            } catch (err) {
+              console.error('[Payment] cancelInvestment a échoué:', err);
+              Alert.alert(t('common.error'), t('invest.cancel.error'));
+              setCancelling(false);
+            }
+          },
+        },
+      ]
+    );
+  }
+
   return (
-    <SafeAreaView style={styles.container} edges={['bottom']}>
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+      {(step === 'instructions' || step === 'form') && (
+        <View style={styles.topBar}>
+          <Button
+            label={t('invest.cancel.button')}
+            onPress={handleCancelInvestment}
+            loading={cancelling}
+            disabled={submitting}
+            variant="outline"
+            style={styles.cancelButton}
+            textStyle={styles.cancelButtonText}
+          />
+        </View>
+      )}
+
       {/* Step indicator */}
       <View style={styles.stepsRow}>
         {STEPS.map((s, i) => (
           <View key={s} style={styles.stepItem}>
-            <View style={[styles.stepDot, i === 2 && styles.stepDotActive]}>
-              <Text style={i === 2 ? styles.stepNumber : styles.stepNumberInactive}>{i + 1}</Text>
+            <View style={[styles.stepDot, i === 3 && styles.stepDotActive]}>
+              <Text style={i === 3 ? styles.stepNumber : styles.stepNumberInactive}>{i + 1}</Text>
             </View>
-            <Text style={[styles.stepLabel, i === 2 && styles.stepLabelActive]}>{s}</Text>
+            <Text style={[styles.stepLabel, i === 3 && styles.stepLabelActive]}>{s}</Text>
           </View>
         ))}
       </View>
@@ -325,6 +371,13 @@ function InstructionStep({ num, text }: { num: number; text: string }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
+  topBar: {
+    paddingHorizontal: 12,
+    paddingTop: 6,
+    backgroundColor: COLORS.surface,
+  },
+  cancelButton: { height: 36, paddingHorizontal: 12, alignSelf: 'flex-start', borderColor: COLORS.danger },
+  cancelButtonText: { fontSize: 13, color: COLORS.danger },
   stepsRow: {
     flexDirection: 'row', alignItems: 'center',
     paddingHorizontal: 20, paddingVertical: 12,

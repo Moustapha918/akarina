@@ -31,7 +31,7 @@ export class BankilyCallError extends Error {
   }
 }
 
-function toBankilyCallError(err: unknown): BankilyCallError {
+export function toBankilyCallError(err: unknown): BankilyCallError {
   const raw = (err as { code?: string; message?: string })?.code ?? '';
   const code = raw.replace(/^functions\//, '') as BankilyErrorCode;
   const message = (err as { message?: string })?.message ?? 'Erreur inconnue';

@@ -164,8 +164,17 @@
     "steps": {
       "amount": "المبلغ",
       "contract": "العقد",
+      "method": "الطريقة",
       "payment": "الدفع",
       "confirmation": "التأكيد"
+    },
+    "cancel": {
+      "button": "إلغاء الاستثمار",
+      "confirmTitle": "إلغاء الاستثمار؟",
+      "confirmMessage": "سيتم إلغاء استثمارك المعلّق. يمكنك إنشاء استثمار جديد في أي وقت.",
+      "confirmDismiss": "لا",
+      "confirmConfirm": "نعم، إلغاء",
+      "error": "تعذر إلغاء الاستثمار. يرجى إعادة المحاولة."
     },
     "amount": {
       "suggested": "مبالغ مقترحة",
@@ -222,6 +231,16 @@
       "createError": "تعذر إنشاء الاستثمار. حاول مجدداً.",
       "pdfError": "تعذر إنشاء عقد PDF. حاول مجدداً."
     },
+    "method": {
+      "title": "اختر وسيلة الدفع",
+      "subtitle": "حدد الطريقة التي ترغب بها في تسديد استثمارك.",
+      "bankilyTitle": "Bankily",
+      "bankilySubtitle": "الدفع عبر B-PAY Bankily",
+      "masriviTitle": "Masrivi",
+      "masriviSubtitle": "الدفع عبر Masrivi",
+      "comingSoon": "قريباً",
+      "continueBtn": "متابعة"
+    },
     "payment": {
       "amountLabel": "مبلغ الدفع",
       "instructionsTitle": "الدفع عبر بانكيلي",
@@ -243,10 +262,12 @@
       "success": "تم قبول الدفع!",
       "redirecting": "جاري التحويل إلى التأكيد...",
       "failed": "فشل الدفع",
+      "failedMessage": "نأسف، تعذر إتمام عملية الدفع عبر Bankily. يرجى إعادة المحاولة أو التواصل مع الدعم إذا استمرت المشكلة.",
       "pendingTitle": "الدفع قيد المعالجة",
       "pendingMessage": "لم نتلق بعد تأكيداً من Bankily. سيتم إعلامك فور تأكيد الدفع.",
       "networkError": "خطأ في الشبكة. تحقق من اتصالك وأعد المحاولة.",
-      "genericError": "حدث خطأ أثناء الدفع.",
+      "abortedMessage": "نأسف، لم يتم قبول هذا الرمز من طرف Bankily. عد إلى تطبيق Bankily لإنشاء رمز جديد وأعد المحاولة.",
+      "genericError": "نأسف، حدث خطأ أثناء الدفع. يرجى إعادة المحاولة أو التواصل مع الدعم.",
       "retry": "إعادة المحاولة",
       "cancel": "إلغاء",
       "viewPortfolio": "عرض محفظتي"
@@ -297,7 +318,8 @@
       "pending": "في الانتظار",
       "processing": "الدفع قيد المعالجة",
       "success": "مؤكد",
-      "failed": "فاشل"
+      "failed": "فاشل",
+      "cancelled": "ملغى"
     },
     "guestTitle": "محفظتك",
     "guestDescription": "سجّل الدخول لمتابعة استثماراتك وتطور مشاريعك."

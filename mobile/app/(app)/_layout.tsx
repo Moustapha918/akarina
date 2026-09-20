@@ -16,6 +16,7 @@ export default function AppLayout() {
       <Stack.Screen name="project/[id]" />
       <Stack.Screen name="invest/[id]/amount" />
       <Stack.Screen name="invest/[id]/contract" />
+      <Stack.Screen name="invest/[id]/method" />
       <Stack.Screen name="invest/[id]/payment" />
       <Stack.Screen name="invest/[id]/confirmation" />
     </Stack>
