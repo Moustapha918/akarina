@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
+  Image,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
@@ -39,9 +40,12 @@ export default function ProjectsScreen() {
     <View style={[styles.container, { paddingTop: insets.top }]}>
       {/* Header */}
       <View style={styles.header}>
-        <View>
-          <Text style={styles.headerTitle}>اصول — Osool</Text>
-          <Text style={styles.headerSub}>{t('projects.header')}</Text>
+        <View style={styles.brandRow}>
+          <Image source={require('../../../assets/splash-icon.png')} style={styles.brandLogo} resizeMode="contain" />
+          <View>
+            <Text style={styles.headerTitle}>نبني القيمة معا</Text>
+            <Text style={styles.headerSub}>{t('projects.header')}</Text>
+          </View>
         </View>
         {user ? (
           <TouchableOpacity
@@ -148,6 +152,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 16,
     backgroundColor: COLORS.primary,
+  },
+  brandRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  brandLogo: {
+    width: 36,
+    height: 36,
   },
   headerTitle: {
     fontSize: 18,
