@@ -17,6 +17,12 @@
         "APP_ENV": "staging"
       }
     },
+    "betaDev": {
+      "distribution": "store",
+      "env": {
+        "APP_ENV": "dev"
+      }
+    },
     "prod": {
       "distribution": "store",
       "env": {

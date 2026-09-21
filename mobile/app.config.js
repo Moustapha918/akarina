@@ -41,7 +41,11 @@ const env = envConfig[APP_ENV] ?? envConfig.dev;
 module.exports = {
   expo: {
     name: env.appName,
-    slug: 'osool',
+    // Slug technique lié au projet EAS existant (extra.eas.projectId) — ne pas
+    // renommer sans renommer aussi le projet côté expo.dev, sinon `eas build`
+    // casse ("Slug ... does not match"). Le nom affiché (`name` ci-dessus) est
+    // Osool ; ce slug interne reste "akarina" par compatibilité EAS.
+    slug: 'akarina',
     version: '1.0.0',
     orientation: 'portrait',
     icon: './assets/icon.png',
@@ -108,6 +112,7 @@ module.exports = {
           cameraPermission: 'Osool a besoin d\'accéder à la caméra pour photographier votre pièce d\'identité.',
         },
       ],
+      './plugins/withNoTabletSupport',
     ],
 
     experiments: {

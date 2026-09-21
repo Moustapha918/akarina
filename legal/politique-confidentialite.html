@@ -1,0 +1,469 @@
+<title>Politique de confidentialité</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Public+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root {
+    --paper: #F8F9FA;
+    --surface: #FFFFFF;
+    --ink: #1C2833;
+    --ink-soft: #5B6B6E;
+    --ink-faint: #8A9598;
+    --navy: #1B4F72;
+    --navy-deep: #123249;
+    --navy-tint: #EAF1F6;
+    --gold: #B4890A;
+    --gold-tint: #FBF3DD;
+    --border: #DEE3E6;
+    --amber-bg: #FFF6E5;
+    --amber-border: #E3B341;
+    --amber-ink: #6B4E05;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #0F1B24;
+      --surface: #16262F;
+      --ink: #E7EEF1;
+      --ink-soft: #9FB2B7;
+      --ink-faint: #6E8388;
+      --navy: #6FA8D6;
+      --navy-deep: #0B1620;
+      --navy-tint: #172E3C;
+      --gold: #E3B341;
+      --gold-tint: #2A2410;
+      --border: #26383F;
+      --amber-bg: #2B2410;
+      --amber-border: #6B551C;
+      --amber-ink: #E3C877;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #0F1B24;
+    --surface: #16262F;
+    --ink: #E7EEF1;
+    --ink-soft: #9FB2B7;
+    --ink-faint: #6E8388;
+    --navy: #6FA8D6;
+    --navy-deep: #0B1620;
+    --navy-tint: #172E3C;
+    --gold: #E3B341;
+    --gold-tint: #2A2410;
+    --border: #26383F;
+    --amber-bg: #2B2410;
+    --amber-border: #6B551C;
+    --amber-ink: #E3C877;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2 {
+    font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+
+  .shell {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 220px minmax(0, 720px);
+    gap: 64px;
+    justify-content: center;
+  }
+
+  @media (max-width: 880px) {
+    .shell { grid-template-columns: minmax(0, 1fr); gap: 0; }
+    .toc { display: none; }
+  }
+
+  header.masthead {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 56px 24px 0;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .brand svg { width: 34px; height: 34px; flex-shrink: 0; }
+
+  .brand-name {
+    font-family: "Source Serif 4", serif;
+    font-weight: 600;
+    font-size: 19px;
+    letter-spacing: 0.02em;
+    color: var(--navy);
+  }
+
+  .kicker {
+    margin: 30px 0 6px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  h1.title {
+    margin: 0 0 14px;
+    font-size: clamp(30px, 4.4vw, 42px);
+    font-weight: 700;
+    line-height: 1.12;
+  }
+
+  .meta {
+    font-size: 13px;
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.01em;
+  }
+
+  .lead {
+    margin: 26px 0 0;
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 60ch;
+  }
+
+  hr.divider {
+    max-width: 720px;
+    margin: 44px auto;
+    border: none;
+    border-top: 1px solid var(--border);
+  }
+
+  nav.toc {
+    position: sticky;
+    top: 40px;
+    align-self: start;
+    padding-top: 6px;
+  }
+
+  nav.toc .toc-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 14px;
+  }
+
+  nav.toc ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    counter-reset: toc;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  nav.toc a {
+    counter-increment: toc;
+    display: flex;
+    gap: 8px;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    text-decoration: none;
+    line-height: 1.4;
+  }
+
+  nav.toc a::before {
+    content: counter(toc);
+    color: var(--gold);
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    flex-shrink: 0;
+    width: 1.4em;
+  }
+
+  nav.toc a:hover { color: var(--navy); }
+
+  main {
+    min-width: 0;
+    padding-bottom: 80px;
+  }
+
+  section {
+    padding: 34px 0;
+    border-top: 1px solid var(--border);
+  }
+  section:first-of-type { border-top: none; padding-top: 6px; }
+
+  .sec-head {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin: 0 0 14px;
+  }
+
+  .sec-num {
+    font-family: "Source Serif 4", serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+
+  h2.sec-title {
+    margin: 0;
+    font-size: 21px;
+    font-weight: 600;
+  }
+
+  section p, section li { color: var(--ink); }
+  section p { margin: 0 0 14px; max-width: 68ch; }
+  section ul { margin: 0 0 14px; padding-left: 1.2em; }
+  section li { margin-bottom: 6px; }
+
+  a.inline-link { color: var(--navy); }
+
+  .callout {
+    display: flex;
+    gap: 12px;
+    padding: 16px 18px;
+    border-radius: 8px;
+    background: var(--gold-tint);
+    border-left: 3px solid var(--gold);
+    margin: 18px 0;
+    font-size: 14.5px;
+  }
+  .callout .icon { flex-shrink: 0; color: var(--gold); font-size: 17px; line-height: 1.5; }
+  .callout p { margin: 0; }
+
+  .callout.warn {
+    background: var(--amber-bg);
+    border-left-color: var(--amber-border);
+    color: var(--amber-ink);
+  }
+  .callout.warn .icon { color: var(--amber-border); }
+  .callout.warn p { color: var(--amber-ink); }
+
+  .fill {
+    background: var(--amber-bg);
+    border: 1px dashed var(--amber-border);
+    color: var(--amber-ink);
+    border-radius: 4px;
+    padding: 1px 7px;
+    font-size: 0.93em;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 6px 0 18px;
+    font-size: 14.5px;
+  }
+  caption { display: none; }
+  thead th {
+    text-align: left;
+    background: var(--navy);
+    color: #fff;
+    font-weight: 600;
+    padding: 10px 14px;
+    font-size: 12.5px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+  thead th:first-child { border-radius: 8px 0 0 0; }
+  thead th:last-child { border-radius: 0 8px 0 0; }
+  tbody td {
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tbody tr:nth-child(even) td { background: var(--navy-tint); }
+  tbody td:first-child { font-weight: 600; white-space: nowrap; }
+
+  .table-wrap { overflow-x: auto; }
+
+  footer {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 30px 24px 70px;
+    font-size: 13px;
+    color: var(--ink-faint);
+    border-top: 1px solid var(--border);
+    margin-top: 10px;
+  }
+
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+</style>
+
+<header class="masthead">
+  <div class="brand">
+    <svg viewBox="0 0 100 100" aria-hidden="true">
+      <path d="M 20 64 A 30 30 0 0 1 80 64" fill="none" stroke="var(--navy)" stroke-width="11" stroke-linecap="round"/>
+      <rect x="17" y="61" width="66" height="9" rx="4.5" fill="var(--navy)"/>
+      <circle cx="50" cy="30" r="5" fill="var(--gold)"/>
+    </svg>
+    <span class="brand-name">Osool</span>
+  </div>
+  <p class="kicker">Document légal</p>
+  <h1 class="title">Politique de confidentialité</h1>
+  <p class="meta">Dernière mise à jour : <span class="fill">à compléter — date de publication</span></p>
+  <p class="lead">Cette politique décrit comment Osool SARL collecte, utilise, partage et protège vos données personnelles lorsque vous utilisez l'application Osool et ses services associés.</p>
+</header>
+
+<hr class="divider">
+
+<div class="shell">
+  <nav class="toc" aria-label="Sommaire">
+    <div class="toc-label">Sommaire</div>
+    <ol>
+      <li><a href="#qui-sommes-nous">Qui sommes-nous</a></li>
+      <li><a href="#donnees-collectees">Données collectées</a></li>
+      <li><a href="#pourquoi">Pourquoi nous les utilisons</a></li>
+      <li><a href="#partage">Avec qui nous les partageons</a></li>
+      <li><a href="#conservation">Durée de conservation</a></li>
+      <li><a href="#securite">Sécurité</a></li>
+      <li><a href="#droits">Vos droits</a></li>
+      <li><a href="#age">Âge minimum</a></li>
+      <li><a href="#modifications">Modifications</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <section id="qui-sommes-nous">
+      <div class="sec-head"><span class="sec-num">01</span><h2 class="sec-title">Qui sommes-nous</h2></div>
+      <p>Osool SARL, société à responsabilité limitée de droit mauritanien, enregistrée au registre de commerce de Nouakchott, Mauritanie, est responsable du traitement des données personnelles collectées via l'application Osool (« l'Application »).</p>
+      <p>Osool exploite une plateforme de financement participatif immobilier permettant à des investisseurs de co-financer des projets immobiliers en Mauritanie via des contrats de partenariat Mousharaka, conformes aux principes de la finance islamique.</p>
+      <p>Contact : <span class="fill">adresse e-mail à renseigner</span> · Siège : <span class="fill">adresse à renseigner</span></p>
+    </section>
+
+    <section id="donnees-collectees">
+      <div class="sec-head"><span class="sec-num">02</span><h2 class="sec-title">Données que nous collectons</h2></div>
+      <p><strong>Fournies directement par vous</strong></p>
+      <div class="table-wrap">
+        <table>
+          <caption>Données fournies par l'utilisateur</caption>
+          <thead>
+            <tr><th>Donnée</th><th>Quand</th><th>Pourquoi</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Nom complet</td><td>Inscription</td><td>Identification, contrats</td></tr>
+            <tr><td>Téléphone (+222…)</td><td>Inscription</td><td>Connexion par code SMS, identification, contact</td></tr>
+            <tr><td>Adresse e-mail</td><td>Inscription</td><td>Communication, reçus</td></tr>
+            <tr><td>Pièce d'identité</td><td>Vérification KYC</td><td>Obligation réglementaire avant investissement</td></tr>
+            <tr><td>Numéro Bankily</td><td>Lors d'un investissement</td><td>Traitement du paiement via Bankily (B-PAY)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <span class="icon">&#9432;</span>
+        <p>Osool ne collecte jamais votre code PIN Bankily ni le passcode B-PAY saisi dans l'application Bankily — ces informations restent entre vous et Bankily. Nous recevons uniquement une confirmation de transaction (référence, statut).</p>
+      </div>
+
+      <p><strong>Générées par votre utilisation</strong></p>
+      <ul>
+        <li>Historique de vos investissements (montant, projet, statut, date)</li>
+        <li>Statut de vérification KYC (en attente / vérifié / rejeté)</li>
+        <li>Contrats de partenariat générés (PDF) et horodatage de leur acceptation</li>
+        <li>Préférence de langue de l'application</li>
+      </ul>
+
+      <p><strong>Données techniques</strong></p>
+      <ul>
+        <li>Données d'authentification gérées par Firebase Authentication (jeton de session)</li>
+        <li>Aucune géolocalisation précise n'est collectée</li>
+        <li>Aucun outil d'analyse d'audience ni de publicité tierce n'est intégré à ce jour</li>
+      </ul>
+    </section>
+
+    <section id="pourquoi">
+      <div class="sec-head"><span class="sec-num">03</span><h2 class="sec-title">Pourquoi nous utilisons vos données</h2></div>
+      <ul>
+        <li>Créer et gérer votre compte, vous authentifier par code SMS</li>
+        <li>Vérifier votre identité (KYC), obligation réglementaire avant tout investissement au-delà d'un certain seuil</li>
+        <li>Traiter vos investissements et paiements, générer vos contrats Mousharaka</li>
+        <li>Assurer le suivi de vos investissements (dashboard, portfolio, actualités des projets)</li>
+        <li>Assurer le support client et répondre à vos demandes</li>
+        <li>Prévenir la fraude et assurer la sécurité de la plateforme</li>
+        <li>Respecter nos obligations légales et réglementaires, notamment en matière de lutte contre le blanchiment de capitaux</li>
+      </ul>
+    </section>
+
+    <section id="partage">
+      <div class="sec-head"><span class="sec-num">04</span><h2 class="sec-title">Avec qui nous partageons vos données</h2></div>
+      <p>Nous ne vendons jamais vos données personnelles. Nous les partageons uniquement avec :</p>
+      <ul>
+        <li><strong>Bankily / BPM</strong> — pour le traitement des paiements que vous initiez (numéro de téléphone Bankily, montant, référence d'opération)</li>
+        <li><strong>Google Firebase / Google Cloud Platform</strong> — notre infrastructure d'hébergement (authentification, base de données, stockage des documents et contrats, fonctions serveur), en tant que sous-traitant</li>
+        <li><strong>Personnel autorisé d'Osool SARL</strong> — accès limité aux données strictement nécessaires à la vérification KYC et au support client</li>
+        <li><strong>Autorités compétentes</strong> — si la loi mauritanienne l'exige (obligations comptables, lutte anti-blanchiment, réquisition judiciaire)</li>
+      </ul>
+    </section>
+
+    <section id="conservation">
+      <div class="sec-head"><span class="sec-num">05</span><h2 class="sec-title">Durée de conservation</h2></div>
+      <p>Nous conservons vos données personnelles pendant toute la durée de votre compte actif, puis après clôture, pendant la durée nécessaire au respect de nos obligations légales et comptables — notamment les documents contractuels et relatifs aux transactions financières.</p>
+      <p>Les documents d'identité KYC sont conservés selon les mêmes principes et supprimés lorsqu'ils ne sont plus nécessaires à ces fins.</p>
+    </section>
+
+    <section id="securite">
+      <div class="sec-head"><span class="sec-num">06</span><h2 class="sec-title">Sécurité de vos données</h2></div>
+      <ul>
+        <li>Communications chiffrées entre l'Application et nos serveurs (HTTPS/TLS)</li>
+        <li>Accès à vos données restreint par des règles de sécurité strictes : seul le titulaire du compte (ou un administrateur autorisé) peut lire ou modifier ses propres données</li>
+        <li>Les identifiants marchand utilisés pour dialoguer avec Bankily ne sont jamais exposés côté application mobile ; les appels sensibles transitent uniquement par nos fonctions serveur</li>
+      </ul>
+      <p>Aucun système n'étant infaillible, nous ne pouvons garantir une sécurité absolue, mais nous mettons en œuvre les mesures raisonnables pour protéger vos données.</p>
+    </section>
+
+    <section id="droits">
+      <div class="sec-head"><span class="sec-num">07</span><h2 class="sec-title">Vos droits</h2></div>
+      <p>Sous réserve de la réglementation applicable, vous disposez d'un droit d'accès, de rectification et de suppression de vos données personnelles, ainsi que d'un droit d'opposition à certains traitements. La suppression peut être limitée par nos obligations légales de conservation (documents comptables, KYC, lutte anti-blanchiment).</p>
+      <p>Pour exercer ces droits, contactez-nous à : <span class="fill">adresse e-mail à renseigner</span></p>
+    </section>
+
+    <section id="age">
+      <div class="sec-head"><span class="sec-num">08</span><h2 class="sec-title">Âge minimum</h2></div>
+      <p>L'Application est destinée aux personnes ayant atteint la majorité légale en Mauritanie. Nous ne collectons pas sciemment de données concernant des mineurs.</p>
+    </section>
+
+    <section id="modifications">
+      <div class="sec-head"><span class="sec-num">09</span><h2 class="sec-title">Modifications de cette politique</h2></div>
+      <p>Nous pouvons mettre à jour cette politique de confidentialité. Toute modification substantielle vous sera communiquée via l'Application. La date de dernière mise à jour figure en haut de ce document.</p>
+    </section>
+
+    <section id="contact">
+      <div class="sec-head"><span class="sec-num">10</span><h2 class="sec-title">Contact</h2></div>
+      <p>Pour toute question relative à cette politique ou à vos données personnelles : <span class="fill">adresse e-mail à renseigner</span></p>
+    </section>
+
+    <div class="callout warn">
+      <span class="icon">&#9888;</span>
+      <p><strong>Note interne — à retirer avant publication.</strong> Ce document est un premier brouillon rédigé à partir des données réellement collectées par l'application (types Firestore et services mobile). Il doit être relu par un professionnel du droit avant publication, notamment pour confirmer sa conformité à la réglementation mauritanienne applicable et compléter les champs surlignés.</p>
+    </div>
+
+  </main>
+</div>
+
+<footer>
+  © <span id="year"></span> Osool SARL — Nouakchott, Mauritanie
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
