@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "823327340715",
+    "project_id": "osool-prod",
+    "storage_bucket": "osool-prod.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:823327340715:android:a256c16adc0c3d54aadfee",
+        "android_client_info": {
+          "package_name": "mr.akarina.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkQNvhAxc42lOfi1Wb0QOkf9t-XY-RKfI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

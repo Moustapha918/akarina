@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "akarina-bf84b"
+    "default": "akarina-bf84b",
+    "prod": "osool-prod"
   }
 }
